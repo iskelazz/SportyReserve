@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerUser();
+                openRegisterActivity();
             }
         });
     }
@@ -90,7 +90,12 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void registerUser() {
+    private void openRegisterActivity() {
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
+    }
+
+   /* private void registerUser() {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
@@ -134,5 +139,5 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
-    }
+    }*/
 }

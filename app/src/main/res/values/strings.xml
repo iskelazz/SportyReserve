@@ -5,4 +5,14 @@
     <string name="email">Email</string>
     <string name="welcome_main">Welcome!</string>
     <string name="logout">Logout</string>
+    <string name="email_register">Email</string>
+    <string name="telefono_register">Teléfono</string>
+    <string name="nombre_register">Nombre</string>
+    <string name="apellidos_register">Apellidos</string>
+    <string name="password_register">Contraseña</string>
+    <string name="nickname_register">Nombre de usuario</string>
+    <string name="button_register">Registrarse</string>
+    <string name="register_title">Crea tu cuenta</string>
+    <string name="register_description">Descubre un amplio abanico de actividades deportivas en grupo.</string>
+
 </resources>
