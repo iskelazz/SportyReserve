@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "897116484776",
+    "firebase_url": "https://sportyreserve-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "sportyreserve",
+    "storage_bucket": "sportyreserve.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:897116484776:android:d66b4c05fe7cf1ddb77e9d",
+        "android_client_info": {
+          "package_name": "es.udc.psi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "897116484776-f8fhv4o2jev3r92ld7llps31kgt51223.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjMqk4VVI3ZPgVmFJfoxgWkeNf2Kd_C8U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "897116484776-f8fhv4o2jev3r92ld7llps31kgt51223.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
