@@ -1,4 +1,4 @@
-package es.udc.psi;
+package es.udc.psi.view.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import android.os.Bundle;
+import es.udc.psi.R;
 
 public class MainActivity extends AppCompatActivity {
 
