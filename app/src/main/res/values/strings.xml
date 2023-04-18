@@ -5,6 +5,8 @@
     <string name="email">Email</string>
     <string name="welcome_main">Welcome!</string>
     <string name="logout">Logout</string>
+
+    <!-- Registro de usuarios -->
     <string name="email_register">Email</string>
     <string name="telefono_register">Teléfono</string>
     <string name="nombre_register">Nombre</string>
