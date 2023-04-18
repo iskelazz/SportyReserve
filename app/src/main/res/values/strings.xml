@@ -17,4 +17,19 @@
     <string name="register_title">Crea tu cuenta</string>
     <string name="register_description">Descubre un amplio abanico de actividades deportivas en grupo.</string>
 
+    <!-- Reservas -->
+    <string name="book_title">Crea una reserva</string>
+    <string name="book_name">Nombre de la reserva</string>
+    <string name="book_privateness">Es pública?</string>
+    <string name="book_sport">Deporte</string>
+    <string name="book_date">Fecha de reserva</string>
+    <string name="book_duration">Duración</string>
+    <string name="book_maxParticipants">Número de participantes</string>
+    <string name="book_password">Contraseña de la reserva</string>
+    <string name="button_book">Crear reserva</string>
+    <string name="book_privateness_button_on">Reserva privada</string>
+    <string name="book_privateness_button_off">Reserva pública</string>
+    <string name="book_track">Pista</string>
+    <string name="book_maxParticipantsButton">Dar valor</string>
+    <string name="Book_SportsDropdownListHint">Selección de deportes</string>
 </resources>
