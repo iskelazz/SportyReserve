@@ -32,4 +32,15 @@
     <string name="book_track">Pista</string>
     <string name="book_maxParticipantsButton">Dar valor</string>
     <string name="Book_SportsDropdownListHint">Selección de deportes</string>
+
+    <string name="nav_user_avatar">Avatar del usuario</string>
+    <string name="nav_username">Nombre del usuario</string>
+
+    <string name="reservar_pista">Reservar Pista</string>
+    <string name="mis_reservas">Mis Reservas</string>
+    <string name="lista_reservas">Lista de Reservas</string>
+    <string name="opciones">Opciones</string>
+    <string name="about">Acerca de</string>
+    <string name="navigation_drawer_open">Abrir menú de navegación</string>
+    <string name="navigation_drawer_close">Cerrar menú de navegación</string>
 </resources>
