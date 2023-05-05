@@ -82,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView 
     @Override
     public void onRegisterSuccess() {
         Toast.makeText(this, "Registration successful.", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         finish();
     }
 
