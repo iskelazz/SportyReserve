@@ -8,18 +8,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import es.udc.psi.R;
+import es.udc.psi.view.adapters.SectionsPagerAdapter;
 
+import androidx.viewpager2.widget.ViewPager2;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
+    private TabLayout tabLayout;
+    private ViewPager2 viewPager;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        tabLayout = findViewById(R.id.tabs);
+        viewPager = findViewById(R.id.view_pager);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -27,12 +39,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        selectNavigationMenuItem(R.id.nav_mis_reservas);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        setupTabLayoutAndViewPager(viewPager, tabLayout);
+        setupBottomNavigationView();
     }
 
     @Override
@@ -87,5 +101,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void setupTabLayoutAndViewPager(ViewPager2 viewPager, TabLayout tabs) {
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this);
+        viewPager.setAdapter(sectionsPagerAdapter);
+        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(
+                tabs, viewPager, (tab, position) -> {
+            switch (position) {
+                case 0:
+                    tab.setText("Anfitrión");
+                    break;
+                case 1:
+                    tab.setText("Mis Reservas");
+                    break;
+            }
+        });
+        tabLayoutMediator.attach();
+    }
+
+    private void setupBottomNavigationView() {
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.navigation_home) {
+// Inicio seleccionado, no se necesita hacer nada aquí
+                return true;
+            } else if (itemId == R.id.navigation_notifications) {
+// Lanza la actividad de notificaciones
+// Reemplaza NotificacionesActivity.class con la clase de actividad adecuada
+                Intent intent = new Intent(MainActivity.this, NotificationsActivity.class);
+                startActivity(intent);
+                return true;
+            } else {
+                return false;
+            }
+        });
+    }
+
+    private void selectNavigationMenuItem(int menuItemId) {
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        MenuItem menuItem = navigationView.getMenu().findItem(menuItemId);
+        if (menuItem != null) {
+            menuItem.setChecked(true);
+        }
     }
 }
