@@ -45,4 +45,6 @@
     <string name="navigation_drawer_close">Cerrar menú de navegación</string>
     <string name="str_no_reservas">No hay reservas</string>
     <string name="str_error_msg">Error ......</string>
+    <string name="str_name_team1">Equipo 1</string>
+    <string name="str_name_team2">Equipo 2</string>
 </resources>

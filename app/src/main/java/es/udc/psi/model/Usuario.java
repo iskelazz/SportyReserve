@@ -1,6 +1,7 @@
 package es.udc.psi.model;
 
 public class Usuario {
+
     private String id;
     private String nombre;
     private String correoElectronico;
@@ -8,11 +9,21 @@ public class Usuario {
     private String telefono;
     private String apellidos;
 
-    public Usuario() {}
+    private String uriAvatar;
+
+    public Usuario() {
+
+    }
 
     // Constructor con parámetros
 
-    public Usuario(String id, String nombre, String correoElectronico, String contraseña, String telefono, String apellidos) {
+    public Usuario(String id,
+                   String nombre,
+                   String correoElectronico,
+                   String contraseña,
+                   String telefono,
+                   String apellidos) {
+
         this.id = id;
         this.nombre = nombre;
         this.correoElectronico = correoElectronico;
@@ -22,51 +33,72 @@ public class Usuario {
     }
 
     public String getId() {
+
         return id;
     }
 
     public void setId(String id) {
+
         this.id = id;
     }
 
     public String getNombre() {
+
         return nombre;
     }
 
     public void setNombre(String nombre) {
+
         this.nombre = nombre;
     }
 
     public String getCorreoElectronico() {
+
         return correoElectronico;
     }
 
     public void setCorreoElectronico(String correoElectronico) {
+
         this.correoElectronico = correoElectronico;
     }
 
     public String getContraseña() {
+
         return contraseña;
     }
 
     public void setContraseña(String contraseña) {
+
         this.contraseña = contraseña;
     }
 
     public String getTelefono() {
+
         return telefono;
     }
 
     public void setTelefono(String telefono) {
+
         this.telefono = telefono;
     }
 
     public String getApellidos() {
+
         return apellidos;
     }
 
     public void setApellidos(String apellidos) {
+
         this.apellidos = apellidos;
     }
 
+    public String getUriAvatar() {
+
+        return uriAvatar;
+    }
+
+    public void setUriAvatar(String uriAvatar) {
+
+        this.uriAvatar = uriAvatar;
+    }
 }

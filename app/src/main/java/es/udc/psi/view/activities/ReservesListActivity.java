@@ -10,13 +10,17 @@ import java.util.ArrayList;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import es.udc.psi.R;
+import es.udc.psi.controller.impl.ReservesListControllerImpl;
+import es.udc.psi.controller.interfaces.ReservesListController;
 import es.udc.psi.databinding.ActivityReservesListBinding;
+import es.udc.psi.model.Reserve;
+import es.udc.psi.view.activities.adapter.ReservesAdapter;
 import es.udc.psi.view.interfaces.ReservesListView;
 
 public class ReservesListActivity extends AppCompatActivity implements ReservesListView {
 
     private ActivityReservesListBinding binding;
-    private ReserveListController mReserveListController;
+    private ReservesListController mReserveListController;
     private ReservesAdapter mReserveAdapter;
 
     @Override
@@ -29,14 +33,16 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
 
         setUI();
 
-        mReserveListController = new ReserveListControllerImpl(this);
+        mReserveListController = new ReservesListControllerImpl(this);
         mReserveListController.initFlow();
 
     }
 
     @Override
-    public void showReservesList(ArrayList<Reserve> reservationList) {
-
+    public void showReservesList(ArrayList<Reserve> reservesList) {
+        mReserveAdapter.setReserveList(reservesList);
+        binding.tvReservesEmptyList.setVisibility(View.GONE);
+        binding.rvReserves.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -62,10 +68,22 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
     private void setUI() {
 
         binding.rvReserves.setHasFixedSize(true);
-        mReserveAdapter = new ReserveAdapter();
+        mReserveAdapter = new ReservesAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.rvReserves.setLayoutManager(linearLayoutManager);
         binding.rvReserves.setAdapter(mReserveAdapter);
+
+        mReserveAdapter.setClickListener(new ReservesAdapter.OnItemClickListener() {
+
+            @Override
+            public void onClick(View view,
+                                int position) {
+                //TODO: check if player exist or add new player
+                mReserveListController.onClickPlayer();
+                mReserveListController.onClickAddNewPlayer();
+
+            }
+        });
 
     }
 

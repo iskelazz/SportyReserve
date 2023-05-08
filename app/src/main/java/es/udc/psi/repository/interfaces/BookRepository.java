@@ -3,6 +3,7 @@ package es.udc.psi.repository.interfaces;
 import java.util.ArrayList;
 
 import es.udc.psi.model.Reserva;
+import es.udc.psi.model.Reserve;
 import es.udc.psi.model.Usuario;
 
 public interface BookRepository {
