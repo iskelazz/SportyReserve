@@ -43,4 +43,6 @@
     <string name="about">Acerca de</string>
     <string name="navigation_drawer_open">Abrir menú de navegación</string>
     <string name="navigation_drawer_close">Cerrar menú de navegación</string>
+    <string name="str_no_reservas">No hay reservas</string>
+    <string name="str_error_msg">Error ......</string>
 </resources>

@@ -7,6 +7,10 @@ android {
     namespace 'es.udc.psi'
     compileSdk 33
 
+    viewBinding {
+        enabled = true
+    }
+
     defaultConfig {
         applicationId "es.udc.psi"
         minSdk 25
