@@ -14,14 +14,14 @@ import es.udc.psi.controller.impl.ReservesListControllerImpl;
 import es.udc.psi.controller.interfaces.ReservesListController;
 import es.udc.psi.databinding.ActivityReservesListBinding;
 import es.udc.psi.model.Reserve;
-import es.udc.psi.view.activities.adapter.ReservesAdapter;
+import es.udc.psi.view.activities.adapter.ReservesAdapter2;
 import es.udc.psi.view.interfaces.ReservesListView;
 
 public class ReservesListActivity extends AppCompatActivity implements ReservesListView {
 
     private ActivityReservesListBinding binding;
     private ReservesListController mReserveListController;
-    private ReservesAdapter mReserveAdapter;
+    private ReservesAdapter2 mReserveAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +68,12 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
     private void setUI() {
 
         binding.rvReserves.setHasFixedSize(true);
-        mReserveAdapter = new ReservesAdapter();
+        mReserveAdapter = new ReservesAdapter2();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.rvReserves.setLayoutManager(linearLayoutManager);
         binding.rvReserves.setAdapter(mReserveAdapter);
 
-        mReserveAdapter.setClickListener(new ReservesAdapter.OnItemClickListener() {
+        mReserveAdapter.setClickListener(new ReservesAdapter2.OnItemClickListener() {
 
             @Override
             public void onClick(View view,

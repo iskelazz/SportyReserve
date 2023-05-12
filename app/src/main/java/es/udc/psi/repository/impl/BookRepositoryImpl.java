@@ -60,7 +60,8 @@ public class BookRepositoryImpl implements BookRepository {
         Usuario usuario = new Usuario("1234", "Nombre player 1","mail@mail.com","passwd01","678123456","Perez Perez");
         Usuario usuario2 = new Usuario("1344", "Nombre player 2","mail2@mail.com","passwd01","675345345456","Perez Perez");
         usuario2.setUriAvatar("https://goo.gl/gEgYUd");
-        usuario.setUriAvatar("https://brickmarkt.com/19711-large_default/minifiguras-iron-man-minifigura-lego-marvel-super-heroes-sh065.jpg");
+        //usuario.setUriAvatar("https://brickmarkt.com/19711-large_default/minifiguras-iron-man-minifigura-lego-marvel-super-heroes-sh065.jpg");
+        usuario.setUriAvatar("https://firebasestorage.googleapis.com/v0/b/sportyreserve.appspot.com/o/lego-marvel-super-heroes.jpg?alt=media&token=8ea6a384-da6d-4d81-89f0-f5f7e003169c");
 
         Usuario usuarioVacio = new Usuario();usuarioVacio.setNombre("+New Player");
 

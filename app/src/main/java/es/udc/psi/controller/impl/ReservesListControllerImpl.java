@@ -13,14 +13,11 @@ public class ReservesListControllerImpl implements ReservesListController {
 
     private ReservesListView mReserveListView;
 
-    private FirebaseAuth mAuth;
-
     private BookRepositoryImpl mBookRepository;
 
     public ReservesListControllerImpl(ReservesListView reservesListView) {
 
         mReserveListView = reservesListView;
-        mAuth = FirebaseAuth.getInstance();
         mBookRepository = new BookRepositoryImpl();
     }
 

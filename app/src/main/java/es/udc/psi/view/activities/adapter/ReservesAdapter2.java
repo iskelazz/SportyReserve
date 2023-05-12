@@ -18,17 +18,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import es.udc.psi.R;
 import es.udc.psi.model.Reserve;
 
-public class ReservesAdapter extends RecyclerView.Adapter<ReservesAdapter.reserveViewHolder> {
+public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.reserveViewHolder> {
 
     private ArrayList<Reserve> mDataset;
 
-    public ReservesAdapter(){
+    public ReservesAdapter2(){
 
         mDataset = new ArrayList<>();
     }
 
 
-    public ReservesAdapter(ArrayList<Reserve> myDataset){
+    public ReservesAdapter2(ArrayList<Reserve> myDataset){
 
         mDataset = myDataset;
     }
@@ -58,7 +58,7 @@ public class ReservesAdapter extends RecyclerView.Adapter<ReservesAdapter.reserv
 
         public void bind(Reserve reserve) {
 
-            tvNameReservation.setText(reserve.getPista());
+            tvNameReservation.setText(reserve.getId()+" - "+reserve.getPista());
             tvNameCourt.setText(reserve.getPista());
             //tvStrDate.setText(reserve.getFecha());
             tvNameSport.setText(reserve.getDeporte());
@@ -120,7 +120,7 @@ public class ReservesAdapter extends RecyclerView.Adapter<ReservesAdapter.reserv
             imageView_newplayer.setTag("image_player_"+position);
             imageView_newplayer.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,1));
+                    ViewGroup.LayoutParams.MATCH_PARENT,1));
             Glide.with(imageView_newplayer)
                     .load(reserve.getPlayerList().get(position).getUriAvatar())
                     .placeholder(android.R.drawable.ic_input_add)   //TODO: Cambiar icono??
@@ -154,8 +154,8 @@ public class ReservesAdapter extends RecyclerView.Adapter<ReservesAdapter.reserv
 
     @NonNull
     @Override
-    public ReservesAdapter.reserveViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-                                                                        int viewType) {
+    public ReservesAdapter2.reserveViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+                                                                 int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.reserve_tile, parent, false);
         return new reserveViewHolder(v);
