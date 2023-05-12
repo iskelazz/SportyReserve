@@ -109,8 +109,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
                 break;
             case R.id.nav_logout:
-                intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //intent = new Intent(this, RegisterActivity.class);
+                //startActivity(intent);
+                about();
                 break;
         }
 
@@ -161,4 +162,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             menuItem.setChecked(true);
         }
     }
+
+
+    private void about() {
+        //TODO hay que añadirle margenes al layout de "about"
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        builder.setView(getLayoutInflater().inflate(R.layout.activity_about, null));
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    
 }
