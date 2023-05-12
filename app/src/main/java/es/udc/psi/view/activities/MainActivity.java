@@ -3,6 +3,9 @@ package es.udc.psi.view.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -10,6 +13,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -45,6 +49,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        FloatingActionButton fab = findViewById(R.id.fab_add_reservation);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, BookActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView usernameText = headerView.findViewById(R.id.username_text);
+        TextView emailText = headerView.findViewById(R.id.email_text);
+
+        usernameText.setText("Nombre de usuario");
+        emailText.setText("Correo electrónico");
+
         setupTabLayoutAndViewPager(viewPager, tabLayout);
         setupBottomNavigationView();
     }
@@ -65,11 +85,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent;
 
         switch (id) {
-            case R.id.nav_reservar_pista:
-                // Lanza la actividad de reserva de pista
-                intent = new Intent(this, BookActivity.class);
-                startActivity(intent);
-                break;
             case R.id.nav_mis_reservas:
                 // Lanza la actividad de mis reservas
                 // Reemplaza MisReservasActivity.class con la clase de actividad adecuada

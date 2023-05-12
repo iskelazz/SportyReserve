@@ -1,11 +1,16 @@
 package es.udc.psi.repository.interfaces;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.AuthResult;
+
 import es.udc.psi.model.Usuario;
 
 public interface UserRepository {
     void createUser(Usuario usuario, OnUserCreatedListener listener);
 
     void checkUsernameExists(String username, OnUsernameCheckedListener listener);
+
+    void signInWithEmailAndPassword(String email, String password, OnCompleteListener<AuthResult> listener);
 
     interface OnUserCreatedListener {
         void onSuccess();
