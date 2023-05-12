@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_lista_reservas:
                 // Lanza la actividad de lista de reservas
-                intent = new Intent(this, RegisterActivity.class);
+                intent = new Intent(this, ReservesListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_opciones:

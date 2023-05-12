@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="10dp"
+        android:layout_margin="5dp"
+        card_view:cardBackgroundColor="@color/white">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ll_reservation">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ll_header_reservation">
+
+                <TextView
+                    android:id="@+id/tv_nameReservation"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textSize="24sp"
+                    android:gravity="start"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:id="@+id/tv_nameCourt"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textSize="20sp"
+                    android:gravity="start"
+                    android:layout_gravity="center"
+                    android:text="Name Court"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ll_lastline_header_reservation_">
+
+                    <TextView
+                        android:id="@+id/tv_nameSport"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:textSize="16sp"
+                        android:gravity="right"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:text="Name Court"/>
+
+                    <TextView
+                        android:id="@+id/tv_nameDate"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:textSize="16sp"
+                        android:gravity="left"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:text="10:00 - 12:00"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:id="@+id/ll_players">
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ll_team1"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ll_header_team1">
+
+                        <TextView
+                            android:id="@+id/tv_nameTeam1"
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:textSize="16sp"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:text="@string/str_name_team1"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:id="@+id/ll_team1players">
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ll_team2"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ll_header_team2">
+
+                        <TextView
+                            android:id="@+id/tv_nameTeam2"
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:textSize="16sp"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:text="@string/str_name_team2"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:id="@+id/ll_team2players">
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
