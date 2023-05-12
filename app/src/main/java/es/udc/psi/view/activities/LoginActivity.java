@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import es.udc.psi.R;
 import es.udc.psi.controller.impl.LoginControllerImpl;
 import es.udc.psi.controller.interfaces.LoginController;
+import es.udc.psi.repository.impl.UserRepositoryImpl;
+import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.view.interfaces.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
@@ -23,6 +25,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     private Button loginButton;
     private TextView signUpTextView;
     private LoginController loginController;
+    private UserRepository userRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         signUpTextView = findViewById(R.id.signUpTextView);
 
         // Inicializa el controlador de inicio de sesión
-        loginController = new LoginControllerImpl(this);
+        userRepository = new UserRepositoryImpl();
+        loginController = new LoginControllerImpl(this,userRepository);
 
         // Configura los listeners para los botones
         setupListeners();

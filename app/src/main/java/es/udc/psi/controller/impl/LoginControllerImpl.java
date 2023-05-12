@@ -8,30 +8,32 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import es.udc.psi.controller.interfaces.LoginController;
+import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.view.interfaces.LoginView;
 
 public class LoginControllerImpl implements LoginController {
 
     private LoginView loginView;
-    private FirebaseAuth mAuth;
+    private UserRepository userRepository;
 
-    public LoginControllerImpl(LoginView loginView) {
+    public LoginControllerImpl(LoginView loginView, UserRepository userRepository) {
         this.loginView = loginView;
-        mAuth = FirebaseAuth.getInstance();
+        this.userRepository = userRepository;
     }
 
     @Override
     public void login(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            loginView.onLoginSuccess();
-                        } else {
-                            loginView.onLoginFailed(task.getException().getMessage());
-                        }
-                    }
-                });
+        userRepository.signInWithEmailAndPassword(email, password, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    loginView.onLoginSuccess();
+                } else {
+                    Exception exception = task.getException();
+                    String errorMessage = exception != null ? exception.getMessage() : "Unknown error";
+                    loginView.onLoginFailed(errorMessage);
+                }
+            }
+        });
     }
 }

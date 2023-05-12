@@ -1,5 +1,8 @@
 package es.udc.psi.repository.impl;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -11,9 +14,11 @@ import es.udc.psi.repository.interfaces.UserRepository;
 
 public class UserRepositoryImpl implements UserRepository {
     private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
 
     public UserRepositoryImpl() {
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -40,5 +45,10 @@ public class UserRepositoryImpl implements UserRepository {
                 listener.onFailure(databaseError.getMessage());
             }
         });
+    }
+
+    @Override
+    public void signInWithEmailAndPassword(String email, String password, OnCompleteListener<AuthResult> listener) {
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(listener);
     }
 }
