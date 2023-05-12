@@ -1,12 +1,16 @@
 package es.udc.psi.view.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -105,8 +109,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_about:
                 // Lanza la actividad de "acerca de"
                 // Reemplaza AcercaDeActivity.class con la clase de actividad adecuada
-                intent = new Intent(this, RegisterActivity.class);
-                startActivity(intent);
+                //intent = new Intent(this, RegisterActivity.class);
+                //startActivity(intent);
+                about();
                 break;
             case R.id.nav_logout:
                 intent = new Intent(this, LoginActivity.class);
@@ -140,11 +145,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int itemId = item.getItemId();
 
             if (itemId == R.id.navigation_home) {
-// Inicio seleccionado, no se necesita hacer nada aquí
+                // Inicio seleccionado, no se necesita hacer nada aquí
                 return true;
             } else if (itemId == R.id.navigation_notifications) {
-// Lanza la actividad de notificaciones
-// Reemplaza NotificacionesActivity.class con la clase de actividad adecuada
+                // Lanza la actividad de notificaciones
+                // Reemplaza NotificacionesActivity.class con la clase de actividad adecuada
                 Intent intent = new Intent(MainActivity.this, NotificationsActivity.class);
                 startActivity(intent);
                 return true;
@@ -160,5 +165,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (menuItem != null) {
             menuItem.setChecked(true);
         }
+    }
+
+    private void about() {
+        //TODO hay que añadirle margenes al layout de "about"
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        builder.setView(getLayoutInflater().inflate(R.layout.activity_about, null));
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }
