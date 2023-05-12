@@ -1,12 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="TituloAutores">Autores</string>
+    <string name="authorsTitleText">Autores</string>
+    <string name="authorsText">Alejandro, Javier y José</string>
+    <string name="aboutInfoTitleText">Info</string>
+    <string name="aboutInfoText">Este proyecto trata de...</string>
     <string name="app_name">SportyReserve</string>
-    <string name="login">Login</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="sign_up">Registrarse</string>
     <string name="email">Email</string>
-    <string name="welcome_main">Welcome!</string>
-    <string name="logout">Logout</string>
-
-    <!-- Registro de usuarios -->
+    <string name="welcome_main">Bienvenid@!</string>
+    <string name="logout">Cerrar sesión</string>
     <string name="email_register">Email</string>
     <string name="telefono_register">Teléfono</string>
     <string name="nombre_register">Nombre</string>
@@ -16,8 +20,6 @@
     <string name="button_register">Registrarse</string>
     <string name="register_title">Crea tu cuenta</string>
     <string name="register_description">Descubre un amplio abanico de actividades deportivas en grupo.</string>
-
-    <!-- Reservas -->
     <string name="book_title">Crea una reserva</string>
     <string name="book_name">Nombre de la reserva</string>
     <string name="book_privateness">Es pública?</string>
@@ -32,10 +34,8 @@
     <string name="book_track">Pista</string>
     <string name="book_maxParticipantsButton">Dar valor</string>
     <string name="Book_SportsDropdownListHint">Selección de deportes</string>
-
     <string name="nav_user_avatar">Avatar del usuario</string>
     <string name="nav_username">Nombre del usuario</string>
-
     <string name="reservar_pista">Reservar Pista</string>
     <string name="mis_reservas">Mis Reservas</string>
     <string name="lista_reservas">Lista de Reservas</string>
@@ -43,17 +43,10 @@
     <string name="about">Acerca de</string>
     <string name="navigation_drawer_open">Abrir menú de navegación</string>
     <string name="navigation_drawer_close">Cerrar menú de navegación</string>
-    <string name="reserva_image_description">Image description</string>
-  
+    <string name="reserva_image_description">Descripción de la imagen</string>
     <string name="str_no_reservas">No hay reservas</string>
     <string name="str_error_msg">Error ......</string>
     <string name="str_name_team1">Equipo 1</string>
     <string name="str_name_team2">Equipo 2</string>
-
     <string name="autores">Alejandro, Javier y José</string>
-    <string name="TituloAutores">Autores</string>
-    <string name="authorsTitleText">Autores</string>
-    <string name="authorsText">Alejandro, Javier y José</string>
-    <string name="aboutInfoTitleText">Info</string>
-    <string name="aboutInfoText">Este proyecto trata de...</string>
 </resources>
