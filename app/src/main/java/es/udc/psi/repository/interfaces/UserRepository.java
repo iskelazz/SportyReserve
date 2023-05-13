@@ -3,10 +3,10 @@ package es.udc.psi.repository.interfaces;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 
-import es.udc.psi.model.Usuario;
+import es.udc.psi.model.User;
 
 public interface UserRepository {
-    void createUser(Usuario usuario, OnUserCreatedListener listener);
+    void createUser(User usuario, OnUserCreatedListener listener);
 
     void checkUsernameExists(String username, OnUsernameCheckedListener listener);
 

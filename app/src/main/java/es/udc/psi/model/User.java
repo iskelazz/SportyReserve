@@ -1,6 +1,6 @@
 package es.udc.psi.model;
 
-public class Usuario {
+public class User {
 
     private String id;
     private String nombre;
@@ -11,18 +11,18 @@ public class Usuario {
 
     private String uriAvatar;
 
-    public Usuario() {
+    public User() {
 
     }
 
     // Constructor con parámetros
 
-    public Usuario(String id,
-                   String nombre,
-                   String correoElectronico,
-                   String contraseña,
-                   String telefono,
-                   String apellidos) {
+    public User(String id,
+                String nombre,
+                String correoElectronico,
+                String contraseña,
+                String telefono,
+                String apellidos) {
 
         this.id = id;
         this.nombre = nombre;

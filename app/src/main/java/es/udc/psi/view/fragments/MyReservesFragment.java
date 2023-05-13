@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.udc.psi.R;
-import es.udc.psi.model.Reserva;
+import es.udc.psi.model.Reserve;
 import es.udc.psi.view.adapters.ReservesAdapter;
 
 public class MyReservesFragment extends Fragment {
@@ -27,7 +27,7 @@ public class MyReservesFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.mis_reservas_recyclerview);
 
         // Añade aquí la lógica para cargar la lista de reservas en las que el usuario está anotado
-        List<Reserva> reservas = new ArrayList<>();
+        List<Reserve> reservas = new ArrayList<>();
 
         // Configura el RecyclerView con el adaptador personalizado
         ReservesAdapter adapter = new ReservesAdapter(reservas);

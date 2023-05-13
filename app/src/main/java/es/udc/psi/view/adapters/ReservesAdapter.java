@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import es.udc.psi.R;
-import es.udc.psi.model.Reserva;
+import es.udc.psi.model.Reserve;
 
     public class ReservesAdapter extends RecyclerView.Adapter<ReservesAdapter.ViewHolder> {
 
-        private List<Reserva> reservas;
+        private List<Reserve> reservas;
 
-        public ReservesAdapter(List<Reserva> reservas) {
+        public ReservesAdapter(List<Reserve> reservas) {
             this.reservas = reservas;
         }
 
@@ -30,7 +30,7 @@ import es.udc.psi.model.Reserva;
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             // Configura los elementos de la vista con los datos de la reserva
-            Reserva reserva = reservas.get(position);
+            Reserve reserva = reservas.get(position);
 
             // Por ejemplo, si tienes un TextView en reserva_item.xml para mostrar el nombre de la pista
             // holder.textViewNombrePista.setText(reserva.getNombrePista());

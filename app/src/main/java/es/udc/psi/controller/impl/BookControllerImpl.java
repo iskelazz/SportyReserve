@@ -1,22 +1,13 @@
 package es.udc.psi.controller.impl;
 
-import android.util.Patterns;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Date;
 
 import es.udc.psi.controller.interfaces.BookController;
-import es.udc.psi.model.Reserva;
-import es.udc.psi.model.Usuario;
+import es.udc.psi.model.Reserve;
 import es.udc.psi.repository.impl.BookRepositoryImpl;
 import es.udc.psi.repository.interfaces.BookRepository;
-import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.view.interfaces.BookView;
 
 public class BookControllerImpl implements BookController {
@@ -34,7 +25,7 @@ public class BookControllerImpl implements BookController {
 
 
     @Override
-    public void validateAndRegister(Reserva book) {
+    public void validateAndRegister(Reserve book) {
         boolean isValid = validateFields(book.getPassword(), book.getDuracion(), book.getFecha());
 
         if (isValid) {
@@ -64,7 +55,7 @@ public class BookControllerImpl implements BookController {
     }
 
 
-    private void createBook(Reserva book) {
+    private void createBook(Reserve book) {
         bookRepository.checkBookCoincidences(book, new BookRepository.OnBookCoincidencesCheckedListener() {
             @Override
             public void onExists() {

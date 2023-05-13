@@ -9,7 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import es.udc.psi.model.Usuario;
+import es.udc.psi.model.User;
 import es.udc.psi.repository.interfaces.UserRepository;
 
 public class UserRepositoryImpl implements UserRepository {
@@ -22,7 +22,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void createUser(Usuario usuario, final OnUserCreatedListener listener) {
+    public void createUser(User usuario, final OnUserCreatedListener listener) {
         mDatabase.child(usuario.getId()).setValue(usuario)
                 .addOnSuccessListener(aVoid -> listener.onSuccess())
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
