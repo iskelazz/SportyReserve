@@ -10,7 +10,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import es.udc.psi.controller.interfaces.RegisterController;
-import es.udc.psi.model.Usuario;
+import es.udc.psi.model.User;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
 import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.view.interfaces.RegisterView;
@@ -98,7 +98,7 @@ public class RegisterControllerImpl implements RegisterController {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             String userId = mAuth.getCurrentUser().getUid();
-                            Usuario usuario = new Usuario(userId, firstName, email, password, phone, lastName);
+                            User usuario = new User(userId, firstName, email, password, phone, lastName);
 
                             userRepository.createUser(usuario, new UserRepository.OnUserCreatedListener() {
                                 @Override

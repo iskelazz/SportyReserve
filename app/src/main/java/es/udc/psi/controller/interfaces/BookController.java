@@ -1,13 +1,12 @@
 package es.udc.psi.controller.interfaces;
 
-import java.util.Date;
 
-import es.udc.psi.model.Reserva;
+import es.udc.psi.model.Reserve;
 
 public interface BookController {
 
     // TODO Se necesita meter el anfitrion para validar?
-    void validateAndRegister(Reserva book);
+    void validateAndRegister(Reserve book);
 
     //void validateAndRegister(String password, String anfitrion, Date fecha, int duracion);
 }

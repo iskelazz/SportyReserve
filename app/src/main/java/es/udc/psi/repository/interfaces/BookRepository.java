@@ -2,16 +2,14 @@ package es.udc.psi.repository.interfaces;
 
 import java.util.ArrayList;
 
-import es.udc.psi.model.Reserva;
 import es.udc.psi.model.Reserve;
-import es.udc.psi.model.Usuario;
 
 public interface BookRepository {
 
-    void createBook(Reserva book,
+    void createBook(Reserve book,
                     OnBookCreatedListener listener);
 
-    void checkBookCoincidences(Reserva book,
+    void checkBookCoincidences(Reserve book,
                                OnBookCoincidencesCheckedListener listener);
 
     interface OnBookCreatedListener {

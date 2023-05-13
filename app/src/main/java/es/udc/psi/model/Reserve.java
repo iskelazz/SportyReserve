@@ -25,7 +25,7 @@ public class Reserve {
     // 0 <= duracion <= X
     private int duracion;
 
-    private ArrayList<Usuario> playerList;
+    private ArrayList<User> playerList;
 
     public Reserve(String id,
                    String anfitrion,
@@ -36,7 +36,7 @@ public class Reserve {
                    int numPlayers,
                    Date fecha,
                    int duracion,
-                   ArrayList<Usuario> playerList) {
+                   ArrayList<User> playerList) {
 
         this.id = id;
         this.anfitrion = anfitrion;
@@ -62,7 +62,7 @@ public class Reserve {
                    int numPlayers,
                    Date fecha,
                    int duracion,
-                   ArrayList<Usuario> playerList) {
+                   ArrayList<User> playerList) {
 
         this.id = id;
         this.anfitrion = anfitrion;
@@ -165,12 +165,12 @@ public class Reserve {
         this.duracion = duracion;
     }
 
-    public ArrayList<Usuario> getPlayerList() {
+    public ArrayList<User> getPlayerList() {
 
         return playerList;
     }
 
-    public void setPlayerList(ArrayList<Usuario> playerList) {
+    public void setPlayerList(ArrayList<User> playerList) {
 
         this.playerList = playerList;
     }
