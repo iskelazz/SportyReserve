@@ -22,6 +22,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public String getCurrentUserId() {
+        return mAuth.getCurrentUser().getUid();
+    }
+
+    @Override
     public void createUser(User usuario, final OnUserCreatedListener listener) {
         mDatabase.child(usuario.getId()).setValue(usuario)
                 .addOnSuccessListener(aVoid -> listener.onSuccess())
@@ -38,6 +43,22 @@ public class UserRepositoryImpl implements UserRepository {
                 } else {
                     listener.onNotExists();
                 }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onFailure(databaseError.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void getUser(String uid, final OnUserFetchedListener listener) {
+        mDatabase.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                listener.onFetched(user);
             }
 
             @Override

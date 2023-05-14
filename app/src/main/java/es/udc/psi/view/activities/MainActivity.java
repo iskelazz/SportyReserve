@@ -22,6 +22,10 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import es.udc.psi.R;
+import es.udc.psi.controller.impl.UserControllerImpl;
+import es.udc.psi.controller.interfaces.UserController;
+import es.udc.psi.model.User;
+import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.view.adapters.SectionsPagerAdapter;
 
 import androidx.viewpager2.widget.ViewPager2;
@@ -31,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     private BottomNavigationView bottomNavigationView;
+    private UserController userController;
+    private TextView usernameText;
+    private TextView emailText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +69,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         View headerView = navigationView.getHeaderView(0);
-        TextView usernameText = headerView.findViewById(R.id.username_text);
-        TextView emailText = headerView.findViewById(R.id.email_text);
+        usernameText = headerView.findViewById(R.id.username_text);
+        emailText = headerView.findViewById(R.id.email_text);
 
-        usernameText.setText("Nombre de usuario");
-        emailText.setText("Correo electrónico");
+        userController = new UserControllerImpl();
+
+        setupUser();
 
         setupTabLayoutAndViewPager(viewPager, tabLayout);
         setupBottomNavigationView();
@@ -181,5 +189,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         AlertDialog alert = builder.create();
         alert.show();
     }
-    
+
+    private void setupUser() {
+        String uid = userController.getCurrentUserId();
+        userController.getUser(uid, new UserRepository.OnUserFetchedListener() {
+            @Override
+            public void onFetched(User user) {
+                usernameText.setText(user.getNombre());
+                emailText.setText(user.getCorreoElectronico());
+            }
+
+            @Override
+            public void onFailure(String error) {
+                // Maneja el error
+            }
+        });
+    }
 }
+
