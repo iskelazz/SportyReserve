@@ -28,5 +28,10 @@ public interface BookRepository {
         void onFailure(String errorMessage);
     }
 
+    interface OnReservesFetchedListener {
+        void onFetched(ArrayList<Reserve> reserve);
+        void onFailure(String error);
+    }
+
     ArrayList<Reserve> getReservesList();
 }

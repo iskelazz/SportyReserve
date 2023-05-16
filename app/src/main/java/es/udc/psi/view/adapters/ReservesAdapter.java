@@ -3,6 +3,7 @@ package es.udc.psi.view.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,11 +30,10 @@ import es.udc.psi.model.Reserve;
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            // Configura los elementos de la vista con los datos de la reserva
             Reserve reserva = reservas.get(position);
-
-            // Por ejemplo, si tienes un TextView en reserva_item.xml para mostrar el nombre de la pista
-            // holder.textViewNombrePista.setText(reserva.getNombrePista());
+            holder.textViewNombrePista.setText(reserva.getPista());
+            holder.textViewHoraInicio.setText(reserva.getFecha().toString());
+            holder.textViewHoraFin.setText(reserva.getDeporte());
         }
 
         @Override
@@ -41,17 +41,21 @@ import es.udc.psi.model.Reserve;
             return reservas.size();
         }
 
-        public static class ViewHolder extends RecyclerView.ViewHolder {
+        public void updateData(List<Reserve> newReserves) {
+            this.reservas = newReserves;
+            notifyDataSetChanged();
+        }
 
-            // Por ejemplo, si tienes un TextView en reserva_item.xml para mostrar el nombre de la pista
-            // public final TextView textViewNombrePista;
+        public static class ViewHolder extends RecyclerView.ViewHolder {
+            public final TextView textViewNombrePista;
+            public final TextView textViewHoraInicio;
+            public final TextView textViewHoraFin;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
-
-                // Por ejemplo, si tienes un TextView en reserva_item.xml para mostrar el nombre de la pista
-                // textViewNombrePista =
-                // itemView.findViewById(R.id.nombre_pista);
+                textViewNombrePista = itemView.findViewById(R.id.nombre_pista);
+                textViewHoraInicio = itemView.findViewById(R.id.hora_inicio);
+                textViewHoraFin = itemView.findViewById(R.id.hora_fin);
             }
         }
     }

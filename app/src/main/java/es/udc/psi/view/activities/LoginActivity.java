@@ -12,10 +12,19 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import es.udc.psi.R;
 import es.udc.psi.controller.impl.LoginControllerImpl;
 import es.udc.psi.controller.interfaces.LoginController;
+import es.udc.psi.model.Reserve;
+import es.udc.psi.model.User;
+import es.udc.psi.repository.impl.BookRepositoryImpl;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
+import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.view.interfaces.LoginView;
 
@@ -41,9 +50,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         // Inicializa el controlador de inicio de sesión
         userRepository = new UserRepositoryImpl();
         loginController = new LoginControllerImpl(this,userRepository);
-
         // Configura los listeners para los botones
         setupListeners();
+        //createRandomReserve();
     }
 
     private void setupListeners() {
@@ -95,4 +104,54 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     public void onLoginFailed(String errorMessage) {
         Toast.makeText(LoginActivity.this, "Login Failed: " + errorMessage, Toast.LENGTH_SHORT).show();
     }
+/*
+    public void createRandomReserve() {
+        // Crear usuarios
+        User user1 = new User();
+        user1.setId("AeZRgPueqHRjR1avUjDTvsO30qm2");
+        user1.setNombre("cantona");
+        user1.setApellidos("mastuerzo");
+        user1.setCorreoElectronico("cantona@mail.com");
+        user1.setContraseña("1234567890");
+        user1.setTelefono("614614777");
+
+        User user2 = new User();
+        user2.setId("Nv56BVdKd6SRCxTuakn1KNHDwC82");
+        user2.setNombre("Melero");
+        user2.setApellidos("Melonero");
+        user2.setCorreoElectronico("melon@mailmelon.com");
+        user2.setContraseña("1234567890");
+        user2.setTelefono("600112233");
+
+        ArrayList<User> playerList = new ArrayList<>();
+        playerList.add(user1);
+        playerList.add(user2);
+
+        String id = "RandomId2"; // Este debe ser un identificador único. Puedes usar UUID.randomUUID().toString() para generar uno.
+        String anfitrion = "AeZRgPueqHRjR1avUjDTvsO30qm2";
+        String pista = "Pista del colegio de los Salesianos";
+        int capacidadMax = 10;
+        String deporte = "Futbol";
+        int numPlayers = 5;
+
+        // Establecer fecha
+        Calendar calendar = new GregorianCalendar(2023, Calendar.JUNE, 16, 18, 0);
+        Date fecha = calendar.getTime();
+
+        int duracion = 2;
+
+        Reserve reserve = new Reserve(id, anfitrion, pista, capacidadMax, deporte, numPlayers, fecha, duracion, playerList);
+        BookRepositoryImpl bookRepository = new BookRepositoryImpl();
+        bookRepository.createBook(reserve, new BookRepository.OnBookCreatedListener() {
+            @Override
+            public void onSuccess() {
+                System.out.println("Reserva creada con éxito");
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                System.err.println("Error al crear la reserva: " + errorMessage);
+            }
+        });
+    }*/
 }

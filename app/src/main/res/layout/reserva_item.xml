@@ -2,34 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/reserva_image"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:contentDescription="@string/reserva_image_description" />
-
-    <LinearLayout
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/nombre_pista"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:paddingLeft="16dp">
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/reserva_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp" />
+    <TextView
+        android:id="@+id/hora_inicio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
 
-        <TextView
-            android:id="@+id/reserva_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/hora_fin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
 
 </LinearLayout>

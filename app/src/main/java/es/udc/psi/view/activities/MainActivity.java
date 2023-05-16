@@ -22,13 +22,21 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import es.udc.psi.R;
+import es.udc.psi.controller.impl.BookControllerImpl;
 import es.udc.psi.controller.impl.UserControllerImpl;
+import es.udc.psi.controller.interfaces.BookController;
 import es.udc.psi.controller.interfaces.UserController;
+import es.udc.psi.model.Reserve;
 import es.udc.psi.model.User;
+import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.view.adapters.SectionsPagerAdapter;
+import es.udc.psi.view.fragments.HostFragment;
 
 import androidx.viewpager2.widget.ViewPager2;
+
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
@@ -38,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private UserController userController;
     private TextView usernameText;
     private TextView emailText;
+    private BookController bookController;
+    private SectionsPagerAdapter pagerAdapter;
+    private ArrayList<Reserve> fetchedReserves;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +86,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         userController = new UserControllerImpl();
 
         setupUser();
-
+        bookController = new BookControllerImpl();
+        ViewPager2 viewPager = findViewById(R.id.view_pager);
+        pagerAdapter = new SectionsPagerAdapter(this);
+        viewPager.setAdapter(pagerAdapter);
         setupTabLayoutAndViewPager(viewPager, tabLayout);
         setupBottomNavigationView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateNavigationDrawerSelection();
     }
 
     @Override
@@ -204,6 +224,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // Maneja el error
             }
         });
+    }
+
+    private void updateNavigationDrawerSelection() {
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        MenuItem menuItem;
+        // Actualiza la selección en base a la actividad actual
+        if (this instanceof MainActivity) {
+            menuItem = navigationView.getMenu().findItem(R.id.nav_mis_reservas);
+        }else {
+            return;
+        }
+        if (menuItem != null) {
+            menuItem.setChecked(true);
+        }
     }
 }
 
