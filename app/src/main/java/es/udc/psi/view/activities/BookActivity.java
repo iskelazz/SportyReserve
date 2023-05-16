@@ -95,7 +95,7 @@ public class BookActivity extends AppCompatActivity implements BookView {
         updateRegisterButtonOpacity(false);
 
         // Inicializa el controlador de registro
-        bookController = new BookControllerImpl(this);
+        bookController = new BookControllerImpl();
 
         /*
         // Configura el listener para el botón de registro

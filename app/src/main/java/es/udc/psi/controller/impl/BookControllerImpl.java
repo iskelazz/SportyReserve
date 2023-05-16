@@ -2,6 +2,7 @@ package es.udc.psi.controller.impl;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import es.udc.psi.controller.interfaces.BookController;
@@ -17,8 +18,7 @@ public class BookControllerImpl implements BookController {
     private final BookRepositoryImpl bookRepository;
 
 
-    public BookControllerImpl(BookView view) {
-        this.view = view;
+    public BookControllerImpl() {
         mAuth = FirebaseAuth.getInstance();
         bookRepository = new BookRepositoryImpl();
     }
@@ -31,6 +31,21 @@ public class BookControllerImpl implements BookController {
         if (isValid) {
             createBook(book);
         }
+    }
+
+    @Override
+    public void fetchHostReserves(String hostId, BookRepository.OnReservesFetchedListener listener) {
+        bookRepository.getHostReserves(hostId, new BookRepository.OnReservesFetchedListener() {
+            @Override
+            public void onFetched(ArrayList<Reserve> reserves) {
+                listener.onFetched(reserves);
+            }
+
+            @Override
+            public void onFailure(String errorMsg) {
+                listener.onFailure(errorMsg);
+            }
+        });
     }
 
 
