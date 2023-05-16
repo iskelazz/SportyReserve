@@ -70,6 +70,27 @@ public class BookRepositoryImpl implements BookRepository {
                 });
     }
 
+    public void getPlayerReserves(String playerId, final OnPlayerReservesFetchedListener listener) {
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Reserve> reserves = new ArrayList<>();
+                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                    Reserve reserve = childSnapshot.getValue(Reserve.class);
+                    if (reserve.getPlayerList().stream().anyMatch(player -> player.getId().equals(playerId))) {
+                        reserves.add(reserve);
+                    }
+                }
+                listener.onFetched(reserves);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onFailure(databaseError.getMessage());
+            }
+        });
+    }
+
     @Override
     public ArrayList<Reserve> getReservesList() {
 

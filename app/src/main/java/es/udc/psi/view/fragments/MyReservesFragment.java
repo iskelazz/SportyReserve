@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,11 +15,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.udc.psi.R;
+import es.udc.psi.controller.impl.BookControllerImpl;
+import es.udc.psi.controller.impl.UserControllerImpl;
+import es.udc.psi.controller.interfaces.BookController;
+import es.udc.psi.controller.interfaces.UserController;
 import es.udc.psi.model.Reserve;
+import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.view.adapters.ReservesAdapter;
 
 public class MyReservesFragment extends Fragment {
     private RecyclerView recyclerView;
+    private ReservesAdapter adapter;
+    private BookController bookController;
 
     @Nullable
     @Override
@@ -30,10 +38,37 @@ public class MyReservesFragment extends Fragment {
         List<Reserve> reservas = new ArrayList<>();
 
         // Configura el RecyclerView con el adaptador personalizado
-        ReservesAdapter adapter = new ReservesAdapter(reservas);
+        adapter = new ReservesAdapter(reservas);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        bookController = new BookControllerImpl();
+        fetchReserves();
+    }
+
+    public void updateReserves(List<Reserve> newReserves) {
+        adapter.updateData(newReserves);
+    }
+
+    private void fetchReserves() {
+        UserController userController = new UserControllerImpl();
+        String currentUserId = userController.getCurrentUserId();
+        bookController.fetchPlayerReserves(currentUserId, new BookRepository.OnPlayerReservesFetchedListener() {
+            @Override
+            public void onFetched(ArrayList<Reserve> reserves) {
+                updateReserves(reserves);
+            }
+
+            @Override
+            public void onFailure(String errorMsg) {
+                // Maneja el error aquí
+            }
+        });
     }
 }

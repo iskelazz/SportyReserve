@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -46,53 +48,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private UserController userController;
     private TextView usernameText;
     private TextView emailText;
-    private BookController bookController;
     private SectionsPagerAdapter pagerAdapter;
-    private ArrayList<Reserve> fetchedReserves;
+    private Toolbar toolbar;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        tabLayout = findViewById(R.id.tabs);
-        viewPager = findViewById(R.id.view_pager);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        selectNavigationMenuItem(R.id.nav_mis_reservas);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-        FloatingActionButton fab = findViewById(R.id.fab_add_reservation);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, BookActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        View headerView = navigationView.getHeaderView(0);
-        usernameText = headerView.findViewById(R.id.username_text);
-        emailText = headerView.findViewById(R.id.email_text);
-
-        userController = new UserControllerImpl();
-
-        setupUser();
-        bookController = new BookControllerImpl();
-        ViewPager2 viewPager = findViewById(R.id.view_pager);
-        pagerAdapter = new SectionsPagerAdapter(this);
-        viewPager.setAdapter(pagerAdapter);
-        setupTabLayoutAndViewPager(viewPager, tabLayout);
+        setupToolbar();
+        setupDrawerLayout();
+        setupNavigationView();
+        setupFloatingActionButton();
+        setupUserController();
+        setupViewPager();
+        setupTabLayoutAndViewPager();
         setupBottomNavigationView();
     }
+
 
     @Override
     protected void onResume() {
@@ -118,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case R.id.nav_mis_reservas:
                 // Lanza la actividad de mis reservas
-                // Reemplaza MisReservasActivity.class con la clase de actividad adecuada
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 break;
@@ -129,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_opciones:
                 // Lanza la actividad de opciones
-                // Reemplaza OpcionesActivity.class con la clase de actividad adecuada
                 intent = new Intent(this, RegisterActivity.class);
                 startActivity(intent);
                 break;
@@ -150,11 +122,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void setupTabLayoutAndViewPager(ViewPager2 viewPager, TabLayout tabs) {
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this);
-        viewPager.setAdapter(sectionsPagerAdapter);
+    /**
+     * Configura el TabLayout y lo asocia con el ViewPager.
+     */
+    private void setupTabLayoutAndViewPager() {
+        tabLayout = findViewById(R.id.tabs);
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(
-                tabs, viewPager, (tab, position) -> {
+                tabLayout, viewPager, (tab, position) -> {
             switch (position) {
                 case 0:
                     tab.setText("Anfitrión");
@@ -167,20 +141,88 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabLayoutMediator.attach();
     }
 
-    private void setupBottomNavigationView() {
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
+    /**
+     * Configura la barra de herramientas (Toolbar) de la actividad.
+     */
+    private void setupToolbar() {
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
 
-            if (itemId == R.id.navigation_home) {
-// Inicio seleccionado, no se necesita hacer nada aquí
-                return true;
-            } else if (itemId == R.id.navigation_notifications) {
-// Lanza la actividad de notificaciones
-// Reemplaza NotificacionesActivity.class con la clase de actividad adecuada
-                Intent intent = new Intent(MainActivity.this, NotificationsActivity.class);
+    /**
+     * Configura el Navigation Drawer (Menú lateral) y el Toggle asociado con la barra de herramientas.
+     */
+    private void setupDrawerLayout() {
+        drawerLayout = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    /**
+     * Configura la vista de navegación lateral (Navigation View) y selecciona el primer elemento.
+     */
+    private void setupNavigationView() {
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        selectNavigationMenuItem(R.id.nav_mis_reservas);
+
+        View headerView = navigationView.getHeaderView(0);
+        usernameText = headerView.findViewById(R.id.username_text);
+        emailText = headerView.findViewById(R.id.email_text);
+    }
+
+    /**
+     * Configura el botón flotante de acción (Floating Action Button) asociado a crearReserva.
+     */
+    private void setupFloatingActionButton() {
+        FloatingActionButton fab = findViewById(R.id.fab_add_reservation);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, BookActivity.class);
                 startActivity(intent);
-                return true;
-            } else {
+            }
+        });
+    }
+
+    /**
+     * Configura el controlador de usuario (UserController).
+     */
+    private void setupUserController() {
+        userController = new UserControllerImpl();
+        setupUser();
+    }
+
+    /**
+     * Configura el ViewPager para la navegación entre pestañas.
+     */
+    private void setupViewPager() {
+        viewPager = findViewById(R.id.view_pager);
+        pagerAdapter = new SectionsPagerAdapter(this);
+        viewPager.setAdapter(pagerAdapter);
+    }
+
+    /**
+     * Configura la vista de navegación inferior (Bottom Navigation View).
+     */
+    private void setupBottomNavigationView() {
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        // Inicio seleccionado, no se necesita hacer nada aquí
+                        return true;
+                    case R.id.navigation_notifications:
+                        // Lanza la actividad de notificaciones
+                        Intent intent = new Intent(MainActivity.this, NotificationsActivity.class);
+                        startActivity(intent);
+                        return true;
+                }
                 return false;
             }
         });
