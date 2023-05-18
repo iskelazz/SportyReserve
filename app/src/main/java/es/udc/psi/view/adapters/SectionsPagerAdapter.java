@@ -9,7 +9,6 @@ import es.udc.psi.view.fragments.HostFragment;
 import es.udc.psi.view.fragments.MyReservesFragment;
 
 public class SectionsPagerAdapter extends FragmentStateAdapter {
-    private HostFragment hostFragment;
     public SectionsPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
@@ -19,10 +18,7 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                if (hostFragment == null) {
-                    hostFragment = new HostFragment();
-                }
-                return hostFragment;
+                return new HostFragment();
             case 1:
                 return new MyReservesFragment();
             default:
@@ -33,10 +29,6 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     @Override
     public int getItemCount() {
         return 2;
-    }
-
-    public HostFragment getHostFragment() {
-        return hostFragment;
     }
 }
 

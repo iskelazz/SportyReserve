@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     public void onLoginFailed(String errorMessage) {
         Toast.makeText(LoginActivity.this, "Login Failed: " + errorMessage, Toast.LENGTH_SHORT).show();
     }
-/*
+
     public void createRandomReserve() {
         // Crear usuarios
         User user1 = new User();
@@ -127,12 +127,12 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         playerList.add(user1);
         playerList.add(user2);
 
-        String id = "RandomId2"; // Este debe ser un identificador único. Puedes usar UUID.randomUUID().toString() para generar uno.
-        String anfitrion = "AeZRgPueqHRjR1avUjDTvsO30qm2";
-        String pista = "Pista del colegio de los Salesianos";
-        int capacidadMax = 10;
-        String deporte = "Futbol";
-        int numPlayers = 5;
+        String id = "RandomId3"; // Este debe ser un identificador único. Puedes usar UUID.randomUUID().toString() para generar uno.
+        String anfitrion = "Nv56BVdKd6SRCxTuakn1KNHDwC82";
+        String pista = "Pista de tenis de Betanzos";
+        int capacidadMax = 2;
+        String deporte = "Tennis";
+        int numPlayers = 2;
 
         // Establecer fecha
         Calendar calendar = new GregorianCalendar(2023, Calendar.JUNE, 16, 18, 0);
@@ -153,5 +153,5 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
                 System.err.println("Error al crear la reserva: " + errorMessage);
             }
         });
-    }*/
+    }
 }

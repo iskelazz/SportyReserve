@@ -48,6 +48,21 @@ public class BookControllerImpl implements BookController {
         });
     }
 
+    @Override
+    public void fetchPlayerReserves(String playerId, BookRepository.OnPlayerReservesFetchedListener listener) {
+        bookRepository.getPlayerReserves(playerId, new BookRepository.OnPlayerReservesFetchedListener() {
+            @Override
+            public void onFetched(ArrayList<Reserve> reserves) {
+                listener.onFetched(reserves);
+            }
+
+            @Override
+            public void onFailure(String errorMsg) {
+                listener.onFailure(errorMsg);
+            }
+        });
+    }
+
 
     private boolean validateFields(String password, int duracion, Date fecha) {
         boolean isValid = true;
