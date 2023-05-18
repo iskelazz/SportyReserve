@@ -1,6 +1,10 @@
 package es.udc.psi.model;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class User {
+import androidx.annotation.NonNull;
+
+public class User implements Parcelable {
 
     private String id;
     private String nombre;
@@ -32,6 +36,15 @@ public class User {
         this.apellidos = apellidos;
     }
 
+    protected User(Parcel in) {
+        id = in.readString();
+        nombre = in.readString();
+        correoElectronico = in.readString();
+        contraseña = in.readString();
+        telefono = in.readString();
+        apellidos = in.readString();
+        uriAvatar = in.readString();
+    }
     public String getId() {
 
         return id;
@@ -101,4 +114,33 @@ public class User {
 
         this.uriAvatar = uriAvatar;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(nombre);
+        dest.writeString(correoElectronico);
+        dest.writeString(contraseña);
+        dest.writeString(telefono);
+        dest.writeString(apellidos);
+        dest.writeString(uriAvatar);
+    }
+
+    // Este es el CREATOR requerido para Parcelable
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

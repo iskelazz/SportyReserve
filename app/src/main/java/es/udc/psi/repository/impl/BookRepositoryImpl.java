@@ -77,7 +77,7 @@ public class BookRepositoryImpl implements BookRepository {
                 ArrayList<Reserve> reserves = new ArrayList<>();
                 for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
                     Reserve reserve = childSnapshot.getValue(Reserve.class);
-                    if (reserve.getPlayerList().stream().anyMatch(player -> player.getId().equals(playerId))) {
+                    if (reserve.getPlayerList() != null && reserve.getPlayerList().stream().anyMatch(player -> player.getId().equals(playerId))) {
                         reserves.add(reserve);
                     }
                 }

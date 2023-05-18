@@ -26,6 +26,7 @@
         <activity android:name=".view.activities.MainActivity" />
         <activity android:name=".view.activities.RegisterActivity" />
         <activity android:name=".view.activities.BookActivity" />
+        <activity android:name=".view.activities.DetailActivity" />
     </application>
 
 </manifest>

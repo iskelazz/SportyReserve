@@ -2,8 +2,12 @@ package es.udc.psi.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Reserve {
+import androidx.annotation.NonNull;
+
+public class Reserve implements Parcelable {
 
     private String id;
 
@@ -73,6 +77,25 @@ public class Reserve {
         this.fecha = fecha;
         this.duracion = duracion;
         this.playerList = playerList;
+    }
+
+    protected Reserve(Parcel in) {
+        id = in.readString();
+        anfitrion = in.readString();
+        password = in.readString();
+        pista = in.readString();
+        capacidadMax = in.readInt();
+        deporte = in.readString();
+        numPlayers = in.readInt();
+        long tmpFecha = in.readLong();
+        fecha = tmpFecha != -1 ? new Date(tmpFecha) : null;
+        duracion = in.readInt();
+        if (in.readByte() == 0x01) {
+            playerList = new ArrayList<User>();
+            in.readList(playerList, User.class.getClassLoader());
+        } else {
+            playerList = null;
+        }
     }
 
     public String getId() {
@@ -174,4 +197,40 @@ public class Reserve {
 
         this.playerList = playerList;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(anfitrion);
+        dest.writeString(password);
+        dest.writeString(pista);
+        dest.writeInt(capacidadMax);
+        dest.writeString(deporte);
+        dest.writeInt(numPlayers);
+        dest.writeLong(fecha != null ? fecha.getTime() : -1L);
+        dest.writeInt(duracion);
+        if (playerList == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(playerList);
+        }
+    }
+
+    public static final Creator<Reserve> CREATOR = new Creator<Reserve>() {
+        @Override
+        public Reserve createFromParcel(Parcel in) {
+            return new Reserve(in);
+        }
+
+        @Override
+        public Reserve[] newArray(int size) {
+            return new Reserve[size];
+        }
+    };
 }
