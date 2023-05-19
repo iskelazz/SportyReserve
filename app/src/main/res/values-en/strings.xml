@@ -49,4 +49,12 @@
     <string name="str_name_team1">Team 1</string>
     <string name="str_name_team2">Team 2</string>
     <string name="autores">Alejandro, Javier and José</string>
+    <string name="cancel_reserve">Cancel reservation</string>
+    <string name="edit_reserve">Edit</string>
+    <string name="start_time">00:00</string>
+    <string name="end_time">02:00</string>
+    <string name="start_time_label">Hora Inicial</string>
+    <string name="end_time_label">Hora Final</string>
+    <string name="start_date">07/17</string>
+    <string name="end_date">07/17</string>
 </resources>

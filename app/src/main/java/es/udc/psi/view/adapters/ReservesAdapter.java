@@ -12,8 +12,9 @@ import java.util.List;
 
 import es.udc.psi.R;
 import es.udc.psi.model.Reserve;
+import es.udc.psi.view.activities.DetailActivity;
 
-    public class ReservesAdapter extends RecyclerView.Adapter<ReservesAdapter.ViewHolder> {
+public class ReservesAdapter extends RecyclerView.Adapter<ReservesAdapter.ViewHolder> {
 
         private List<Reserve> reservas;
 
@@ -34,6 +35,12 @@ import es.udc.psi.model.Reserve;
             holder.textViewNombrePista.setText(reserva.getPista());
             holder.textViewHoraInicio.setText(reserva.getFecha().toString());
             holder.textViewHoraFin.setText(reserva.getDeporte());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    v.getContext().startActivity(DetailActivity.newIntent(v.getContext(), reserva));
+                }
+            });
         }
 
         @Override
