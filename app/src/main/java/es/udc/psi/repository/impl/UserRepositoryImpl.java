@@ -27,6 +27,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public String getAuthId() {
+        return mAuth.getCurrentUser().getUid();
+    }
+
+    @Override
     public void createUser(User usuario, final OnUserCreatedListener listener) {
         mDatabase.child(usuario.getId()).setValue(usuario)
                 .addOnSuccessListener(aVoid -> listener.onSuccess())

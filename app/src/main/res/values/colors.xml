@@ -9,5 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="error_color">#D32F2F</color>
     <color name="default_box_stroke_color">#000000</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorDarkYellow">#FFAA00</color>
+    <color name="colorRed">#FF0000</color>
 
 </resources>

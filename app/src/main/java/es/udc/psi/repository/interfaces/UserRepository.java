@@ -7,6 +7,7 @@ import es.udc.psi.model.User;
 
 public interface UserRepository {
     String getCurrentUserId();
+    String getAuthId();
     void createUser(User usuario, OnUserCreatedListener listener);
     void getUser(String uid, final OnUserFetchedListener listener);
     void checkUsernameExists(String username, OnUsernameCheckedListener listener);
