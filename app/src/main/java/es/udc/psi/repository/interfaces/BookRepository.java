@@ -11,6 +11,7 @@ public interface BookRepository {
 
     void checkBookCoincidences(Reserve book,
                                OnBookCoincidencesCheckedListener listener);
+    void deleteReserve(String bookId, OnBookDeletedListener listener);
 
     interface OnBookCreatedListener {
 
@@ -36,6 +37,11 @@ public interface BookRepository {
     interface OnPlayerReservesFetchedListener {
         void onFetched(ArrayList<Reserve> reserves);
         void onFailure(String error);
+    }
+
+    public interface OnBookDeletedListener {
+        void onSuccess();
+        void onFailure(String errorMessage);
     }
     ArrayList<Reserve> getReservesList();
 }

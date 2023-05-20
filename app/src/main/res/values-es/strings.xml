@@ -51,10 +51,10 @@
     <string name="autores">Alejandro, Javier y José</string>
     <string name="cancel_reserve">Cancelar reserva</string>
     <string name="edit_reserve">Editar</string>
-    <string name="start_time">00:00</string>
-    <string name="end_time">02:00</string>
     <string name="start_time_label">Hora Inicial</string>
     <string name="end_time_label">Hora Final</string>
-    <string name="start_date">07/17</string>
-    <string name="end_date">07/17</string>
+    <string name="expulsar">Expulsar</string>
+    <string name="hacer_anfi">Hacer Anfitrón</string>
+    <string name="Jugadores">Jugadores</string>
+    <string name="Anfitrión">Anfitrión</string>
 </resources>

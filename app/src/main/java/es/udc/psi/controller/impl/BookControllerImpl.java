@@ -63,6 +63,20 @@ public class BookControllerImpl implements BookController {
         });
     }
 
+    @Override
+    public void deleteReserve(String reserveId, BookRepository.OnBookDeletedListener listener) {
+        bookRepository.deleteReserve(reserveId, new BookRepository.OnBookDeletedListener() {
+            @Override
+            public void onSuccess() {
+                listener.onSuccess();
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                listener.onFailure(errorMessage);
+            }
+        });
+    }
 
     private boolean validateFields(String password, int duracion, Date fecha) {
         boolean isValid = true;

@@ -90,6 +90,12 @@ public class BookRepositoryImpl implements BookRepository {
             }
         });
     }
+    @Override
+    public void deleteReserve(String bookId, final OnBookDeletedListener listener) {
+        mDatabase.child(bookId).removeValue()
+                .addOnSuccessListener(aVoid -> listener.onSuccess())
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
 
     @Override
     public ArrayList<Reserve> getReservesList() {
