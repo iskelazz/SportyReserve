@@ -1,6 +1,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -60,14 +61,12 @@
                             android:id="@+id/tvInicio"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="26sp"
-                            android:text="@string/start_time"/>
+                            android:textSize="26sp"/>
                         <TextView
                             android:id="@+id/tvFechaInicio"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="12sp"
-                            android:text="@string/start_date"/>
+                            android:textSize="12sp"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -89,14 +88,12 @@
                             android:id="@+id/tvFinal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="26sp"
-                            android:text="@string/end_time"/>
+                            android:textSize="26sp"/>
                         <TextView
                             android:id="@+id/tvFechaFin"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="12sp"
-                            android:text="@string/end_date"/>
+                            android:textSize="12sp"/>
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -118,6 +115,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:textSize="16sp"
                             android:text="Pista"/>
 
                         <TextView
@@ -125,8 +123,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
-                            android:text="Valor Pista"/>
+                            android:textSize="16sp"
+                            android:gravity="right"/>
                     </LinearLayout>
 
                     <View
@@ -143,6 +141,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:textSize="16sp"
                             android:text="Deporte"/>
 
                         <TextView
@@ -151,7 +150,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="right"
-                            android:text="Valor Deporte"/>
+                            android:textSize="16sp"/>
                     </LinearLayout>
 
                     <View
@@ -168,6 +167,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:textSize="16sp"
                             android:text="Numero maximo de jugadores"/>
 
                         <TextView
@@ -175,8 +175,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
-                            android:text="Valor NumMax"/>
+                            android:textSize="16sp"
+                            android:gravity="right"/>
                     </LinearLayout>
 
                     <View
@@ -193,6 +193,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:textSize="16sp"
                             android:text="Numero actual de jugadores"/>
 
                         <TextView
@@ -200,8 +201,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
-                            android:text="Num de jugadores"/>
+                            android:textSize="16sp"
+                            android:gravity="right"/>
                     </LinearLayout>
 
                     <View
@@ -210,8 +211,27 @@
                         android:background="@android:color/darker_gray"/>
                 </LinearLayout>
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/text_view_jugadores"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/Jugadores"
+                    android:layout_marginTop="24dp"
+                    tools:ignore="ExtraText" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPlayerList"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_jugadores"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+            </LinearLayout>
 
         </ScrollView>
 

@@ -10,5 +10,6 @@ public interface BookController {
     void validateAndRegister(Reserve book);
     void fetchHostReserves(String hostId, final BookRepository.OnReservesFetchedListener listener);
     void fetchPlayerReserves(String playerId, final BookRepository.OnPlayerReservesFetchedListener listener);
+    void deleteReserve(String reserveId, BookRepository.OnBookDeletedListener listener);
     //void validateAndRegister(String password, String anfitrion, Date fecha, int duracion);
 }
