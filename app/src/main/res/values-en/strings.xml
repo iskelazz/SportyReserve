@@ -25,7 +25,7 @@
     <string name="book_privateness">Is public?</string>
     <string name="book_sport">Sport</string>
     <string name="book_date">Reserve\'s date</string>
-    <string name="book_duration">Length</string>
+    <string name="book_duration">Length (min)</string>
     <string name="book_maxParticipants">Participant\'s number</string>
     <string name="book_password">Reserve password</string>
     <string name="button_book">Create reserve</string>
@@ -57,4 +57,10 @@
     <string name="hacer_anfi">Making host</string>
     <string name="Jugadores">Players</string>
     <string name="Anfitrión">Host</string>
+    <string name="datePickingLabel">Date</string>
+    <string name="datePickingText">Choose date</string>
+    <string name="timePickingLabel">Time</string>
+    <string name="timePickingText">Choose an hour</string>
+    <string name="reserveLengthLabel">Length</string>
+    <string name="reserveLengthText">Give Value</string>
 </resources>

@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         Reserve reserve = new Reserve(id, anfitrion, pista, capacidadMax, deporte, numPlayers, fecha, duracion, playerList);
         BookRepositoryImpl bookRepository = new BookRepositoryImpl();
-        bookRepository.createBook(reserve, new BookRepository.OnBookCreatedListener() {
+        bookRepository.createReserve(reserve, new BookRepository.OnBookCreatedListener() {
             @Override
             public void onSuccess() {
                 System.out.println("Reserva creada con éxito");

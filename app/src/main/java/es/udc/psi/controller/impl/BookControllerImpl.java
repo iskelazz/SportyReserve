@@ -3,10 +3,12 @@ package es.udc.psi.controller.impl;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import es.udc.psi.controller.interfaces.BookController;
 import es.udc.psi.model.Reserve;
+import es.udc.psi.model.TimeShot;
 import es.udc.psi.repository.impl.BookRepositoryImpl;
 import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.view.interfaces.BookView;
@@ -23,13 +25,18 @@ public class BookControllerImpl implements BookController {
         bookRepository = new BookRepositoryImpl();
     }
 
+    public BookControllerImpl(BookView view) {
+        this.view = view;
+        mAuth = FirebaseAuth.getInstance();
+        bookRepository = new BookRepositoryImpl();
+    }
 
     @Override
     public void validateAndRegister(Reserve book) {
-        boolean isValid = validateFields(book.getPassword(), book.getDuracion(), book.getFecha());
+        boolean isValid = validateFields(book.isPublic(), book.getName(), book.getPassword(), book.getDuracion(), book.getFecha2(), book.getHora());
 
         if (isValid) {
-            createBook(book);
+            createReserve(book);
         }
     }
 
@@ -78,62 +85,73 @@ public class BookControllerImpl implements BookController {
         });
     }
 
-    private boolean validateFields(String password, int duracion, Date fecha) {
+    private boolean validateFields(Boolean isPublic, String name, String password, int duracion, Calendar fecha, TimeShot time) {
         boolean isValid = true;
 
-        if (password.length() < 8) {
+        if(name != null)
+        {
+            isValid = (name != "");
+            view.showValidationError("name", "La reserva debe tener un nombre");
+        }
+        else
+        {
+            view.clearValidationError("name");
+        }
+        if (fecha.compareTo(Calendar.getInstance()) < 0)
+        {
+            System.out.println(String.format("fecha before: %s vs %s", fecha.toString(), Calendar.getInstance().getTime().toString()));
+            view.showValidationError("date", "La fecha de la reserva debe ser posterior a la actual");
+            isValid = false;
+        }
+        else
+        {
+            view.clearValidationError("date");
+        }
+        int aux = fecha.get(Calendar.HOUR_OF_DAY);
+        if (aux < 8 || aux > 20)
+        {
+            System.out.println("wrong time");
+            view.showValidationError("time", "La hora no está dentro del horario apto para reservar");
+            isValid = false;
+        }
+        else
+        {
+            view.clearValidationError("time");
+        }
+        if (!isPublic && password != null && password.length() < 8) {
             view.showValidationError("password", "La contraseña debe tener al menos 8 caracteres");
             isValid = false;
         } else {
             view.clearValidationError("password");
         }
 
-        if (duracion < 1) {
-            view.showValidationError("duracion", "La duración debe tener al menos un valor de 1");
-            isValid = false;
-        } else {
-            view.clearValidationError("duracion");
-        }
+
 
         return isValid;
     }
 
 
-    private void createBook(Reserve book) {
+    private void createReserve(Reserve book) {
         bookRepository.checkBookCoincidences(book, new BookRepository.OnBookCoincidencesCheckedListener() {
             @Override
             public void onExists() {
-                view.showValidationError("username", "Username is already taken.");
+                view.showValidationError("reserve", "La reserva coincide en horario con alguna ya existente.");
             }
 
             @Override
             public void onNotExists() {
                 // WARNING - Hay que cambiar todoo este código por algo relacionado con BBDD
-                /*
-                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                bookRepository.createReserve(book, new BookRepository.OnBookCreatedListener() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            String userId = mAuth.getCurrentUser().getUid();
-                            Usuario usuario = new Usuario(userId, firstName, email, password, phone, lastName);
+                    public void onSuccess() {
+                        view.onBookSuccess();
+                    }
 
-                            userRepository.createUser(usuario, new UserRepository.OnUserCreatedListener() {
-                                @Override
-                                public void onSuccess() {
-                                    view.onRegisterSuccess();
-                                }
-
-                                @Override
-                                public void onFailure(String errorMessage) {
-                                    view.onRegisterFailure("Error al registrar el usuario: " + errorMessage);
-                                }
-                            });
-                        } else {
-                            view.onRegisterFailure("Error al crear el usuario: " + task.getException().getMessage());
-                        }
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        view.onBookFailure("Error al añadir la reserva: " + errorMessage);
                     }
                 });
-                */
             }
 
             @Override

@@ -8,12 +8,14 @@ import es.udc.psi.model.User;
 
 public interface BookRepository {
 
-    void createBook(Reserve book,
+    void createReserve(Reserve book,
                     OnBookCreatedListener listener);
 
     void checkBookCoincidences(Reserve book,
                                OnBookCoincidencesCheckedListener listener);
     void deleteReserve(String bookId, OnBookDeletedListener listener);
+
+    void getReserves(OnReservesFetchedListener listener);
 
     interface OnBookCreatedListener {
 
