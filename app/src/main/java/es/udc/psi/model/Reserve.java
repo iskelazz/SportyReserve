@@ -1,7 +1,10 @@
 package es.udc.psi.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+
+import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,6 +13,8 @@ import androidx.annotation.NonNull;
 public class Reserve implements Parcelable {
 
     private String id;
+
+    private String name;
 
     private String anfitrion;
 
@@ -23,12 +28,16 @@ public class Reserve implements Parcelable {
 
     private int numPlayers;
 
+    private Calendar fecha2;
+
+    private TimeShot hora;
     private Date fecha;
 
     // Cantidad de "lapsos" de tiempo que se reserva la pista
     // 0 <= duracion <= X
     private int duracion;
 
+    private boolean isPublic;
     private ArrayList<User> playerList;
 
     public Reserve(String id,
@@ -79,6 +88,24 @@ public class Reserve implements Parcelable {
         this.playerList = playerList;
     }
 
+    public Reserve(String hostUser, String name, Calendar date, TimeShot time, String track, String sport, int length, boolean isPublic, String password, int capacidadMax) {
+        this.id = java.util.UUID.randomUUID().toString();
+        this.name = name;
+        this.anfitrion = hostUser;
+        this.pista = track;
+        this.deporte = sport;
+        this.duracion = length;
+        this.fecha2 = date;
+        this.fecha = date.getTime();
+        this.hora = time;
+        this.capacidadMax = capacidadMax;
+        this.isPublic = isPublic;
+        this.password = password;
+
+        //this.playerList.add(hostUser);
+    }
+
+
     protected Reserve(Parcel in) {
         id = in.readString();
         anfitrion = in.readString();
@@ -116,6 +143,38 @@ public class Reserve implements Parcelable {
     public void setAnfitrion(String anfitrion) {
 
         this.anfitrion = anfitrion;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Calendar getFecha2() {
+        return fecha2;
+    }
+
+    public void setFecha2(Calendar fecha2) {
+        this.fecha2 = fecha2;
+    }
+
+    public TimeShot getHora() {
+        return hora;
+    }
+
+    public void setHora(TimeShot hora) {
+        this.hora = hora;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 
     public String getPassword() {
@@ -197,6 +256,34 @@ public class Reserve implements Parcelable {
 
         this.playerList = playerList;
     }
+
+
+    @SuppressLint("DefaultLocale")
+    @Override
+    public String toString()
+    {
+        return String.format(
+                "Reserve %s:\n" +
+                        "\tID: %s\n" +
+                        "\tMaxParticipants: %d\n" +
+                        "\tLength: %d\n" +
+                        "\tHost: %s\n" +
+                        "\tisPublic?: %s\n" +
+                        "\tCalendar: %s\n" +
+                        "\tSport: %s\n" +
+                        "\tTrack: %s\n",
+                this.name,
+                this.id,
+                this.capacidadMax,
+                this.duracion,
+                this.anfitrion,
+                (this.isPublic ? "True" : "False"),
+                this.fecha2.getTime().toString(),
+                this.deporte,
+                this.pista
+        );
+    }
+
 
     @Override
     public int describeContents() {

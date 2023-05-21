@@ -8,6 +8,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -22,14 +23,23 @@ import es.udc.psi.repository.interfaces.BookRepository;
 
 public class BookRepositoryImpl implements BookRepository {
     private DatabaseReference mDatabase;
+    private DatabaseReference mSportsDB;
+    private DatabaseReference mLocationDB;
 
     public BookRepositoryImpl() {
         mDatabase = FirebaseDatabase.getInstance().getReference("Books");
+        mSportsDB = FirebaseDatabase.getInstance().getReference("Sports");
+        mLocationDB = FirebaseDatabase.getInstance().getReference("Location");
     }
 
     @Override
-    public void createBook(Reserve book, final OnBookCreatedListener listener) {
-        mDatabase.child(book.getId()).setValue(book)
+    public void createReserve(Reserve book, final OnBookCreatedListener listener) {
+        System.out.println(book);
+        book.setNumPlayers(1);
+        // TODO Tener los datos del usuario logeado en algún sitio para no tener que pedirlo
+        //      y poder hacer cosas como la anterior
+        //book.setPlayerList(new ArrayList<User>().add(null));
+        mDatabase.push().setValue(book)
                 .addOnSuccessListener(aVoid -> listener.onSuccess())
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
@@ -41,10 +51,12 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public void checkBookCoincidences(Reserve book, final OnBookCoincidencesCheckedListener listener) {
-        mDatabase.orderByChild("pista").equalTo(book.getPista()).addListenerForSingleValueEvent(new ValueEventListener() {
+        final Query aux = mDatabase.orderByChild("id");
+        aux.equalTo(book.getPista()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    //aux
                     listener.onExists();
                 } else {
                     listener.onNotExists();
@@ -216,5 +228,34 @@ public class BookRepositoryImpl implements BookRepository {
         return reservationmockList;
 
         //    return null;
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void getReserves(OnReservesFetchedListener listener)
+    {
+        Query aux = mDatabase.orderByChild("name");
+        aux.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    ArrayList<Reserve> results = new ArrayList<>();
+                    for (DataSnapshot data: dataSnapshot.getChildren())
+                    {
+                        results.add(data.getValue(Reserve.class));
+                    }
+                    listener.onFetched(results);
+                } else {
+                    listener.onFailure("Error retrieving reserves from Reserve database");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onFailure(databaseError.getMessage());
+            }
+        });
     }
 }

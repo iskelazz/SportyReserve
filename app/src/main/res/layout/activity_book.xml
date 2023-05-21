@@ -23,16 +23,104 @@
             android:textStyle="bold"
             android:layout_gravity="center_horizontal" />
 
-        <!--
-        <TextView
-            android:id="@+id/registerDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:text="@string/register_description"
-            android:textSize="20sp"
-            android:textAlignment="center" />
-        -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/book_name"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/reserveTitleField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Fecha -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/datePickingLabel"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <EditText
+                android:id="@+id/datePickerInput"
+                android:focusable="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/datePickingText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Hora -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/timePickingLabel"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <EditText
+                android:id="@+id/timePickerInput"
+                android:focusable="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/timePickingText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Duración -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reserveLengthLabel"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <Spinner
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.33"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/reserve_lengthDropdownList"
+                android:hint="@string/Book_SportsDropdownListHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@android:drawable/btn_dropdown"
+                android:spinnerMode="dropdown">
+            </Spinner>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Deporte -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -106,8 +194,8 @@
                 android:id="@+id/book_privateness_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textOff="@string/book_privateness_button_off"
-                android:textOn="@string/book_privateness_button_on"
+                android:textOn="@string/book_privateness_button_off"
+                android:textOff="@string/book_privateness_button_on"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"></ToggleButton>
@@ -146,14 +234,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"></TextView>
 
-            <Button
-                android:id="@+id/Book_MaxParticipantsButton"
+
+            <NumberPicker
+                android:id="@+id/Reserve_MaxParticipantsPicker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/book_maxParticipantsButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_percent="0.33"
-                app:layout_constraintTop_toTopOf="parent"></Button>
+                app:layout_constraintTop_toTopOf="parent"></NumberPicker>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
