@@ -1,5 +1,9 @@
 package es.udc.psi.repository.impl;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -8,6 +12,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import es.udc.psi.model.Reserve;
 import es.udc.psi.model.User;
@@ -76,9 +83,16 @@ public class BookRepositoryImpl implements BookRepository {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<Reserve> reserves = new ArrayList<>();
                 for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-                    Reserve reserve = childSnapshot.getValue(Reserve.class);
-                    if (reserve.getPlayerList() != null && reserve.getPlayerList().stream().anyMatch(player -> player.getId().equals(playerId))) {
-                        reserves.add(reserve);
+                    try {
+                        Reserve reserve = childSnapshot.getValue(Reserve.class);
+                        if (reserve != null && reserve.getPlayerList() != null) {
+                            if (reserve.getPlayerList().stream().anyMatch(player -> player.getId().equals(playerId))) {
+                                reserves.add(reserve);
+                            }
+                        }
+                    } catch (com.google.firebase.database.DatabaseException e) {
+                        // Falló la conversión, ignora esta reserva y continúa con la siguiente
+                        continue;
                     }
                 }
                 listener.onFetched(reserves);
@@ -96,6 +110,76 @@ public class BookRepositoryImpl implements BookRepository {
                 .addOnSuccessListener(aVoid -> listener.onSuccess())
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
+
+    @Override
+    public void updateReserve(Reserve reserve, OnReserveUpdatedListener listener) {
+        DatabaseReference bookRef = mDatabase.child(reserve.getId());
+
+        bookRef.setValue(reserve)
+                .addOnSuccessListener(aVoid -> listener.onSuccess())
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
+
+
+    @Override
+    public void replaceUserListWithNew(String bookId, List<User> newUserList, OnUserListUpdatedListener listener) {
+        DatabaseReference bookRef = mDatabase.child(bookId);
+        DatabaseReference playersRef = bookRef.child("playerList");
+        DatabaseReference numPlayersRef = bookRef.child("numPlayers");  // referencia al campo numPlayers
+
+        // Primero, elimina todos los datos existentes en playerList
+        playersRef.setValue(null)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // Si la eliminación de datos existentes fue exitosa, escribe la nueva lista de usuarios
+                        if (task.isSuccessful()) {
+                            // Crea un mapa para contener los datos de la lista de usuarios
+                            Map<String, Object> userListMap = new HashMap<>();
+
+                            // Rellena el mapa con los datos de los usuarios de newUserList
+                            for (int i = 0; i < newUserList.size(); i++) {
+                                userListMap.put(Integer.toString(i), newUserList.get(i));
+                            }
+
+                            // Escribe la nueva lista de usuarios en Firebase
+                            playersRef.updateChildren(userListMap)
+                                    .addOnSuccessListener(aVoid -> {
+                                        // Actualiza el valor de numPlayers
+                                        numPlayersRef.setValue(newUserList.size())
+                                                .addOnSuccessListener(aVoid1 -> listener.onSuccess())
+                                                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+                                    })
+                                    .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+                        } else {
+                            // Si hubo un error al eliminar los datos existentes, notifica al oyente
+                            listener.onFailure(task.getException().getMessage());
+                        }
+                    }
+                });
+    }
+
+
+
+    public void getReserve(String reserveId, OnReserveRetrievedListener listener) {
+        mDatabase.child(reserveId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Reserve reserve = dataSnapshot.getValue(Reserve.class);
+                if (reserve != null) {
+                    listener.onSuccess(reserve);
+                } else {
+                    listener.onFailure("Reserve not found");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                listener.onFailure(databaseError.getMessage());
+            }
+        });
+    }
+
 
     @Override
     public ArrayList<Reserve> getReservesList() {
