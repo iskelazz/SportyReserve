@@ -1,10 +1,8 @@
 package es.udc.psi.repository.interfaces;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import es.udc.psi.model.Reserve;
-import es.udc.psi.model.User;
 
 public interface BookRepository {
 
@@ -41,28 +39,9 @@ public interface BookRepository {
         void onFailure(String error);
     }
 
-    interface OnBookDeletedListener {
-        void onSuccess();
-        void onFailure(String errorMessage);
-    }
-
-    interface OnReserveRetrievedListener {
-        void onSuccess(Reserve reserve);
-
-        void onFailure(String errorMessage);
-    }
-
-    interface OnUserListUpdatedListener {
-        void onSuccess();
-        void onFailure(String errorMessage);
-    }
-
-    void updateReserve(Reserve reserve, final OnReserveUpdatedListener listener);
-
-    interface OnReserveUpdatedListener {
+    public interface OnBookDeletedListener {
         void onSuccess();
         void onFailure(String errorMessage);
     }
     ArrayList<Reserve> getReservesList();
-    public void replaceUserListWithNew(String bookId, List<User> newUserList, OnUserListUpdatedListener listener);
 }
