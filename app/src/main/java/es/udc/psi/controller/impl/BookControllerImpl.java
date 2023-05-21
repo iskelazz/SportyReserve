@@ -33,7 +33,7 @@ public class BookControllerImpl implements BookController {
 
     @Override
     public void validateAndRegister(Reserve book) {
-        boolean isValid = validateFields(book.isPublic(), book.getName(), book.getPassword(), book.getDuracion(), book.getFecha2(), book.getHora());
+        boolean isValid = validateFields(book.isPublic(), book.getName(), book.getPassword(), book.getDuracion(), book.getFecha());
 
         if (isValid) {
             createReserve(book);
@@ -85,7 +85,7 @@ public class BookControllerImpl implements BookController {
         });
     }
 
-    private boolean validateFields(Boolean isPublic, String name, String password, int duracion, Calendar fecha, TimeShot time) {
+    private boolean validateFields(Boolean isPublic, String name, String password, int duracion, Date fecha) {
         boolean isValid = true;
 
         if(name != null)
@@ -97,7 +97,7 @@ public class BookControllerImpl implements BookController {
         {
             view.clearValidationError("name");
         }
-        if (fecha.compareTo(Calendar.getInstance()) < 0)
+        if (fecha.compareTo(Calendar.getInstance().getTime()) < 0)
         {
             System.out.println(String.format("fecha before: %s vs %s", fecha.toString(), Calendar.getInstance().getTime().toString()));
             view.showValidationError("date", "La fecha de la reserva debe ser posterior a la actual");
@@ -107,7 +107,7 @@ public class BookControllerImpl implements BookController {
         {
             view.clearValidationError("date");
         }
-        int aux = fecha.get(Calendar.HOUR_OF_DAY);
+        int aux = fecha.getHours();
         if (aux < 8 || aux > 20)
         {
             System.out.println("wrong time");

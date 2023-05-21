@@ -2,7 +2,7 @@
 <resources>
     <string name="TituloAutores">Authors</string>
     <string name="authorsTitleText">Authors</string>
-    <string name="authorsText">Alejandro, Javier y José</string>
+    <string name="authorsText">Alejandro, Javier and José</string>
     <string name="aboutInfoTitleText">Info</string>
     <string name="aboutInfoText">This proyect is about...</string>
     <string name="app_name">SportyReserve</string>

@@ -36,15 +36,18 @@ import java.util.GregorianCalendar;
 
 import es.udc.psi.R;
 import es.udc.psi.controller.impl.BookControllerImpl;
+import es.udc.psi.controller.impl.UserControllerImpl;
 import es.udc.psi.databinding.ActivityBookBinding;
 import es.udc.psi.model.Reserve;
 import es.udc.psi.model.Sport;
 import es.udc.psi.model.TimeShot;
 import es.udc.psi.model.Track;
+import es.udc.psi.model.User;
 import es.udc.psi.repository.impl.SportRepositoryImpl;
 import es.udc.psi.repository.impl.TrackRepositoryImpl;
 import es.udc.psi.repository.interfaces.SportRepository;
 import es.udc.psi.repository.interfaces.TrackRepository;
+import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.view.interfaces.BookView;
 
 public class BookActivity extends AppCompatActivity implements BookView {
@@ -58,6 +61,7 @@ public class BookActivity extends AppCompatActivity implements BookView {
     private Button bookButton;
 
     private ArrayList<Sport> sportsList;
+    private UserControllerImpl userController;
     private BookControllerImpl bookController;
     private SportRepositoryImpl sportRepository;
     private TrackRepositoryImpl tracksRepository;
@@ -65,8 +69,7 @@ public class BookActivity extends AppCompatActivity implements BookView {
     // TODO Futuras mejoras (todavía mockup) - Meter ints y utilizar recursos
     //private ArrayList<String> sportList = new ArrayList<>();
     private Calendar date = new GregorianCalendar();
-
-    TimeShot time = new TimeShot(0,0,0);
+    private User currentUser;
 
     /**
      * Se activa el campo "password" en función del valor del "toggle" de visibilidad
@@ -103,6 +106,7 @@ public class BookActivity extends AppCompatActivity implements BookView {
 
         // Inicializa los controladores de registro y los repositorios (capa modelo)
         bookController = new BookControllerImpl(this);
+        userController = new UserControllerImpl();
         sportRepository = new SportRepositoryImpl();
         tracksRepository = new TrackRepositoryImpl();
 
@@ -123,7 +127,7 @@ public class BookActivity extends AppCompatActivity implements BookView {
         // Max Participants
         binding.ReserveMaxParticipantsPicker.setMinValue(1);
 
-        // Get sports and tracks data from DB
+        // Get sports, tracks and user data from DB
         sportRepository.retrieveSports(new SportRepository.OnSportsRetrievedListener() {
             @Override
             public void onFetched(ArrayList<Sport> result) {
@@ -154,6 +158,20 @@ public class BookActivity extends AppCompatActivity implements BookView {
             @Override
             public void onFailure(String errorMessage) {
 
+            }
+        });
+
+        userController.getUser(userController.getCurrentUserId(), new UserRepository.OnUserFetchedListener() {
+            @Override
+            public void onFetched(User user) {
+                currentUser = user;
+            }
+
+            @Override
+            public void onFailure(String error) {
+                // TODO Lanzar excepcion sobre que no se ha recuperado el usuario, como es un poco
+                //      raro lo de traer un usuario para reservar... Se
+                //      podría poner un error desconocido
             }
         });
 
@@ -213,18 +231,24 @@ public class BookActivity extends AppCompatActivity implements BookView {
             @Override
             public void onClick(View v) {
                 System.out.println(binding.reserveTitleField.getText().toString());
+                if (currentUser == null)
+                {
+                    // Unkown Error al usuario
+                }
+                ArrayList<User> aux = new ArrayList<>();
+                aux.add(currentUser);
                 bookController.validateAndRegister(
                         new Reserve(
                                 FirebaseAuth.getInstance().getUid(),
                                 binding.reserveTitleField.getText().toString(),
-                                date,
-                                time,
+                                date.getTime(),
                                 (String) tracksDropdownSpinner.getSelectedItem(),
                                 (String) sportsDropdownSpinner.getSelectedItem(),
                                 Integer.parseInt(binding.reserveLengthDropdownList.getSelectedItem().toString()),
                                 privatenessTButton.isChecked(),
                                 passwordEditText.getText().toString(),
-                                binding.ReserveMaxParticipantsPicker.getValue()
+                                binding.ReserveMaxParticipantsPicker.getValue(),
+                                aux
                         ));
             }
         });
@@ -245,9 +269,11 @@ public class BookActivity extends AppCompatActivity implements BookView {
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
                         date.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
                         date.set(Calendar.MINUTE, timePicker.getMinute());
-                        //time.setHours(timePicker.getHour());
-                        //time.setMinutes(timePicker.getMinute());
-                        binding.timePickerInput.setText(time.toString());
+                        binding.timePickerInput.setText(
+                                String.format("%02d:%02d",
+                                        date.get(Calendar.HOUR_OF_DAY),
+                                        date.get(Calendar.MINUTE))
+                        );
                     }
                 }, date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE), true);
         timePicker.show();
@@ -277,9 +303,9 @@ public class BookActivity extends AppCompatActivity implements BookView {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         date.set(Calendar.YEAR, datePicker.getYear());
-                        date.set(Calendar.MONTH, datePicker.getMonth());
+                        date.set(Calendar.MONTH, datePicker.getMonth()+1);
                         date.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
-                        binding.datePickerInput.setText(localeDate(datePicker.getDayOfMonth(), datePicker.getMonth(), datePicker.getYear()));
+                        binding.datePickerInput.setText(localeDate(datePicker.getDayOfMonth(), datePicker.getMonth()+1, datePicker.getYear()));
                     }
                 }, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
         datePicker.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());

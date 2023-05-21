@@ -1,7 +1,6 @@
 package es.udc.psi.model;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
@@ -28,9 +27,6 @@ public class Reserve implements Parcelable {
 
     private int numPlayers;
 
-    private Calendar fecha2;
-
-    private TimeShot hora;
     private Date fecha;
 
     // Cantidad de "lapsos" de tiempo que se reserva la pista
@@ -88,19 +84,30 @@ public class Reserve implements Parcelable {
         this.playerList = playerList;
     }
 
-    public Reserve(String hostUser, String name, Calendar date, TimeShot time, String track, String sport, int length, boolean isPublic, String password, int capacidadMax) {
+    public Reserve(String hostUser,
+                   String name,
+                   Date date,
+                   String track,
+                   String sport,
+                   int length,
+                   boolean isPublic,
+                   String password,
+                   int capacidadMax,
+                   ArrayList<User> playerList)
+    {
         this.id = java.util.UUID.randomUUID().toString();
         this.name = name;
         this.anfitrion = hostUser;
         this.pista = track;
         this.deporte = sport;
         this.duracion = length;
-        this.fecha2 = date;
-        this.fecha = date.getTime();
-        this.hora = time;
+        //this.fecha2 = date;
+        this.fecha = date;
         this.capacidadMax = capacidadMax;
         this.isPublic = isPublic;
         this.password = password;
+
+        this.playerList = playerList;
 
         //this.playerList.add(hostUser);
     }
@@ -151,22 +158,6 @@ public class Reserve implements Parcelable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Calendar getFecha2() {
-        return fecha2;
-    }
-
-    public void setFecha2(Calendar fecha2) {
-        this.fecha2 = fecha2;
-    }
-
-    public TimeShot getHora() {
-        return hora;
-    }
-
-    public void setHora(TimeShot hora) {
-        this.hora = hora;
     }
 
     public boolean isPublic() {
@@ -264,23 +255,25 @@ public class Reserve implements Parcelable {
     {
         return String.format(
                 "Reserve %s:\n" +
-                        "\tID: %s\n" +
-                        "\tMaxParticipants: %d\n" +
-                        "\tLength: %d\n" +
-                        "\tHost: %s\n" +
-                        "\tisPublic?: %s\n" +
-                        "\tCalendar: %s\n" +
-                        "\tSport: %s\n" +
-                        "\tTrack: %s\n",
+                "\tID: %s\n" +
+                "\tMaxParticipants: %d\n" +
+                "\tLength: %d\n" +
+                "\tHost: %s\n" +
+                "\tisPublic?: %s\n" +
+                "\tCalendar: %s\n" +
+                "\tSport: %s\n" +
+                "\tTrack: %s\n" +
+                "\tPlayerList: %s\n",
                 this.name,
                 this.id,
                 this.capacidadMax,
                 this.duracion,
                 this.anfitrion,
                 (this.isPublic ? "True" : "False"),
-                this.fecha2.getTime().toString(),
+                this.fecha.toString(),
                 this.deporte,
-                this.pista
+                this.pista,
+                this.playerList
         );
     }
 
