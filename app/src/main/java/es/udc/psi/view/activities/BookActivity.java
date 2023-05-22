@@ -257,6 +257,7 @@ public class BookActivity extends AppCompatActivity implements BookView {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 setVisibilityWithCongruence(b);
+                System.out.println(privatenessTButton.isChecked());
             }
         });
 

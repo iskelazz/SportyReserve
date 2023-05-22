@@ -25,7 +25,7 @@ public class Reserve implements Parcelable {
 
     private String deporte;
 
-    private int numPlayers;
+    private int numPlayers = 0;
 
     private Date fecha;
 
@@ -90,7 +90,7 @@ public class Reserve implements Parcelable {
                    String track,
                    String sport,
                    int length,
-                   boolean isPublic,
+                   boolean is_public,
                    String password,
                    int capacidadMax,
                    ArrayList<User> playerList)
@@ -101,13 +101,15 @@ public class Reserve implements Parcelable {
         this.pista = track;
         this.deporte = sport;
         this.duracion = length;
-        //this.fecha2 = date;
         this.fecha = date;
         this.capacidadMax = capacidadMax;
-        this.isPublic = isPublic;
-        this.password = password;
-
+        this.isPublic = is_public;
+        if(is_public)
+            this.password = "";
+        else
+            this.password = password;
         this.playerList = playerList;
+        this.numPlayers = playerList.size();
 
         //this.playerList.add(hostUser);
     }
@@ -260,6 +262,7 @@ public class Reserve implements Parcelable {
                 "\tLength: %d\n" +
                 "\tHost: %s\n" +
                 "\tisPublic?: %s\n" +
+                "\tPassword: %s\n" +
                 "\tCalendar: %s\n" +
                 "\tSport: %s\n" +
                 "\tTrack: %s\n" +
@@ -270,6 +273,7 @@ public class Reserve implements Parcelable {
                 this.duracion,
                 this.anfitrion,
                 (this.isPublic ? "True" : "False"),
+                this.password,
                 this.fecha.toString(),
                 this.deporte,
                 this.pista,
