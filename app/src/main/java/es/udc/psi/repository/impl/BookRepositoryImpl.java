@@ -34,11 +34,6 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public void createReserve(Reserve book, final OnBookCreatedListener listener) {
-        System.out.println(book);
-        book.setNumPlayers(1);
-        // TODO Tener los datos del usuario logeado en algún sitio para no tener que pedirlo
-        //      y poder hacer cosas como la anterior
-        //book.setPlayerList(new ArrayList<User>().add(null));
         mDatabase.child(book.getId()).setValue(book)
                 .addOnSuccessListener(aVoid -> listener.onSuccess())
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
