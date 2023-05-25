@@ -35,7 +35,7 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public void createReserve(Reserve book, final OnBookCreatedListener listener) {
         mDatabase.child(book.getId()).setValue(book)
-                .addOnSuccessListener(aVoid -> listener.onSuccess())
+                .addOnSuccessListener(aVoid -> listener.onSuccess(book))
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
 

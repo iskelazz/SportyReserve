@@ -143,8 +143,8 @@ public class BookControllerImpl implements BookController {
                 // WARNING - Hay que cambiar todoo este código por algo relacionado con BBDD
                 bookRepository.createReserve(book, new BookRepository.OnBookCreatedListener() {
                     @Override
-                    public void onSuccess() {
-                        view.onBookSuccess();
+                    public void onSuccess(Reserve reserve) {
+                        view.onBookSuccess(reserve);
                     }
 
                     @Override
