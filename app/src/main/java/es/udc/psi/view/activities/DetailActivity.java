@@ -2,12 +2,18 @@ package es.udc.psi.view.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,11 +23,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import es.udc.psi.R;
 import es.udc.psi.controller.impl.BookControllerImpl;
 import es.udc.psi.model.Reserve;
+import es.udc.psi.model.User;
 import es.udc.psi.repository.impl.BookRepositoryImpl;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
 import es.udc.psi.view.adapters.UserAdapter;
@@ -124,19 +132,11 @@ public class DetailActivity extends AppCompatActivity implements UserAdapter.OnU
         // Initialize cancel button
         btnCancel = findViewById(R.id.btnCancel);
         btnCancel.setOnClickListener(view -> {
-            bookController.deleteReserve(reserve.getId(),new BookRepositoryImpl.OnBookDeletedListener() {
-                @Override
-                public void onSuccess() {
-                    Toast.makeText(getApplicationContext(), "Reserva eliminada", Toast.LENGTH_SHORT).show();
-                    // Navega a la pantalla de MainActivity
-                    Intent intent = new Intent(DetailActivity.this, MainActivity.class);
-                    startActivity(intent);
-                }
-                @Override
-                public void onFailure(String errorMessage) {
-                    Toast.makeText(getApplicationContext(), "Error al eliminar la reserva: " + errorMessage, Toast.LENGTH_LONG).show();
-                }
-            });
+            if (reserve.getAnfitrion().equals(currentUserId)) {
+                cancelReservationAsHost(reserve.getId());
+            } else {
+                cancelReservationAsPlayer(reserve.getId(), currentUserId);
+            }
         });
     }
 
@@ -173,4 +173,72 @@ public class DetailActivity extends AppCompatActivity implements UserAdapter.OnU
         numPlayers -= 1;
         textViewNumPlayers.setText(String.valueOf(numPlayers));
     }
+
+    private void cancelReservationAsHost(String reserveId) {
+        // Aquí va el código para eliminar toda la reserva
+        new AlertDialog.Builder(DetailActivity.this)
+                .setTitle("Eliminación de Reserva")
+                .setMessage("Al ser anfitrión eliminaras toda la reserva. ¿Estás seguro de que quieres eliminarla?")
+                .setPositiveButton("Continuar", (dialog, which) -> {
+                    bookController.deleteReserve(reserveId, new BookRepositoryImpl.OnBookDeletedListener() {
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(getApplicationContext(), "Reserva eliminada", Toast.LENGTH_SHORT).show();
+                            // Navega a la pantalla de MainActivity
+                            Intent intent = new Intent(DetailActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onFailure(String errorMessage) {
+                            Toast.makeText(getApplicationContext(), "Error al eliminar la reserva: " + errorMessage, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Cancelar", null)
+                .setIcon(getColoredIcon("#FFD700"))
+                .show();
+    }
+
+    private void cancelReservationAsPlayer(String reserveId, String playerId) {
+        // Aquí va el código para eliminar al jugador de la reserva
+                    bookRepository.getReserve(reserveId, new BookRepositoryImpl.OnReserveRetrievedListener() {
+                        @Override
+                        public void onSuccess(Reserve reserve) {
+                            List<User> userList = reserve.getPlayerList();
+                            userList.removeIf(user -> user.getId().equals(playerId));
+                            bookRepository.replaceUserListWithNew(reserveId, userList, new BookRepositoryImpl.OnUserListUpdatedListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Toast.makeText(getApplicationContext(), "Has sido eliminado de la reserva.", Toast.LENGTH_SHORT).show();
+                                    // Navega a la pantalla de MainActivity
+                                    Intent intent = new Intent(DetailActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                }
+
+                                @Override
+                                public void onFailure(String errorMessage) {
+                                    Toast.makeText(getApplicationContext(), "Error al eliminarte de la reserva: " + errorMessage, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(String errorMessage) {
+                            Toast.makeText(getApplicationContext(), "Error al obtener la reserva: " + errorMessage, Toast.LENGTH_LONG).show();
+                        }
+                    });
+    }
+
+    private Drawable getColoredIcon(String hexColor) {
+        Drawable warningIcon = ContextCompat.getDrawable(DetailActivity.this, android.R.drawable.ic_dialog_alert);
+        if (warningIcon != null) {
+            warningIcon.mutate();
+            int color = Color.parseColor(hexColor);
+            warningIcon.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+        }
+        return warningIcon;
+    }
+
+
 }

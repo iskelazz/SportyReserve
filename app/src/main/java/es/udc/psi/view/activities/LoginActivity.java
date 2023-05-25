@@ -26,6 +26,7 @@ import es.udc.psi.repository.impl.BookRepositoryImpl;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
 import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.repository.interfaces.UserRepository;
+import es.udc.psi.utils.ReservationReminderManager;
 import es.udc.psi.view.interfaces.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
@@ -53,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         // Configura los listeners para los botones
         setupListeners();
         //createRandomReserve();
+        ReservationReminderManager.scheduleReservationReminder(this, Calendar.getInstance());
     }
 
     private void setupListeners() {
