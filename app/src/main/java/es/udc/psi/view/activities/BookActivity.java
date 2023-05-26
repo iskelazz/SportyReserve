@@ -48,6 +48,7 @@ import es.udc.psi.repository.impl.TrackRepositoryImpl;
 import es.udc.psi.repository.interfaces.SportRepository;
 import es.udc.psi.repository.interfaces.TrackRepository;
 import es.udc.psi.repository.interfaces.UserRepository;
+import es.udc.psi.utils.ReservationReminderManager;
 import es.udc.psi.view.interfaces.BookView;
 
 public class BookActivity extends AppCompatActivity implements BookView {
@@ -304,7 +305,7 @@ public class BookActivity extends AppCompatActivity implements BookView {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         date.set(Calendar.YEAR, datePicker.getYear());
-                        date.set(Calendar.MONTH, datePicker.getMonth()+1);
+                        date.set(Calendar.MONTH, datePicker.getMonth());
                         date.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
                         binding.datePickerInput.setText(localeDate(datePicker.getDayOfMonth(), datePicker.getMonth()+1, datePicker.getYear()));
                     }
@@ -316,8 +317,9 @@ public class BookActivity extends AppCompatActivity implements BookView {
     // Métodos de la interfaz RegisterView
 
     @Override
-    public void onBookSuccess() {
+    public void onBookSuccess(Reserve reserve) {
         Toast.makeText(this, "Registration successful.", Toast.LENGTH_SHORT).show();
+        scheduleNotification(reserve);
         startActivity(new Intent(BookActivity.this, MainActivity.class));
         finish();
     }
@@ -399,5 +401,15 @@ public class BookActivity extends AppCompatActivity implements BookView {
 
     public void datePicker(DatePicker date) {
 
+    }
+
+    public void scheduleNotification(Reserve reserve) {
+        // Obtén la hora de la reserva y réstale una hora
+        Calendar oneHourBefore = Calendar.getInstance();
+        oneHourBefore.setTime(reserve.getFecha());
+        oneHourBefore.add(Calendar.HOUR, -1);
+        String idUser = userController.getCurrentUserId();
+        // Usa directamente oneHourBefore, que ya es un Calendar
+        ReservationReminderManager.scheduleReservationReminder(getApplicationContext(), oneHourBefore, reserve.getId().hashCode(), reserve.getName(),idUser);
     }
 }

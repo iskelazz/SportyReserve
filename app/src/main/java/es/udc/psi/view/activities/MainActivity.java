@@ -34,7 +34,9 @@ import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.view.adapters.SectionsPagerAdapter;
 import es.udc.psi.view.fragments.HostFragment;
+import es.udc.psi.view.fragments.NotificationsFragment;
 
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
@@ -215,12 +217,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-                        // Inicio seleccionado, no se necesita hacer nada aquí
+                        // Si ya estás en MainActivity, no se necesita hacer nada aquí
+                        if (!(MainActivity.this instanceof MainActivity)) {
+                            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
                         return true;
                     case R.id.navigation_notifications:
-                        // Lanza la actividad de notificaciones
-                        Intent intent = new Intent(MainActivity.this, NotificationsActivity.class);
-                        startActivity(intent);
+                        // Lanza el fragmento de notificaciones
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, new NotificationsFragment());
+                        transaction.addToBackStack(null);
+                        transaction.commit();
                         return true;
                 }
                 return false;

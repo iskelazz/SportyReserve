@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         // Configura los listeners para los botones
         setupListeners();
         //createRandomReserve();
-        ReservationReminderManager.scheduleReservationReminder(this, Calendar.getInstance());
+        //ReservationReminderManager.scheduleReservationReminder(this, Calendar.getInstance(),0,"prueba","0");
     }
 
     private void setupListeners() {
@@ -146,7 +146,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         BookRepositoryImpl bookRepository = new BookRepositoryImpl();
         bookRepository.createReserve(reserve, new BookRepository.OnBookCreatedListener() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(Reserve reserve) {
                 System.out.println("Reserva creada con éxito");
             }
 

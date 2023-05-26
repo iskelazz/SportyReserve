@@ -25,17 +25,19 @@ public class BookRepositoryImpl implements BookRepository {
     private DatabaseReference mDatabase;
     private DatabaseReference mSportsDB;
     private DatabaseReference mLocationDB;
+    private DatabaseReference mUserDB;
 
     public BookRepositoryImpl() {
         mDatabase = FirebaseDatabase.getInstance().getReference("Books");
         mSportsDB = FirebaseDatabase.getInstance().getReference("Sports");
         mLocationDB = FirebaseDatabase.getInstance().getReference("Location");
+        mUserDB = FirebaseDatabase.getInstance().getReference("Users");
     }
 
     @Override
     public void createReserve(Reserve book, final OnBookCreatedListener listener) {
         mDatabase.child(book.getId()).setValue(book)
-                .addOnSuccessListener(aVoid -> listener.onSuccess())
+                .addOnSuccessListener(aVoid -> listener.onSuccess(book))
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
 

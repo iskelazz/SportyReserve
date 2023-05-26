@@ -8,22 +8,27 @@ import android.os.Build;
 
 import java.util.Calendar;
 
+import es.udc.psi.repository.impl.BookRepositoryImpl;
+
 public class ReservationReminderManager {
-    public static void scheduleReservationReminder(Context context, Calendar startTime) {
+
+    public static void scheduleReservationReminder(Context context, Calendar startTime, int reservationId, String title, String userId){
         Calendar reminderTime = (Calendar) startTime.clone();
-        reminderTime.add(Calendar.MINUTE, 2); // Ajusta este valor a 2 minutos en el futuro
+        reminderTime.add(Calendar.MINUTE, -60); // Ajusta este valor para que sea 1 hora antes
 
         Intent intent = new Intent(context, ReminderBroadcastReceiver.class);
-        intent.putExtra("title", "Reminder"); // Personaliza el título y el mensaje según necesites
-        intent.putExtra("message", "Your reservation is about to start in 1 hour!");
+        intent.putExtra("title", "Reminder");
+        String message = String.format("Your reservation, %s, is about to begin!", title);
+        intent.putExtra("message", message);
+        intent.putExtra("userId", userId);  // Añade el userId al intent
 
         PendingIntent pendingIntent;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             pendingIntent = PendingIntent.getBroadcast(
-                    context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                    context, reservationId, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         } else {
             pendingIntent = PendingIntent.getBroadcast(
-                    context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    context, reservationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -33,5 +38,19 @@ public class ReservationReminderManager {
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, reminderTime.getTimeInMillis(), pendingIntent);
         }
+    }
+
+    public static void cancelReservationReminder(Context context, int notificationId) {
+        Intent intent = new Intent(context, ReminderBroadcastReceiver.class);
+        PendingIntent pendingIntent;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getBroadcast(
+                    context, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(
+                    context, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
     }
 }

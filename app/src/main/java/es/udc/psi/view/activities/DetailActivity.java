@@ -32,6 +32,7 @@ import es.udc.psi.model.Reserve;
 import es.udc.psi.model.User;
 import es.udc.psi.repository.impl.BookRepositoryImpl;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
+import es.udc.psi.utils.ReservationReminderManager;
 import es.udc.psi.view.adapters.UserAdapter;
 
 public class DetailActivity extends AppCompatActivity implements UserAdapter.OnUserExpelledListener {
@@ -184,6 +185,7 @@ public class DetailActivity extends AppCompatActivity implements UserAdapter.OnU
                         @Override
                         public void onSuccess() {
                             Toast.makeText(getApplicationContext(), "Reserva eliminada", Toast.LENGTH_SHORT).show();
+                            ReservationReminderManager.cancelReservationReminder(getApplicationContext(), reserveId.hashCode());
                             // Navega a la pantalla de MainActivity
                             Intent intent = new Intent(DetailActivity.this, MainActivity.class);
                             startActivity(intent);
