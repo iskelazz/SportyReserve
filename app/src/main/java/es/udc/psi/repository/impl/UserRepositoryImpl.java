@@ -1,5 +1,7 @@
 package es.udc.psi.repository.impl;
 
+import es.udc.psi.model.Notification;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -8,6 +10,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import es.udc.psi.model.User;
 import es.udc.psi.repository.interfaces.UserRepository;
@@ -38,6 +43,32 @@ public class UserRepositoryImpl implements UserRepository {
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
 
+    @Override
+    public void addNotification(String userId, Notification notification, final OnNotificationAddedListener listener) {
+        mDatabase.child(userId).child("notifications").child(notification.getId()).setValue(notification)
+                .addOnSuccessListener(aVoid -> listener.onSuccess())
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
+
+    @Override
+    public void getNotifications(String userId, final OnNotificationsFetchedListener listener) {
+        mDatabase.child(userId).child("notifications").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Notification> notifications = new HashMap<>();
+                for (DataSnapshot notificationSnapshot: dataSnapshot.getChildren()) {
+                    Notification notification = notificationSnapshot.getValue(Notification.class);
+                    notifications.put(notification.getId(), notification);
+                }
+                listener.onFetched(notifications);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onFailure(databaseError.getMessage());
+            }
+        });
+    }
     @Override
     public void checkUsernameExists(String username, final OnUsernameCheckedListener listener) {
         mDatabase.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {

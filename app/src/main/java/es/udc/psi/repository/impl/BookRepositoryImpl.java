@@ -25,11 +25,13 @@ public class BookRepositoryImpl implements BookRepository {
     private DatabaseReference mDatabase;
     private DatabaseReference mSportsDB;
     private DatabaseReference mLocationDB;
+    private DatabaseReference mUserDB;
 
     public BookRepositoryImpl() {
         mDatabase = FirebaseDatabase.getInstance().getReference("Books");
         mSportsDB = FirebaseDatabase.getInstance().getReference("Sports");
         mLocationDB = FirebaseDatabase.getInstance().getReference("Location");
+        mUserDB = FirebaseDatabase.getInstance().getReference("Users");
     }
 
     @Override

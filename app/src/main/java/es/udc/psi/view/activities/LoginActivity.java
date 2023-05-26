@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         // Configura los listeners para los botones
         setupListeners();
         //createRandomReserve();
-        ReservationReminderManager.scheduleReservationReminder(this, Calendar.getInstance(),0);
+        //ReservationReminderManager.scheduleReservationReminder(this, Calendar.getInstance(),0,"prueba","0");
     }
 
     private void setupListeners() {

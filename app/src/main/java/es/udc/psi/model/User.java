@@ -4,6 +4,9 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class User implements Parcelable {
 
     private String id;
@@ -12,6 +15,7 @@ public class User implements Parcelable {
     private String contraseña;
     private String telefono;
     private String apellidos;
+    private Map<String, Notification> notifications = new HashMap<>();
 
     private String uriAvatar;
 
@@ -44,6 +48,12 @@ public class User implements Parcelable {
         telefono = in.readString();
         apellidos = in.readString();
         uriAvatar = in.readString();
+        int size = in.readInt();
+        for(int i = 0; i < size; i++){
+            String key = in.readString();
+            Notification value = in.readParcelable(Notification.class.getClassLoader());
+            notifications.put(key, value);
+        }
     }
     public String getId() {
 
@@ -114,6 +124,13 @@ public class User implements Parcelable {
 
         this.uriAvatar = uriAvatar;
     }
+    public Map<String, Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Map<String, Notification> notifications) {
+        this.notifications = notifications;
+    }
 
     @Override
     public int describeContents() {
@@ -129,6 +146,11 @@ public class User implements Parcelable {
         dest.writeString(telefono);
         dest.writeString(apellidos);
         dest.writeString(uriAvatar);
+        dest.writeInt(notifications.size());
+        for(Map.Entry<String, Notification> entry : notifications.entrySet()){
+            dest.writeString(entry.getKey());
+            dest.writeParcelable(entry.getValue(), flags);
+        }
     }
 
     // Este es el CREATOR requerido para Parcelable

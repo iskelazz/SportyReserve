@@ -305,7 +305,7 @@ public class BookActivity extends AppCompatActivity implements BookView {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         date.set(Calendar.YEAR, datePicker.getYear());
-                        date.set(Calendar.MONTH, datePicker.getMonth()+1);
+                        date.set(Calendar.MONTH, datePicker.getMonth());
                         date.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
                         binding.datePickerInput.setText(localeDate(datePicker.getDayOfMonth(), datePicker.getMonth()+1, datePicker.getYear()));
                     }
@@ -408,8 +408,8 @@ public class BookActivity extends AppCompatActivity implements BookView {
         Calendar oneHourBefore = Calendar.getInstance();
         oneHourBefore.setTime(reserve.getFecha());
         oneHourBefore.add(Calendar.HOUR, -1);
-
+        String idUser = userController.getCurrentUserId();
         // Usa directamente oneHourBefore, que ya es un Calendar
-        ReservationReminderManager.scheduleReservationReminder(getApplicationContext(), oneHourBefore, reserve.getId().hashCode());
+        ReservationReminderManager.scheduleReservationReminder(getApplicationContext(), oneHourBefore, reserve.getId().hashCode(), reserve.getName(),idUser);
     }
 }
