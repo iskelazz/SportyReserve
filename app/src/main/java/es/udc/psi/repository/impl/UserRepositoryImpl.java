@@ -96,42 +96,19 @@ public class UserRepositoryImpl implements UserRepository {
 
     public void uploadAvatarAndSetUrlAvatar(Uri fileAvatarImage){
 
-
-        //StorageReference storageReferenceUID = mStorage.getReference().child(mAuth.getCurrentUser().getUid()+"/avatar.jpg");
         StorageReference storageReferenceUID = mStorage.getReference().child(getCurrentUserId()+"/avatar.jpg");
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("image/jpeg")   //TODO: ¿qué pasa si no upload un jpg????
                 .build();
         UploadTask uploadTask = storageReferenceUID.putFile(fileAvatarImage, metadata);
-//TODO: controlar observers to listen for when the download is done or if it fails
 
-
-/*
-        storageReferenceUID.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
-        {
-            @Override
-            public void onSuccess(Uri downloadUrl)
-            {
-                Log.d("TAG_LOG","urlAvatarImagen??:"+downloadUrl.toString());
-
-
-            }
-        });
-*/
-
-        //Log.d("TAG_LOG","urlAvatarImagen??:"+storageReferenceUID.getDownloadUrl().getResult().toString());
-        //return storageReferenceUID.getDownloadUrl().getResult().toString();
-
+        //Obtener url de descarga
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                 if (!task.isSuccessful()) {
                     throw task.getException();
                 }
-
-                // Continue with the task to get the download URL
-Log.d("TAG_LOG","urlAvatarImagenblablalba1??:"+ storageReferenceUID.getDownloadUrl().toString());
-Log.d("TAG_LOG","urlAvatarImagenblablalba3??:"+ storageReferenceUID.getDownloadUrl().getResult().toString());
 
                 return storageReferenceUID.getDownloadUrl();
             }
@@ -140,8 +117,8 @@ Log.d("TAG_LOG","urlAvatarImagenblablalba3??:"+ storageReferenceUID.getDownloadU
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Uri downloadUri = task.getResult();
-Log.d("TAG_LOG","urlAvatarImagenblablalba2??:"+downloadUri.toString());
                     setUrlAvatar(downloadUri.toString());
+
                 } else {
                     // Handle failures
                     // ...
@@ -153,8 +130,8 @@ Log.d("TAG_LOG","urlAvatarImagenblablalba2??:"+downloadUri.toString());
 
 
     private void setUrlAvatar(String url){
-        mDatabase.child(getCurrentUserId()).child("uriAvatar").setValue(url);
 
+        mDatabase.child(getCurrentUserId()).child("uriAvatar").setValue(url);
 
     }
 }

@@ -342,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 Log.d("TAG_LOG","hola???");
                             final Uri imageUri = data.getData();
                             avatarImage.setImageURI(imageUri);
-                            userController.uploadAvatarAndSetUrlAvatar(imageUri.toString());
+                            userController.uploadAvatarAndSetUrlAvatar(imageUri);
                     }
                 }
             });
@@ -356,7 +356,7 @@ Log.d("TAG_LOG","hola???");
         if (requestCode == RC_GET_AVATAR_IMAGE && resultCode == RESULT_OK && null != data) {
             final Uri imageUri = data.getData();
             avatarImage.setImageURI(imageUri);
-            userController.uploadAvatarAndSetUrlAvatar(imageUri.toString());
+            userController.uploadAvatarAndSetUrlAvatar(imageUri);
         }
     }
 
