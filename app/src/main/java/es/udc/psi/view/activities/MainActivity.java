@@ -27,6 +27,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -286,9 +287,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 emailText.setText(user.getCorreoElectronico());
                 Glide.with(getApplicationContext())
                         .load(user.getUriAvatar())
-                        //.load("https://firebasestorage.googleapis.com/v0/b/sportyreserve.appspot.com/o/AeZRgPueqHRjR1avUjDTvsO30qm2%2Favatar.jpg?alt=media&token=6b9e152d-ed18-4390-b1c4-5ae0e0157e09")
-                        .placeholder(R.drawable.baseline_account_circle_24)
-                        .fallback(R.drawable.baseline_account_circle_24)    //TODO:probar???
+                        .apply(new RequestOptions()
+                                .placeholder(R.drawable.baseline_account_circle_24))
+                        .placeholder(R.drawable.baseline_account_circle_24) //TODO:¿porqué NO fncionano carga el drawable????
+                        .error(R.drawable.baseline_account_circle_24) //TODO:¿porqué NO fncionano carga el drawable????
+                        .skipMemoryCache(true)
+                        //.fallback(R.drawable.baseline_account_circle_24)    //TODO:probar???
                         .into(avatarImage);
             }
 
@@ -314,44 +318,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getAvatarImageFromDevice(){
-        Intent intentAvatarImage = new Intent(Intent.ACTION_PICK); //TODO: new Intent(Intent.ACTION_GET_CONTENT) ??????
+        Intent intentAvatarImage = new Intent(Intent.ACTION_GET_CONTENT);
+        //Intent intentAvatarImage = new Intent(Intent.ACTION_PICK);
         intentAvatarImage.setType("image/*");
 
-        startActivityForResult(intentAvatarImage, RC_GET_AVATAR_IMAGE);
-        //selectAvatarResultLauncher.launch(intentAvatarImage);
-        //TODO:1.-Elegir con requestCode y startActivityforResult o sin código numérico (ver P22)
-//TODO: 2.-.Elegir cómo lanzar?createchooser????
-
-/*1.-
-        try {
-            startActivityForResult(Intent.createChooser(intentAvatarImage, "Elige tu imagen de avatar:"),
-                    RC_GET_AVATAR_IMAGE);
-        }catch (ActivityNotFoundException e){
-            Toast.makeText(getApplicationContext(), "No hay apps para seleccionar imagen", LENGTH_SHORT).show();
-        }
-*/
-
- /*2.-
         if (intentAvatarImage.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intentAvatarImage, RC_GET_AVATAR_IMAGE);
+            selectAvatarResultLauncher.launch(Intent.createChooser(intentAvatarImage, getString(R.string.str_title_chooser_avatarImage)));
         }
-*/
 
+        //selectAvatarResultLauncher.launch(intentAvatarImage);
+        // startActivityForResult(intentAvatarImage, RC_GET_AVATAR_IMAGE);
+        /*if (intentAvatarImage.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(Intent.createChooser(intentAvatarImage, getString(R.string.str_title_chooser_avatarImage)), RC_GET_AVATAR_IMAGE);
+        }*/
     }
 
-//TODO:Probar????
     ActivityResultLauncher<Intent> selectAvatarResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
+
                     Intent data = result.getData();
                     if (data != null) {
-                        Bundle bundle = data.getExtras();
-                        if (bundle != null) {
+Log.d("TAG_LOG","hola???");
                             final Uri imageUri = data.getData();
                             avatarImage.setImageURI(imageUri);
-
-                            userController.uploadAvatarAndSetUrlAvatar(imageUri);
-                        }
+                            userController.uploadAvatarAndSetUrlAvatar(imageUri.toString());
                     }
                 }
             });
@@ -362,32 +353,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         super.onActivityResult(requestCode, resultCode, data);
 
-
-
         if (requestCode == RC_GET_AVATAR_IMAGE && resultCode == RESULT_OK && null != data) {
             final Uri imageUri = data.getData();
             avatarImage.setImageURI(imageUri);
-
-
-Log.d("TAG_LOG", "por aquí en activityResult:(imageUri):  "+imageUri);
-/*
-            final InputStream imageStream;
-            try {
-                imageStream = getContentResolver().openInputStream(imageUri);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-            avatarImage.setImageBitmap(selectedImage);
-*/
-
-            //String uid = userController.getCurrentUserId(); //TODO: ya solicitado antes al hacer el setupUser
-            //String uriAvatarImage = userController.saveAvatarImage(imageUri);
-            userController.uploadAvatarAndSetUrlAvatar(imageUri);
-            //Log.d("TAG_LOG", "por aquí en activityResult después de guardar fichero:(imageUri):  "+uriAvatarImage);
-
+            userController.uploadAvatarAndSetUrlAvatar(imageUri.toString());
         }
-
     }
+
 }
 
