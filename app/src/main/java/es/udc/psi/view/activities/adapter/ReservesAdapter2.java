@@ -123,7 +123,7 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
                     ViewGroup.LayoutParams.MATCH_PARENT,1));
             Glide.with(imageView_newplayer)
                     .load(reserve.getPlayerList().get(position).getUriAvatar())
-                    .placeholder(android.R.drawable.ic_input_add)   //TODO: Cambiar icono??
+                    .placeholder(R.drawable.baseline_account_circle_24)
                     .into(imageView_newplayer);
 
             layoutOnePlayer.setId(position);

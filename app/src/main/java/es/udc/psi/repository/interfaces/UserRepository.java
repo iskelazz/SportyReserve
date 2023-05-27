@@ -1,5 +1,7 @@
 package es.udc.psi.repository.interfaces;
 
+import android.net.Uri;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 
@@ -28,4 +30,6 @@ public interface UserRepository {
         void onFetched(User user);
         void onFailure(String error);
     }
+
+    void uploadAvatarAndSetUrlAvatar(Uri uriAvatarImage);
 }

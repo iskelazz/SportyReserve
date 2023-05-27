@@ -1,14 +1,24 @@
 package es.udc.psi.view.activities;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +26,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -37,7 +48,11 @@ import es.udc.psi.view.fragments.HostFragment;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -48,10 +63,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private UserController userController;
     private TextView usernameText;
     private TextView emailText;
+    private ImageView avatarImage;
     private SectionsPagerAdapter pagerAdapter;
     private Toolbar toolbar;
     private NavigationView navigationView;
 
+    private static final int RC_GET_AVATAR_IMAGE = 1234567;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,6 +189,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View headerView = navigationView.getHeaderView(0);
         usernameText = headerView.findViewById(R.id.username_text);
         emailText = headerView.findViewById(R.id.email_text);
+        avatarImage = headerView.findViewById(R.id.avatar_image);
+        avatarImage.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                getAvatarImageFromDevice();
+            }
+        });
     }
 
     /**
@@ -259,6 +284,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onFetched(User user) {
                 usernameText.setText(user.getNombre());
                 emailText.setText(user.getCorreoElectronico());
+                Glide.with(getApplicationContext())
+                        .load(user.getUriAvatar())
+                        //.load("https://firebasestorage.googleapis.com/v0/b/sportyreserve.appspot.com/o/AeZRgPueqHRjR1avUjDTvsO30qm2%2Favatar.jpg?alt=media&token=6b9e152d-ed18-4390-b1c4-5ae0e0157e09")
+                        .placeholder(R.drawable.baseline_account_circle_24)
+                        .fallback(R.drawable.baseline_account_circle_24)    //TODO:probar???
+                        .into(avatarImage);
             }
 
             @Override
@@ -280,6 +311,83 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (menuItem != null) {
             menuItem.setChecked(true);
         }
+    }
+
+    private void getAvatarImageFromDevice(){
+        Intent intentAvatarImage = new Intent(Intent.ACTION_PICK); //TODO: new Intent(Intent.ACTION_GET_CONTENT) ??????
+        intentAvatarImage.setType("image/*");
+
+        startActivityForResult(intentAvatarImage, RC_GET_AVATAR_IMAGE);
+        //selectAvatarResultLauncher.launch(intentAvatarImage);
+        //TODO:1.-Elegir con requestCode y startActivityforResult o sin código numérico (ver P22)
+//TODO: 2.-.Elegir cómo lanzar?createchooser????
+
+/*1.-
+        try {
+            startActivityForResult(Intent.createChooser(intentAvatarImage, "Elige tu imagen de avatar:"),
+                    RC_GET_AVATAR_IMAGE);
+        }catch (ActivityNotFoundException e){
+            Toast.makeText(getApplicationContext(), "No hay apps para seleccionar imagen", LENGTH_SHORT).show();
+        }
+*/
+
+ /*2.-
+        if (intentAvatarImage.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intentAvatarImage, RC_GET_AVATAR_IMAGE);
+        }
+*/
+
+    }
+
+//TODO:Probar????
+    ActivityResultLauncher<Intent> selectAvatarResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        Bundle bundle = data.getExtras();
+                        if (bundle != null) {
+                            final Uri imageUri = data.getData();
+                            avatarImage.setImageURI(imageUri);
+
+                            userController.uploadAvatarAndSetUrlAvatar(imageUri);
+                        }
+                    }
+                }
+            });
+    @Override
+    protected void onActivityResult(int requestCode,
+                                    int resultCode,
+                                    @Nullable Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+
+        if (requestCode == RC_GET_AVATAR_IMAGE && resultCode == RESULT_OK && null != data) {
+            final Uri imageUri = data.getData();
+            avatarImage.setImageURI(imageUri);
+
+
+Log.d("TAG_LOG", "por aquí en activityResult:(imageUri):  "+imageUri);
+/*
+            final InputStream imageStream;
+            try {
+                imageStream = getContentResolver().openInputStream(imageUri);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            avatarImage.setImageBitmap(selectedImage);
+*/
+
+            //String uid = userController.getCurrentUserId(); //TODO: ya solicitado antes al hacer el setupUser
+            //String uriAvatarImage = userController.saveAvatarImage(imageUri);
+            userController.uploadAvatarAndSetUrlAvatar(imageUri);
+            //Log.d("TAG_LOG", "por aquí en activityResult después de guardar fichero:(imageUri):  "+uriAvatarImage);
+
+        }
+
     }
 }
 
