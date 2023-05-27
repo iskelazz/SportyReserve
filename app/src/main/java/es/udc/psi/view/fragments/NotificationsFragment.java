@@ -1,6 +1,5 @@
 package es.udc.psi.view.fragments;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,55 +8,27 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import es.udc.psi.R;
-import es.udc.psi.model.Notification;
-import es.udc.psi.repository.impl.UserRepositoryImpl;
-import es.udc.psi.repository.interfaces.UserRepository;
-import es.udc.psi.view.adapters.NotificationsAdapter;
 
 public class NotificationsFragment extends Fragment {
+    private ListView notificationsListView;
+    private TextView emptyNotificationsTextView;
 
-    private UserRepository mUserRepository;
-    private ListView mNotificationsListView;
-    private TextView mEmptyNotificationsTextView;
-    private NotificationsAdapter mNotificationsAdapter;
-
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
-        mUserRepository = new UserRepositoryImpl();
-        mNotificationsListView = view.findViewById(R.id.notificationsListView);
-        mEmptyNotificationsTextView = view.findViewById(R.id.emptyNotificationsTextView);
+        notificationsListView = view.findViewById(R.id.notificationsListView);
+        emptyNotificationsTextView = view.findViewById(R.id.emptyNotificationsTextView);
 
-        // Use your actual user id here
-        String userId = "actualUserId";
-
-        mUserRepository.getNotifications(userId, new UserRepository.OnNotificationsFetchedListener() {
-            @Override
-            public void onFetched(Map<String, Notification> notificationsMap) {
-                if (notificationsMap.isEmpty()) {
-                    mEmptyNotificationsTextView.setVisibility(View.VISIBLE);
-                    mNotificationsListView.setVisibility(View.GONE);
-                } else {
-                    ArrayList<Notification> notificationsList = new ArrayList<>(notificationsMap.values());
-                    mNotificationsAdapter = new NotificationsAdapter(getContext(), notificationsList);
-                    mNotificationsListView.setAdapter(mNotificationsAdapter);
-                }
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                // Handle error
-            }
-        });
+        // Configura aquí tu ListView. Por ejemplo, podrías querer configurar un adapter personalizado,
+        // añadir un OnItemClickListener, etc.
 
         return view;
     }
 }
+
