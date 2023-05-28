@@ -1,5 +1,6 @@
 package es.udc.psi.view.fragments;
 
+// ... (importaciones necesarias)
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,54 +8,57 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import es.udc.psi.R;
 import es.udc.psi.model.Notification;
+import es.udc.psi.view.adapters.NotificationsAdapter;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
 import es.udc.psi.repository.interfaces.UserRepository;
-import es.udc.psi.view.adapters.NotificationsAdapter;
 
 public class NotificationsFragment extends Fragment {
+    private ListView notificationsListView;
+    private TextView emptyNotificationsTextView;
+    private UserRepository userRepository;
+    private NotificationsAdapter adapter;
 
-    private UserRepository mUserRepository;
-    private ListView mNotificationsListView;
-    private TextView mEmptyNotificationsTextView;
-    private NotificationsAdapter mNotificationsAdapter;
-
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
-        mUserRepository = new UserRepositoryImpl();
-        mNotificationsListView = view.findViewById(R.id.notificationsListView);
-        mEmptyNotificationsTextView = view.findViewById(R.id.emptyNotificationsTextView);
+        notificationsListView = view.findViewById(R.id.notificationsListView);
+        emptyNotificationsTextView = view.findViewById(R.id.emptyNotificationsTextView);
 
-        // Use your actual user id here
-        String userId = "actualUserId";
+        userRepository = new UserRepositoryImpl();
+        String userId = userRepository.getCurrentUserId(); // Obtén el ID del usuario actual
 
-        mUserRepository.getNotifications(userId, new UserRepository.OnNotificationsFetchedListener() {
+        userRepository.getNotifications(userId, new UserRepository.OnNotificationsFetchedListener() {
             @Override
-            public void onFetched(Map<String, Notification> notificationsMap) {
-                if (notificationsMap.isEmpty()) {
-                    mEmptyNotificationsTextView.setVisibility(View.VISIBLE);
-                    mNotificationsListView.setVisibility(View.GONE);
-                } else {
-                    ArrayList<Notification> notificationsList = new ArrayList<>(notificationsMap.values());
-                    mNotificationsAdapter = new NotificationsAdapter(getContext(), notificationsList);
-                    mNotificationsListView.setAdapter(mNotificationsAdapter);
-                }
+            public void onFetched(Map<String, Notification> notifications) {
+                // Cuando tengamos las notificaciones, las mostramos en el ListView.
+                List<Notification> notificationList = new ArrayList<>(notifications.values());
+
+                // Ordena la lista en orden inverso.
+                Collections.reverse(notificationList);
+
+                adapter = new NotificationsAdapter(getContext(), notificationList);
+                notificationsListView.setAdapter(adapter);
             }
 
             @Override
             public void onFailure(String errorMessage) {
-                // Handle error
+                // Gestionar el error aquí.
+                Toast.makeText(getContext(), "Error fetching notifications: " + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
 

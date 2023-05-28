@@ -24,22 +24,18 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import es.udc.psi.R;
-import es.udc.psi.controller.impl.BookControllerImpl;
 import es.udc.psi.controller.impl.UserControllerImpl;
-import es.udc.psi.controller.interfaces.BookController;
 import es.udc.psi.controller.interfaces.UserController;
-import es.udc.psi.model.Reserve;
 import es.udc.psi.model.User;
-import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.view.adapters.SectionsPagerAdapter;
-import es.udc.psi.view.fragments.HostFragment;
 import es.udc.psi.view.fragments.NotificationsFragment;
+import es.udc.psi.view.fragments.TabFragment;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -58,15 +54,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         setupToolbar();
         setupDrawerLayout();
         setupNavigationView();
-        setupFloatingActionButton();
+        //setupFloatingActionButton();
         setupUserController();
-        setupViewPager();
-        setupTabLayoutAndViewPager();
         setupBottomNavigationView();
+        setupFragmentTabs();
     }
 
 
@@ -104,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_opciones:
                 // Lanza la actividad de opciones
-                intent = new Intent(this, RegisterActivity.class);
+                intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_about:
@@ -124,24 +118,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    /**
-     * Configura el TabLayout y lo asocia con el ViewPager.
-     */
-    private void setupTabLayoutAndViewPager() {
-        tabLayout = findViewById(R.id.tabs);
-        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(
-                tabLayout, viewPager, (tab, position) -> {
-            switch (position) {
-                case 0:
-                    tab.setText("Anfitrión");
-                    break;
-                case 1:
-                    tab.setText("Mis Reservas");
-                    break;
-            }
-        });
-        tabLayoutMediator.attach();
-    }
 
     /**
      * Configura la barra de herramientas (Toolbar) de la actividad.
@@ -201,10 +177,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /**
      * Configura el ViewPager para la navegación entre pestañas.
      */
-    private void setupViewPager() {
-        viewPager = findViewById(R.id.view_pager);
-        pagerAdapter = new SectionsPagerAdapter(this);
-        viewPager.setAdapter(pagerAdapter);
+    private void setupFragmentTabs() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        TabFragment tabFragment = new TabFragment();
+        fragmentTransaction.add(R.id.fragment_tabs, tabFragment); // Aquí utilizamos la misma ID
+        fragmentTransaction.commit();
     }
 
     /**
@@ -215,21 +194,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment selectedFragment = null;
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-                        // Si ya estás en MainActivity, no se necesita hacer nada aquí
-                        if (!(MainActivity.this instanceof MainActivity)) {
-                            Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                            startActivity(intent);
-                        }
-                        return true;
+                        selectedFragment = new TabFragment();
+                        break;
                     case R.id.navigation_notifications:
-                        // Lanza el fragmento de notificaciones
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, new NotificationsFragment());
-                        transaction.addToBackStack(null);
-                        transaction.commit();
-                        return true;
+                        selectedFragment = new NotificationsFragment();
+                        break;
+                }
+                if (selectedFragment != null) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_tabs, selectedFragment).commit();
+                    return true;
                 }
                 return false;
             }
