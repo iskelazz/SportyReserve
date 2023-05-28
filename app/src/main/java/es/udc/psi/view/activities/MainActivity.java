@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_opciones:
                 // Lanza la actividad de opciones
-                intent = new Intent(this, RegisterActivity.class);
+                intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_about:

@@ -28,6 +28,7 @@
         <activity android:name=".view.activities.RegisterActivity" />
         <activity android:name=".view.activities.BookActivity" />
         <activity android:name=".view.activities.DetailActivity" />
+        <activity android:name=".view.activities.SettingsActivity" />
 
         <receiver android:name=".utils.ReminderBroadcastReceiver"/>
         <service
