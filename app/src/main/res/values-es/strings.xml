@@ -39,7 +39,7 @@
     <string name="reservar_pista">Reservar Pista</string>
     <string name="mis_reservas">Mis Reservas</string>
     <string name="lista_reservas">Lista de Reservas</string>
-    <string name="opciones">Opciones</string>
+    <string name="opciones">Ajustes</string>
     <string name="about">Acerca de</string>
     <string name="navigation_drawer_open">Abrir menú de navegación</string>
     <string name="navigation_drawer_close">Cerrar menú de navegación</string>
@@ -63,4 +63,14 @@
     <string name="timePickingText">Elige una hora</string>
     <string name="reserveLengthLabel">Duración</string>
     <string name="reserveLengthText">Dar valor</string>
+    <string name="theme">Tema</string>
+    <string name="change_password">Cambiar contraseña</string>
+    <string name="theme_description">Elige un tema entre destintos estilos</string>
+    <string name="change_password_description">Cambia tu contraseña</string>
+    <string name="light_theme">Tema Claro</string>
+    <string name="dark_theme">Tema Oscuro</string>
+    <string name="old_password">Contraseña Actual</string>
+    <string name="new_password">Nueva Contraseña</string>
+    <string name="accept">Aceptar</string>
+
 </resources>

@@ -18,12 +18,16 @@ public interface UserRepository {
     public void getNotifications(String userId, final OnNotificationsFetchedListener listener);
 
     void signInWithEmailAndPassword(String email, String password, OnCompleteListener<AuthResult> listener);
+    public void updateUserPassword(User user, String oldPassword, String newPassword, OnPasswordChangedListener listener);
 
     interface OnUserCreatedListener {
         void onSuccess();
         void onFailure(String errorMessage);
     }
-
+    public interface OnPasswordChangedListener {
+        void onSuccess();
+        void onFailure(String error);
+    }
     interface OnUsernameCheckedListener {
         void onExists();
         void onNotExists();
