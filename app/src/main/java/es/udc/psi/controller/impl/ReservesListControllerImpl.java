@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import es.udc.psi.controller.interfaces.ReservesListController;
 import es.udc.psi.model.Reserve;
 import es.udc.psi.repository.impl.BookRepositoryImpl;
+import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.view.interfaces.ReservesListView;
 
 public class ReservesListControllerImpl implements ReservesListController {
@@ -23,10 +24,21 @@ public class ReservesListControllerImpl implements ReservesListController {
 
     @Override
     public void initFlow() {
+        mBookRepository.getReserves(new BookRepository.OnReservesFetchedListener() {
 
-        ArrayList<Reserve> reservesList = mBookRepository.getReservesList();
-        mReserveListView.showReservesList(reservesList);
+            @Override
+            public void onFetched(ArrayList<Reserve> reservesList) {
+                mReserveListView.showReservesList(reservesList);
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+        });
+
     }
+
 
     @Override
     public void onClickReserve() {

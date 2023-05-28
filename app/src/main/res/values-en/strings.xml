@@ -63,4 +63,6 @@
     <string name="timePickingText">Choose an hour</string>
     <string name="reserveLengthLabel">Length</string>
     <string name="reserveLengthText">Give Value</string>
+    <string name="dateBeginPickerText">Start Date</string>
+    <string name="dateEndPickerText">End Date</string>
 </resources>

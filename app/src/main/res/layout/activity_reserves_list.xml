@@ -6,21 +6,96 @@
     android:layout_width="match_parent"
     tools:context=".view.activities.ReservesListActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_reserves"
+    <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        android:orientation="vertical"
+        android:padding="8dp">
 
-    <TextView
-        android:id="@+id/tv_reserves_empty_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="24sp"
-        android:visibility="gone"
-        tools:text="@string/str_no_reservas" />
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
+            <EditText
+                android:focusable="false"
+                android:id="@+id/startDatePickerInput"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:text="@string/dateBeginPickerText" />
+
+            <EditText
+                android:focusable="false"
+                android:id="@+id/endDatePickerInput"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:text="@string/dateEndPickerText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <Spinner
+                android:background="@android:drawable/btn_dropdown"
+                android:hint="@string/Book_SportsDropdownListHint"
+                android:id="@+id/Book_CourtsDropdownList"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:spinnerMode="dropdown"></Spinner>
+
+            <Spinner
+                android:background="@android:drawable/btn_dropdown"
+                android:hint="@string/Book_SportsDropdownListHint"
+                android:id="@+id/Book_SportsDropdownList"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:spinnerMode="dropdown"></Spinner>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/btnFiltrarReservas"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/tv_reserves_empty_list"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:textSize="24sp"
+                android:visibility="gone"
+                tools:text="@string/str_no_reservas" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_reserves"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp" />
+        </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

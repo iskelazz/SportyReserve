@@ -1,5 +1,7 @@
 package es.udc.psi.repository.impl;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -12,7 +14,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -189,40 +193,84 @@ public class BookRepositoryImpl implements BookRepository {
 
 
     @Override
-    public ArrayList<Reserve> getReservesList() {
+        public void getFilteredReserves(String nameCourt, String nameSport, Calendar startDate, Calendar endDate, final OnFilteredReservesFetchedListener listener) {
 
-        //TODO: Datos mockeados
-        User usuario = new User("1234", "Nombre player 1","mail@mail.com","passwd01","678123456","Perez Perez");
-        User usuario2 = new User("1344", "Nombre player 2","mail2@mail.com","passwd01","675345345456","Perez Perez");
-        usuario2.setUriAvatar("https://goo.gl/gEgYUd");
-        //usuario.setUriAvatar("https://brickmarkt.com/19711-large_default/minifiguras-iron-man-minifigura-lego-marvel-super-heroes-sh065.jpg");
-        usuario.setUriAvatar("https://firebasestorage.googleapis.com/v0/b/sportyreserve.appspot.com/o/lego-marvel-super-heroes.jpg?alt=media&token=8ea6a384-da6d-4d81-89f0-f5f7e003169c");
+/*
+        // String nombrepista="Pistas de Lubre", nombredeporte="Basketball";
+        //String nombrepista="Polideportivo Meirás norte", nombredeporte="Basketball";
 
-        User usuarioVacio = new User();usuarioVacio.setNombre("+New Player");
+        Calendar fecha_comienzo = new GregorianCalendar(),fecha_final = new GregorianCalendar();
+        fecha_comienzo.set(Calendar.YEAR, 2023);
+        fecha_comienzo.set(Calendar.MONTH,5 );
+        fecha_comienzo.set(Calendar.DAY_OF_MONTH, 22);
+        fecha_comienzo.set(Calendar.HOUR_OF_DAY, 0);
+        fecha_comienzo.set(Calendar.MINUTE, 0);
+        fecha_comienzo.set(Calendar.SECOND, 0);
 
+        fecha_final.set(Calendar.YEAR, 2023);
+        fecha_final.set(Calendar.MONTH,5 );
+        fecha_final.set(Calendar.DAY_OF_MONTH, 24);
 
-        ArrayList<User> listaPlayers2=new ArrayList<>();listaPlayers2.add(usuario);listaPlayers2.add(usuario2);listaPlayers2.add(usuarioVacio);listaPlayers2.add(usuario);
-        ArrayList<User> listaPlayers=new ArrayList<>();listaPlayers.add(usuario);listaPlayers.add(usuario2);listaPlayers.add(usuarioVacio);listaPlayers.add(usuario);listaPlayers.add(usuarioVacio);listaPlayers.add(usuario2);listaPlayers.add(usuarioVacio);listaPlayers.add(usuarioVacio);listaPlayers.add(usuarioVacio);listaPlayers.add(usuario);
-        ArrayList<User> listaPlayers3 = (ArrayList<User>) listaPlayers.clone();listaPlayers3.add(usuario);listaPlayers3.add(usuario2);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuario);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuario2);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuario);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuario);
+Log.d("TAG_LOG","fecha_comienzo.set(Calendar.DAY_OF_MONTH, 22); "+fecha_comienzo.get(Calendar.DAY_OF_MONTH)+",  fecha_comienzo enmillis del 22/05??: "+fecha_comienzo.getTimeInMillis());
+        Log.d("TAG_LOG","fecha_comienzo : "+fecha_comienzo.toString());
 
-        Reserve reserve1=new Reserve("2234","Nombre Anfitrion","Nombre de la pista",4,"Padel  ",4,new Date(),120,listaPlayers2);
-        Reserve reserve2=new Reserve("67534","Nombre Anfitrion","Nombre de la pista2",10,"Basket  ",10,new Date(),120,listaPlayers);
-        Reserve reserve3=new Reserve("67534","Nombre Anfitrion","Nombre de la pista2",23,"Basket  ",23,new Date(),120,listaPlayers3);
+        //TODO:Reservas por pista
+*/
 
-        ArrayList<Reserve> reservationmockList= new ArrayList<Reserve>();
+        mDatabase.orderByChild("fecha/time").startAt(startDate.getTimeInMillis()).endAt(endDate.getTimeInMillis())
 
+        //.equalTo(nombrepista)
+        //        .orderByChild("pista")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-        reservationmockList.add(reserve1);
-        reservationmockList.add(reserve2);
-        reservationmockList.add(reserve1);
-        reservationmockList.add(reserve2);
-        reservationmockList.add(reserve3);
-        reservationmockList.add(reserve2);
+                //TODO: if (dataSnapshot.exists()) {
+                ArrayList<Reserve> reserves = new ArrayList<>();
+                //Log.d("TAG_LOG","Nombre pista: "+nombrepista+",  deporte: "+nombredeporte);
 
+                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                        try {
+                            Reserve reserve = childSnapshot.getValue(Reserve.class);
 
-        return reservationmockList;
+                        //Log.d("TAG_LOG","Antes comparación: Reserva  "+ reserve.getName()+ "   pista: "+reserve.getPista()+"  deporte: "+reserve.getDeporte());
 
-        //    return null;
+                            if (reserve != null && reserve.getDeporte().equals(nameSport) && reserve.getPista().equals(nameSport)) {
+
+                            //Log.d("TAG_LOG","Después: Reserva  "+ reserve.getName()+ "   pista: "+reserve.getPista()+"  deporte: "+reserve.getDeporte());
+                                reserves.add(reserve);
+                            }
+                        } catch (com.google.firebase.database.DatabaseException e) {
+                            // Falló la conversión, ignora esta reserva y continúa con la siguiente
+                            continue;
+                        }
+                    }
+                    listener.onFetched(reserves);
+/*
+                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                    try {
+                        Reserve reserve = childSnapshot.getValue(Reserve.class);
+                        if (reserve != null && reserve.getPlayerList() != null) {
+                            if (reserve.getPlayerList().stream().anyMatch(player -> player.getId().equals(playerId))) {
+                                reserves.add(reserve);
+                            }
+                        }
+                    } catch (com.google.firebase.database.DatabaseException e) {
+                        // Falló la conversión, ignora esta reserva y continúa con la siguiente
+                        continue;
+                    }
+                }
+*/
+//TODO:            } else {listener.onFailure("Error retrieving reserves from Reserve database");}
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("TAG_LOG","En fallito :"+databaseError.getMessage());
+                listener.onFailure(databaseError.getMessage());
+            }
+        });
+
     }
 
     /**

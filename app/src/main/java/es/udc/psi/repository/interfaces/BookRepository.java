@@ -1,6 +1,7 @@
 package es.udc.psi.repository.interfaces;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import es.udc.psi.model.Reserve;
@@ -65,6 +66,14 @@ public interface BookRepository {
         void onSuccess();
         void onFailure(String errorMessage);
     }
-    ArrayList<Reserve> getReservesList();
+
     public void replaceUserListWithNew(String bookId, List<User> newUserList, OnUserListUpdatedListener listener);
+
+    void getFilteredReserves(String nombrePista, String nombreDeporte, Calendar fecha_comienzo, Calendar fecha_final, final OnFilteredReservesFetchedListener listener);
+
+    interface OnFilteredReservesFetchedListener {
+        void onFetched(ArrayList<Reserve> reserves);
+        void onFailure(String error);
+    }
+
 }
