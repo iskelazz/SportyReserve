@@ -117,6 +117,7 @@ public class Reserve implements Parcelable {
 
     protected Reserve(Parcel in) {
         id = in.readString();
+        name = in.readString();
         anfitrion = in.readString();
         password = in.readString();
         pista = in.readString();
@@ -290,6 +291,7 @@ public class Reserve implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(id);
+        dest.writeString(name);
         dest.writeString(anfitrion);
         dest.writeString(password);
         dest.writeString(pista);

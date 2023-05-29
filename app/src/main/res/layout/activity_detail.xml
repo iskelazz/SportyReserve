@@ -116,7 +116,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="16sp"
-                            android:text="Pista"/>
+                            android:text="@string/pista"/>
 
                         <TextView
                             android:id="@+id/text_view_pista"
@@ -142,7 +142,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="16sp"
-                            android:text="Deporte"/>
+                            android:text="@string/deporte"/>
 
                         <TextView
                             android:id="@+id/text_view_deporte"
@@ -168,7 +168,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="16sp"
-                            android:text="Numero maximo de jugadores"/>
+                            android:text="@string/numero_maximo_de_jugadores"/>
 
                         <TextView
                             android:id="@+id/text_view_num_max"
@@ -194,7 +194,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="16sp"
-                            android:text="Numero actual de jugadores"/>
+                            android:text="@string/numero_actual_de_jugadores"/>
 
                         <TextView
                             android:id="@+id/text_view_num_actual"

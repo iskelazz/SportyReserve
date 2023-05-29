@@ -6,54 +6,34 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.material.textfield.TextInputLayout;
-
 import es.udc.psi.R;
 import es.udc.psi.controller.impl.RegisterControllerImpl;
+import es.udc.psi.databinding.ActivityRegisterBinding;
 import es.udc.psi.view.interfaces.RegisterView;
 
 public class RegisterActivity extends AppCompatActivity implements RegisterView {
 
-    private EditText emailEditText, phoneEditText, firstNameEditText, lastNameEditText, passwordEditText, usernameEditText;
-    private TextInputLayout emailTextInputLayout, phoneTextInputLayout, firstNameTextInputLayout, lastNameTextInputLayout, passwordTextInputLayout, usernameTextInputLayout;
-    private Button registerButton;
-
+    private ActivityRegisterBinding binding;
     private RegisterControllerImpl registerController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
-        // Inicializa las variables de los elementos de la interfaz de usuario
-        emailEditText = findViewById(R.id.emailEditText);
-        phoneEditText = findViewById(R.id.phoneEditText);
-        firstNameEditText = findViewById(R.id.firstNameEditText);
-        lastNameEditText = findViewById(R.id.lastNameEditText);
-        passwordEditText = findViewById(R.id.passwordEditText);
-        usernameEditText = findViewById(R.id.nicknameEditText);
-        registerButton = findViewById(R.id.registerButton);
-
-        emailTextInputLayout = findViewById(R.id.emailTextInputLayout);
-        phoneTextInputLayout = findViewById(R.id.phoneTextInputLayout);
-        firstNameTextInputLayout = findViewById(R.id.firstNameTextInputLayout);
-        lastNameTextInputLayout = findViewById(R.id.lastNameTextInputLayout);
-        passwordTextInputLayout = findViewById(R.id.passwordTextInputLayout);
-        usernameTextInputLayout = findViewById(R.id.nicknameTextInputLayout);
-
-        emailEditText.addTextChangedListener(fieldsTextWatcher);
-        phoneEditText.addTextChangedListener(fieldsTextWatcher);
-        firstNameEditText.addTextChangedListener(fieldsTextWatcher);
-        lastNameEditText.addTextChangedListener(fieldsTextWatcher);
-        passwordEditText.addTextChangedListener(fieldsTextWatcher);
-        usernameEditText.addTextChangedListener(fieldsTextWatcher);
+        binding.emailEditText.addTextChangedListener(fieldsTextWatcher);
+        binding.phoneEditText.addTextChangedListener(fieldsTextWatcher);
+        binding.firstNameEditText.addTextChangedListener(fieldsTextWatcher);
+        binding.lastNameEditText.addTextChangedListener(fieldsTextWatcher);
+        binding.passwordEditText.addTextChangedListener(fieldsTextWatcher);
+        binding.nicknameEditText.addTextChangedListener(fieldsTextWatcher);
 
         // Establecer la opacidad inicial del botón de registro
         updateRegisterButtonOpacity(false);
@@ -62,16 +42,16 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView 
         registerController = new RegisterControllerImpl(this);
 
         // Configura el listener para el botón de registro
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        binding.registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registerController.validateAndRegister(
-                        emailEditText.getText().toString().trim(),
-                        phoneEditText.getText().toString().trim(),
-                        firstNameEditText.getText().toString().trim(),
-                        lastNameEditText.getText().toString().trim(),
-                        passwordEditText.getText().toString().trim(),
-                        usernameEditText.getText().toString().trim()
+                        binding.emailEditText.getText().toString().trim(),
+                        binding.phoneEditText.getText().toString().trim(),
+                        binding.firstNameEditText.getText().toString().trim(),
+                        binding.lastNameEditText.getText().toString().trim(),
+                        binding.passwordEditText.getText().toString().trim(),
+                        binding.nicknameEditText.getText().toString().trim()
                 );
             }
         });
@@ -93,63 +73,65 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView 
 
     @Override
     public void showValidationError(String fieldName, String errorMessage) {
-        TextInputLayout inputLayout;
         switch (fieldName) {
             case "email":
-                inputLayout = emailTextInputLayout;
+                binding.emailTextInputLayout.setError(errorMessage);
+                binding.emailTextInputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.error_color));
                 break;
             case "phone":
-                inputLayout = phoneTextInputLayout;
+                binding.phoneTextInputLayout.setError(errorMessage);
+                binding.phoneTextInputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.error_color));
                 break;
             case "firstName":
-                inputLayout = firstNameTextInputLayout;
+                binding.firstNameTextInputLayout.setError(errorMessage);
+                binding.firstNameTextInputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.error_color));
                 break;
             case "lastName":
-                inputLayout = lastNameTextInputLayout;
+                binding.lastNameTextInputLayout.setError(errorMessage);
+                binding.lastNameTextInputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.error_color));
                 break;
             case "password":
-                inputLayout = passwordTextInputLayout;
+                binding.passwordTextInputLayout.setError(errorMessage);
+                binding.passwordTextInputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.error_color));
                 break;
             case "username":
-                inputLayout = usernameTextInputLayout;
+                binding.nicknameTextInputLayout.setError(errorMessage);
+                binding.nicknameTextInputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.error_color));
                 break;
-            default:
-                return;
         }
-        inputLayout.setError(errorMessage);
-        inputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.error_color));
     }
 
     @Override
     public void clearValidationError(String fieldName) {
-        TextInputLayout inputLayout;
         switch (fieldName) {
             case "email":
-                inputLayout = emailTextInputLayout;
+                binding.emailTextInputLayout.setError(null);
+                binding.emailTextInputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.default_box_stroke_color));
                 break;
             case "phone":
-                inputLayout = phoneTextInputLayout;
+                binding.phoneTextInputLayout.setError(null);
+                binding.phoneTextInputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.default_box_stroke_color));
                 break;
             case "firstName":
-                inputLayout = firstNameTextInputLayout;
+                binding.firstNameTextInputLayout.setError(null);
+                binding.firstNameTextInputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.default_box_stroke_color));
                 break;
             case "lastName":
-                inputLayout = lastNameTextInputLayout;
+                binding.lastNameTextInputLayout.setError(null);
+                binding.lastNameTextInputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.default_box_stroke_color));
                 break;
             case "password":
-                inputLayout = passwordTextInputLayout;
+                binding.passwordTextInputLayout.setError(null);
+                binding.passwordTextInputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.default_box_stroke_color));
                 break;
             case "username":
-                inputLayout = usernameTextInputLayout;
+                binding.nicknameTextInputLayout.setError(null);
+                binding.nicknameTextInputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.default_box_stroke_color));
                 break;
-            default:
-                return;
         }
-        inputLayout.setError(null);
-        inputLayout.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.default_box_stroke_color));
     }
 
-// TextWatcher y otros métodos auxiliares
+    // TextWatcher y otros métodos auxiliares
 
     TextWatcher fieldsTextWatcher = new TextWatcher() {
         @Override
@@ -165,22 +147,22 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView 
         @Override
         public void afterTextChanged(Editable s) {
             boolean allFieldsFilled = areAllFieldsFilled();
-            registerButton.setEnabled(allFieldsFilled);
+            binding.registerButton.setEnabled(allFieldsFilled);
             updateRegisterButtonOpacity(allFieldsFilled);
         }
     };
 
     private boolean areAllFieldsFilled() {
-        return !TextUtils.isEmpty(emailEditText.getText().toString().trim())
-                && !TextUtils.isEmpty(phoneEditText.getText().toString().trim())
-                && !TextUtils.isEmpty(firstNameEditText.getText().toString().trim())
-                && !TextUtils.isEmpty(lastNameEditText.getText().toString().trim())
-                && !TextUtils.isEmpty(passwordEditText.getText().toString().trim())
-                && !TextUtils.isEmpty(usernameEditText.getText().toString().trim());
+        return !TextUtils.isEmpty(binding.emailEditText.getText().toString().trim())
+                && !TextUtils.isEmpty(binding.phoneEditText.getText().toString().trim())
+                && !TextUtils.isEmpty(binding.firstNameEditText.getText().toString().trim())
+                && !TextUtils.isEmpty(binding.lastNameEditText.getText().toString().trim())
+                && !TextUtils.isEmpty(binding.passwordEditText.getText().toString().trim())
+                && !TextUtils.isEmpty(binding.nicknameEditText.getText().toString().trim());
     }
 
     private void updateRegisterButtonOpacity(boolean enabled) {
         float alpha = enabled ? 1.0f : 0.5f;
-        registerButton.setAlpha(alpha);
+        binding.registerButton.setAlpha(alpha);
     }
 }
