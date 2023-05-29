@@ -163,9 +163,9 @@ public class BookControllerImpl implements BookController {
 
 
     @Override
-    public void fetchFilteredReserves(String nombrePista, String nombreDeporte, Calendar fecha_comienzo, Calendar fecha_final , BookRepository.OnFilteredReservesFetchedListener listener) {
+    public void fetchFilteredReserves(String nameCourt, String nameSport, Calendar startDate, Calendar endDate , BookRepository.OnFilteredReservesFetchedListener listener) {
 
-            bookRepository.getFilteredReserves(nombrePista, nombreDeporte, fecha_comienzo, fecha_final, new BookRepository.OnFilteredReservesFetchedListener() {
+            bookRepository.getFilteredReserves(nameCourt, nameSport, startDate, endDate, new BookRepository.OnFilteredReservesFetchedListener() {
             @Override
             public void onFetched(ArrayList<Reserve> reserves) {
                 listener.onFetched(reserves);

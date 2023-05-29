@@ -65,4 +65,5 @@
     <string name="reserveLengthText">Dar valor</string>
     <string name="dateBeginPickerText">Fecha Inicio</string>
     <string name="dateEndPickerText">Fecha Final</string>
+    <string name="str_bt_lookForReserves">Buscar</string>
 </resources>

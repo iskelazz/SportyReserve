@@ -116,7 +116,7 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
 
             @Override
             public void onFetched(ArrayList<Sport> result) {
-
+                sportsAdapter.add("-- Todos --");
                 for (Sport sport : result) {
                     sportsAdapter.add(sport.getName());
                 }
@@ -132,7 +132,7 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
 
             @Override
             public void onFetched(ArrayList<Track> result) {
-
+                tracksAdapter.add("-- Todas --");
                 for (Track track : result) {
                     tracksAdapter.add(track.getName());
                 }
@@ -174,7 +174,20 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
             @Override
             public void onClick(View v) {
 
-                mBookController.fetchFilteredReserves(binding.BookCourtsDropdownList.getSelectedItem().toString(),
+
+                Calendar dateprueba = new GregorianCalendar();
+                Log.d("TAG_LOG","mes Antes:   "+dateprueba.get(Calendar.MONTH)+" en milliseconds: "+dateprueba.getTimeInMillis());
+                dateprueba.set(Calendar.MONTH,0);
+                Log.d("TAG_LOG","mes Después: "+dateprueba.get(Calendar.MONTH)+" en milliseconds: "+dateprueba.getTimeInMillis());
+
+                //Log.d("TAG_LOG","hora startDate: "+startDate.get(Calendar.HOUR_OF_DAY)+":"+startDate.get(Calendar.MINUTE)+":"+startDate.get(Calendar.SECOND)+"en milliseconds: "+startDate.getTimeInMillis());
+                //Log.d("TAG_LOG","hora endDate  : "+endDate.get(Calendar.HOUR_OF_DAY)+":"+endDate.get(Calendar.MINUTE)+":"+endDate.get(Calendar.SECOND)+"en milliseconds: "+endDate.getTimeInMillis());
+                Log.d("TAG_LOG","hora startDate: "+startDate.get(Calendar.DAY_OF_MONTH)+"/"+startDate.get(Calendar.MONTH)+"/"+startDate.get(Calendar.YEAR)+"/       "+startDate.get(Calendar.HOUR_OF_DAY)+":"+startDate.get(Calendar.MINUTE)+":"+startDate.get(Calendar.SECOND)+"en milliseconds: "+startDate.getTimeInMillis());
+                Log.d("TAG_LOG","hora endDate:   "+endDate.get(Calendar.DAY_OF_MONTH)+"/"+endDate.get(Calendar.MONTH)+"/"+endDate.get(Calendar.YEAR)+"/       "+endDate.get(Calendar.HOUR_OF_DAY)+":"+endDate.get(Calendar.MINUTE)+":"+endDate.get(Calendar.SECOND)+"en milliseconds: "+endDate.getTimeInMillis());
+
+
+                mBookController.fetchFilteredReserves(
+                        binding.BookCourtsDropdownList.getSelectedItem().toString(),
                         binding.BookSportsDropdownList.getSelectedItem().toString(),
                         startDate,
                         endDate,
@@ -219,7 +232,7 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         startDate.set(Calendar.YEAR, datePicker.getYear());
-                        startDate.set(Calendar.MONTH, datePicker.getMonth()+1);
+                        startDate.set(Calendar.MONTH, datePicker.getMonth());
                         startDate.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
                         startDate.set(Calendar.HOUR_OF_DAY,0);
                         startDate.set(Calendar.MINUTE,0);
@@ -236,15 +249,15 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         endDate.set(Calendar.YEAR, datePicker.getYear());
-                        endDate.set(Calendar.MONTH, datePicker.getMonth()+1);
+                        endDate.set(Calendar.MONTH, datePicker.getMonth());
                         endDate.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
                         endDate.set(Calendar.HOUR_OF_DAY,23);
                         endDate.set(Calendar.MINUTE,59);
                         endDate.set(Calendar.SECOND,59);
-                        binding.startDatePickerInput.setText(localeDate(datePicker.getDayOfMonth(), datePicker.getMonth()+1, datePicker.getYear()));
+                        binding.endDatePickerInput.setText(localeDate(datePicker.getDayOfMonth(), datePicker.getMonth()+1, datePicker.getYear()));
                     }
                 }, endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH));
-        datePicker.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
+        datePicker.getDatePicker().setMinDate(startDate.getTimeInMillis()); //TODO:??? startDate.getTimeInMillis() ó Calendar.getInstance().getTimeInMillis()
         datePicker.show();
     }
 
@@ -263,7 +276,11 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
             public void onClick(View view,
                                 int position) {
                 //TODO: check if player exist or add new player
-                mReserveListController.onClickPlayer();
+
+                Log.d("TAG_GOL","position???: "+ view.getId());
+                Log.d("TAG_GOL","REserva?? : "+ mReserveAdapter.getReserve(position).getName());
+
+                mReserveListController.onClickPlayer(mReserveAdapter.getReserve(position), view.getId());
                 mReserveListController.onClickAddNewPlayer();
 
             }
