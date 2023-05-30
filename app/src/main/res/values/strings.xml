@@ -52,7 +52,7 @@
     <string name="reserva_image_description">Image description</string>
   
     <string name="str_no_reservas">No hay reservas</string>
-    <string name="str_error_msg">Error ......</string>
+    <string name="str_error_msg">Error ...</string>
     <string name="str_name_team1">Equipo 1</string>
     <string name="str_name_team2">Equipo 2</string>
 
@@ -75,6 +75,7 @@
     <string name="dateBeginPickerText">Fecha Inicio</string>
     <string name="dateEndPickerText">Fecha Final</string>
     <string name="str_bt_lookForReserves">Buscar</string>
+    <string name="str_NewPlayer">Nuevo Jugador</string>
 
 
 </resources>

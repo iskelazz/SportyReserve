@@ -1,15 +1,27 @@
 package es.udc.psi.view.activities;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import es.udc.psi.R;
 import es.udc.psi.controller.impl.BookControllerImpl;
@@ -38,6 +51,7 @@ import es.udc.psi.view.interfaces.ReservesListView;
 
 public class ReservesListActivity extends AppCompatActivity implements ReservesListView {
 
+    public static String ALL_COURTS_AND_SPORTS = "__________";
     private ActivityReservesListBinding binding;
     private ReservesListController mReserveListController;
     private BookController mBookController;
@@ -77,9 +91,9 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
     }
 
     @Override
-    public void showError() {
+    public void showError(String error) {
 
-        Toast.makeText(this, getResources().getText(R.string.str_error_msg).toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getResources().getText(R.string.str_error_msg).toString()+error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -91,9 +105,165 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
     }
 
     @Override
-    public void updateReserve(Reserve reserve,
+    public void updateReserveListView(Reserve reserve,
                               int position) {
+        mReserveAdapter.updateReserve(reserve, position);
 
+    }
+
+    @Override
+    public void showAddUser(@NonNull Reserve reserve, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        TextInputLayout layoutInputPasswd = new TextInputLayout(this);
+        final TextInputEditText inputPasswd = new TextInputEditText(this);
+        TextInputLayout.LayoutParams lp = new TextInputLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutInputPasswd.setLayoutParams(lp);
+        layoutInputPasswd.setHint(getString(R.string.password_register));
+        layoutInputPasswd.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+        layoutInputPasswd.setEndIconDrawable(R.drawable.outline_lock_black_20);
+        layoutInputPasswd.addView(inputPasswd);
+
+        //inputPasswd.setLayoutParams(lp);
+        inputPasswd.setInputType(EditorInfo.TYPE_TEXT_VARIATION_PASSWORD);
+
+        if (!reserve.isPublic()){builder.setView(layoutInputPasswd);}
+
+        builder
+                .setTitle("Añadir como jugador")
+                .setMessage("Vas a añadirte como jugador a la reserva :    "+reserve.getName())
+                .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        String textPasswd = inputPasswd.getText().toString();
+                        if (reserve.isPublic()){
+                            mReserveListController.addMeAsPlayer(reserve, position);
+                        } else if(textPasswd.equals(reserve.getPassword())) {
+                            mReserveListController.addMeAsPlayer(reserve, position);
+                        } else {
+                            //TODO:Error de passwd
+                            layoutInputPasswd.setError("Mal password");
+                            layoutInputPasswd.setBoxStrokeColor(ContextCompat.getColor(getApplicationContext(), R.color.error_color));
+                            builder.setIcon(getColoredIcon("#FFD700"));
+                        }//?TODO:????????????????????
+
+                    }
+                } )
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        dialog.dismiss();;
+                    }
+                });
+                //.setIcon(getColoredIcon("#FFD700"));  //TODO: Crear un icono por cada deporte???
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+    @Override
+    public void showDeleteUser(@NonNull Reserve reserve, int position) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        //TODO:Cambiar UI?????????????
+        EditText inputPasswd = new EditText(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        inputPasswd.setLayoutParams(lp);
+
+        if (!reserve.isPublic()){builder.setView(inputPasswd);} //TODO: Necesario??????
+
+
+        builder.setTitle("Borrar como jugador")
+                .setMessage("Vas a eliminarte como jugador de la reserva : "+reserve.getName())
+                .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        String textPasswd = inputPasswd.getText().toString();
+                        if (reserve.isPublic()){
+                            mReserveListController.deleteMeAsPlayer(reserve, position);
+                        } else if(textPasswd.equals(reserve.getPassword())) {
+                            mReserveListController.deleteMeAsPlayer(reserve, position);
+                        } else {
+                            //TODO:Error de passwd????? dialog.
+                            builder.setIcon(getColoredIcon("#FFD700"));
+                            dialog.dismiss();//?TODO:????????????????????
+                        }
+                    }
+                } )
+
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        dialog.dismiss();;
+                    }
+                });
+
+        builder.setIcon(getColoredIcon("#FFD700"));  //TODO: Crear un icono por cada deporte???
+
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+    @Override
+    public void showImHost() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("   Eres el Anfitrión")
+                .setMessage("No puedes borrarte de la reserva desde aquí")
+                .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        dialog.dismiss();
+
+                    }
+                });
+
+        builder.setIcon(getColoredIcon("#FF0000"));
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    public void showImInReserve() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Ya estás en la reserva")
+                .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        dialog.dismiss();
+
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private Drawable getColoredIcon(String hexColor) {
+        Drawable warningIcon = ContextCompat.getDrawable(ReservesListActivity.this, android.R.drawable.ic_dialog_alert);
+        if (warningIcon != null) {
+            warningIcon.mutate();
+            int color = Color.parseColor(hexColor);
+            warningIcon.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+        }
+        return warningIcon;
     }
 
     private void setUI() {
@@ -116,7 +286,7 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
 
             @Override
             public void onFetched(ArrayList<Sport> result) {
-                sportsAdapter.add("-- Todos --");
+                sportsAdapter.add(ALL_COURTS_AND_SPORTS);
                 for (Sport sport : result) {
                     sportsAdapter.add(sport.getName());
                 }
@@ -132,7 +302,7 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
 
             @Override
             public void onFetched(ArrayList<Track> result) {
-                tracksAdapter.add("-- Todas --");
+                tracksAdapter.add(ALL_COURTS_AND_SPORTS);
                 for (Track track : result) {
                     tracksAdapter.add(track.getName());
                 }
@@ -174,18 +344,6 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
             @Override
             public void onClick(View v) {
 
-
-                Calendar dateprueba = new GregorianCalendar();
-                Log.d("TAG_LOG","mes Antes:   "+dateprueba.get(Calendar.MONTH)+" en milliseconds: "+dateprueba.getTimeInMillis());
-                dateprueba.set(Calendar.MONTH,0);
-                Log.d("TAG_LOG","mes Después: "+dateprueba.get(Calendar.MONTH)+" en milliseconds: "+dateprueba.getTimeInMillis());
-
-                //Log.d("TAG_LOG","hora startDate: "+startDate.get(Calendar.HOUR_OF_DAY)+":"+startDate.get(Calendar.MINUTE)+":"+startDate.get(Calendar.SECOND)+"en milliseconds: "+startDate.getTimeInMillis());
-                //Log.d("TAG_LOG","hora endDate  : "+endDate.get(Calendar.HOUR_OF_DAY)+":"+endDate.get(Calendar.MINUTE)+":"+endDate.get(Calendar.SECOND)+"en milliseconds: "+endDate.getTimeInMillis());
-                Log.d("TAG_LOG","hora startDate: "+startDate.get(Calendar.DAY_OF_MONTH)+"/"+startDate.get(Calendar.MONTH)+"/"+startDate.get(Calendar.YEAR)+"/       "+startDate.get(Calendar.HOUR_OF_DAY)+":"+startDate.get(Calendar.MINUTE)+":"+startDate.get(Calendar.SECOND)+"en milliseconds: "+startDate.getTimeInMillis());
-                Log.d("TAG_LOG","hora endDate:   "+endDate.get(Calendar.DAY_OF_MONTH)+"/"+endDate.get(Calendar.MONTH)+"/"+endDate.get(Calendar.YEAR)+"/       "+endDate.get(Calendar.HOUR_OF_DAY)+":"+endDate.get(Calendar.MINUTE)+":"+endDate.get(Calendar.SECOND)+"en milliseconds: "+endDate.getTimeInMillis());
-
-
                 mBookController.fetchFilteredReserves(
                         binding.BookCourtsDropdownList.getSelectedItem().toString(),
                         binding.BookSportsDropdownList.getSelectedItem().toString(),
@@ -195,12 +353,19 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
 
                             @Override
                             public void onFetched(ArrayList<Reserve> reservesList) {
-                                showReservesList(reservesList);
+
+                                if (reservesList!=null && !reservesList.isEmpty()){
+                                    showReservesList(reservesList);
+
+                                } else {
+
+                                    showEmptyView();
+                                }
                             }
 
                             @Override
                             public void onFailure(String error) {
-
+                                showError(error);
                             }
                         });
             }
@@ -275,13 +440,8 @@ public class ReservesListActivity extends AppCompatActivity implements ReservesL
             @Override
             public void onClick(View view,
                                 int position) {
-                //TODO: check if player exist or add new player
-
-                Log.d("TAG_GOL","position???: "+ view.getId());
-                Log.d("TAG_GOL","REserva?? : "+ mReserveAdapter.getReserve(position).getName());
 
                 mReserveListController.onClickPlayer(mReserveAdapter.getReserve(position), view.getId());
-                mReserveListController.onClickAddNewPlayer();
 
             }
         });

@@ -2,151 +2,207 @@
 
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:backgroundTint="#F8F8FF"
         android:id="@+id/card_view"
         android:layout_gravity="center"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardCornerRadius="10dp"
-        card_view:cardElevation="10dp"
         android:layout_margin="5dp"
-        card_view:cardBackgroundColor="@color/white">
+        android:layout_width="match_parent"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="2dp">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:id="@+id/ll_reservation"
             android:layout_height="wrap_content"
-            android:id="@+id/ll_reservation">
+            android:layout_width="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
+                android:id="@+id/ll_header_reservation"
                 android:layout_height="wrap_content"
-                android:id="@+id/ll_header_reservation">
-
-                <TextView
-                    android:id="@+id/tv_nameReservation"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:textSize="24sp"
-                    android:gravity="start"
-                    android:layout_gravity="center"/>
-
-                <TextView
-                    android:id="@+id/tv_nameCourt"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:textSize="20sp"
-                    android:gravity="start"
-                    android:layout_gravity="center"
-                    android:text="Name Court"/>
+                android:layout_width="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
+                    android:id="@+id/ll_firstline_header_reservation_"
                     android:layout_height="wrap_content"
-                    android:id="@+id/ll_lastline_header_reservation_">
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:id="@+id/iv_privateReserve"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:layout_width="48dp"
+                        android:visibility="gone"
+                        android:src="@drawable/outline_lock_black_48" />
 
                     <TextView
-                        android:id="@+id/tv_nameSport"
-                        android:layout_height="wrap_content"
-                        android:layout_width="match_parent"
-                        android:textSize="16sp"
-                        android:gravity="right"
+                        android:gravity="start"
+                        android:id="@+id/tv_nameReservation"
                         android:layout_gravity="center"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Name Court"/>
+                        android:layout_width="match_parent"
+                        android:padding="8dp"
+                        android:textAppearance="?attr/textAppearanceHeadline5"
+                        android:textColor="#777777"
+                        android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tv_nameDate"
-                        android:layout_height="wrap_content"
-                        android:layout_width="match_parent"
-                        android:textSize="16sp"
-                        android:gravity="left"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:text="10:00 - 12:00"/>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/ll_court_sport_header_reservation_"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/tv_nameCourt"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:padding="2dp"
+                        android:text="Name Court"
+                        android:textAppearance="?attr/textAppearanceHeadline6" />
+
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/tv_nameSport"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:padding="2dp"
+                        android:text="Name Sport"
+                        android:textAppearance="?attr/textAppearanceHeadline6" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_date_header_reservation_"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/tv_nameTime"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:layout_width="match_parent"
+                        android:padding="2dp"
+                        android:text="10:00 - 12:00"
+                        android:textAppearance="?attr/textAppearanceHeadline6"  />
+
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/tv_nameDate"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:layout_width="match_parent"
+                        android:padding="2dp"
+                        android:text="10/07"
+                        android:textAppearance="?attr/textAppearanceHeadline6"  />
+
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/tv_numberPlayers"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:layout_width="match_parent"
+                        android:padding="2dp"
+                        android:text="Num Players"
+                        android:textAppearance="?attr/textAppearanceHeadline6"  />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:id="@+id/ll_players"
                 android:layout_gravity="bottom"
-                android:id="@+id/ll_players">
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="horizontal">
 
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:id="@+id/ll_team1"
-                    android:layout_weight="1">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
+                        android:id="@+id/ll_header_team1"
                         android:layout_height="wrap_content"
-                        android:id="@+id/ll_header_team1">
+                        android:layout_width="match_parent"
+                        android:orientation="vertical">
 
                         <TextView
+                            android:gravity="center"
                             android:id="@+id/tv_nameTeam1"
+                            android:layout_gravity="center"
                             android:layout_height="wrap_content"
                             android:layout_width="match_parent"
-                            android:textSize="16sp"
-                            android:gravity="center"
-                            android:layout_gravity="center"
-                            android:text="@string/str_name_team1"/>
+                            android:text="@string/str_name_team1"
+                            android:padding="2dp"
+                            android:textAppearance="?attr/textAppearanceHeadline6" />
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/ll_team1players"
                         android:layout_gravity="bottom"
-                        android:id="@+id/ll_team1players">
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal">
 
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:id="@+id/ll_team2"
-                    android:layout_weight="1">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
+                        android:id="@+id/ll_header_team2"
                         android:layout_height="wrap_content"
-                        android:id="@+id/ll_header_team2">
+                        android:layout_width="match_parent"
+                        android:orientation="vertical">
 
                         <TextView
+                            android:gravity="center"
                             android:id="@+id/tv_nameTeam2"
+                            android:layout_gravity="center"
                             android:layout_height="wrap_content"
                             android:layout_width="match_parent"
-                            android:textSize="16sp"
-                            android:gravity="center"
-                            android:layout_gravity="center"
-                            android:text="@string/str_name_team2"/>
+                            android:text="@string/str_name_team2"
+                            android:padding="2dp"
+                            android:textAppearance="?attr/textAppearanceHeadline6" />
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/ll_team2players"
                         android:layout_gravity="bottom"
-                        android:id="@+id/ll_team2players">
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal">
 
                     </LinearLayout>
                 </LinearLayout>

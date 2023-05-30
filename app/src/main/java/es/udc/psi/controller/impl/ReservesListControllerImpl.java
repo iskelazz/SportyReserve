@@ -1,11 +1,9 @@
 package es.udc.psi.controller.impl;
 
-import android.util.Log;
-import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import es.udc.psi.controller.interfaces.ReservesListController;
 import es.udc.psi.model.Reserve;
@@ -14,24 +12,47 @@ import es.udc.psi.repository.impl.BookRepositoryImpl;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
 import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.repository.interfaces.UserRepository;
+import es.udc.psi.view.activities.ReservesListActivity;
 import es.udc.psi.view.interfaces.ReservesListView;
 
 public class ReservesListControllerImpl implements ReservesListController {
 
-    private ReservesListView mReserveListView;
+    private final ReservesListView mReserveListView;
 
-    private BookRepositoryImpl mBookRepository;
-    private UserRepository mUserRepository;//TODO::???
+    private final BookRepositoryImpl mBookRepository;
+    private final UserRepository mUserRepository;
 
     public ReservesListControllerImpl(ReservesListView reservesListView) {
 
         mReserveListView = reservesListView;
         mBookRepository = new BookRepositoryImpl();
-        mUserRepository=new UserRepositoryImpl();
+        mUserRepository = new UserRepositoryImpl();
     }
 
     @Override
     public void initFlow() {
+
+        Calendar today = new GregorianCalendar();
+        Calendar endDate = new GregorianCalendar();
+        endDate.add(Calendar.YEAR,1);           //Inicialmente todas las reservas desde hoy en un año
+
+        mBookRepository.getFilteredReserves(ReservesListActivity.ALL_COURTS_AND_SPORTS,
+                ReservesListActivity.ALL_COURTS_AND_SPORTS,
+                today,
+                endDate,
+                new BookRepository.OnFilteredReservesFetchedListener(){
+
+                    @Override
+                    public void onFetched(ArrayList<Reserve> reservesList) {
+                        mReserveListView.showReservesList(reservesList);
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+
+                    }
+                });
+/*
         mBookRepository.getReserves(new BookRepository.OnReservesFetchedListener() {    //TODO:cambiar por reservas filtradas desde hoy hasta 1año, por ej???
 
             @Override
@@ -44,7 +65,7 @@ public class ReservesListControllerImpl implements ReservesListController {
 
             }
         });
-
+*/
     }
 
 
@@ -56,80 +77,69 @@ public class ReservesListControllerImpl implements ReservesListController {
     @Override
     public void onClickPlayer(Reserve reserve, int position) {
         if (reserve != null && reserve.getPlayerList() != null) {
-            //if (position < reserve.getPlayerList().size())
-            if (position < reserve.getNumPlayers()) {    // Seleccionado un jugador
+
+            //if (position < reserve.getNumPlayers()) {    // Seleccionado un jugador   //TODO:???Comprobar si  BookRepository.replaceUserListWithNew actualiza bien el numPlayers
+            if (position < reserve.getPlayerList().size()) {    // Seleccionado un jugador
 
                 if (reserve.getPlayerList().get(position).getId().equals(mUserRepository.getCurrentUserId())) {   //Si el jugador seleccionado es el propio usuario
-                    Log.d("TAG_GOL", "player pinchado (yo)??:" + reserve.getPlayerList().get(position).getNombre() + " ,  numplayers:  " + reserve.getNumPlayers());
 
-                    deleteMeAsPlayer(reserve); //TODO:comprobar q no soy anfitrión
-//mBookRepository.pruebaBorradolistausuarios(reserve.getId());
+                    if (!reserve.getAnfitrion().equals(mUserRepository.getCurrentUserId())) {
+
+                        mReserveListView.showDeleteUser(reserve,position);
+
+                    } else {
+
+                        mReserveListView.showImHost();
+}
                 } else {
+
                     //TODO: Opción DetailOtrosPlayers()????
-                    Log.d("TAG_GOL", "player pinchado:" + reserve.getPlayerList().get(position).getNombre() + " ,  numplayers:  " + reserve.getNumPlayers());
                 }
 
-            } else if (position == reserve.getNumPlayers()) {    //Seleccionado para añadir al usuario como Nuevo Jugador
+            } else if (position ==  reserve.getPlayerList().size()) {    //Seleccionado para añadir al usuario como Nuevo Jugador
                 //(position >= reserve.getNumPlayers()
-                Log.d("TAG_GOL", "añadirme???:, position:" + position + " ,  numplayers:  " + reserve.getNumPlayers());
-                //TODO:AlertDialogs???passwd si es privada???
-                if (!reserve.getPlayerList().stream().anyMatch(player -> player.getId().equals(mUserRepository.getCurrentUserId()))) {
-                    Log.d("TAG_GOL", "user:" + mUserRepository.getCurrentUserId() + "está en la reserva: " + reserve.getName());
 
-                    addMeAsPlayer(reserve);
+                if (reserve.getPlayerList().stream().noneMatch(player -> player.getId().equals(mUserRepository.getCurrentUserId()))) {
+
+                    mReserveListView.showAddUser(reserve,position);
+
                 } else {
-                    //TODO:Aviso, ya estás en la reserva???
+
+                    mReserveListView.showImInReserve();
                 }
 
 
             }
         }
 
-        /*if (reserve != null && reserve.getPlayerList() != null) {
-            if (reserve.getPlayerList().stream().anyMatch(player -> player.getId().equals(mUserRepository.getCurrentUserId()))) {
-                Log.d("TAG_GOL","user:"+ mUserRepository.getCurrentUserId()+ "está en la reserva: "+reserve.getName());
-            }
-        }*/
-
     }
+
 
     @Override
-    public void onClickAddNewPlayer() {
-
-    }
-
-    private void deleteMeAsPlayer(Reserve reserve){
-        //TODO:
-        // AlertDialog para Borrarse de la reserva??? (si es anfitrión????) mirar de userAdapter/btnExpulsar
+    public void deleteMeAsPlayer(Reserve reserve, int position){
 
         mUserRepository.getUser(mUserRepository.getCurrentUserId(), new UserRepository.OnUserFetchedListener() {
 
             @Override
             public void onFetched(User user) {
                 ArrayList<User> newListUsers = reserve.getPlayerList();
-                Log.d("TAG_DELETE", "newlistPlayers:"+newListUsers.toString());
-                Log.d("TAG_DELETE", "user:"+user);
-                newListUsers.remove(user);
-                Log.d("TAG_DELETE", "newlistPlayers:"+newListUsers.toString());
+
                 newListUsers.removeIf(user1 -> user1.getId().equals(user.getId()));
-                Log.d("TAG_DELETE", "newlistPlayers:"+newListUsers.toString());
+
                 mBookRepository.replaceUserListWithNew(reserve.getId(), newListUsers, new BookRepository.OnUserListUpdatedListener() {
 
                     @Override
                     public void onSuccess() {
-                                /*// Muestra un Toast cuando el usuario se haya eliminado con éxito
-                                Toast.makeText(context.getApplicationContext(), "Usuario expulsado con éxito.", Toast.LENGTH_SHORT).show();
-                                // Actualizar la vista aquí. Por ejemplo, podrías querer actualizar una lista de usuarios.
-                                if(listener != null) {
-                                    listener.onUserExpelled();
-                                }*/
+                                //TODO:??? Mostrar Toast (pasar contexto)
 
-                        //TODO:actualizar vista??                                mReserveListView.showReservesList();
-                        initFlow();//TODO: de momento
+                        reserve.setPlayerList(newListUsers);
+                        mReserveListView.updateReserveListView(reserve,position);
+
                     }
 
                     @Override
                     public void onFailure(String errorMessage) {
+                        //TODO:??? Mostrar Toast cuando haya error?? (pasar contexto)
 
                     }
                 });
@@ -137,15 +147,15 @@ public class ReservesListControllerImpl implements ReservesListController {
 
             @Override
             public void onFailure(String error) {
-                // Muestra un Toast cuando haya un error
-                //TODO: Toast.makeText(context.getApplicationContext(), "Error al expulsar al usuario: " + errorMessage, Toast.LENGTH_SHORT).show();
+                //TODO:??? Mostrar Toast cuando haya error?? (pasar contexto)
 
             }
         });
 
     }
 
-    private void addMeAsPlayer(Reserve reserve){
+    @Override
+    public void addMeAsPlayer(Reserve reserve, int position){
 
         mUserRepository.getUser(mUserRepository.getCurrentUserId(), new UserRepository.OnUserFetchedListener() {
 
@@ -153,20 +163,14 @@ public class ReservesListControllerImpl implements ReservesListController {
             public void onFetched(User user) {
 
                 ArrayList<User> newListUsers = reserve.getPlayerList();
-                newListUsers.add(user); //TODO:Comprobar q no esté en
+                newListUsers.add(user);
                 mBookRepository.replaceUserListWithNew(reserve.getId(), newListUsers, new BookRepository.OnUserListUpdatedListener() {
 
                     @Override
                     public void onSuccess() {
-                                /*// Muestra un Toast cuando el usuario se haya añadido con éxito
-                                Toast.makeText(context.getApplicationContext(), "Usuario expulsado con éxito.", Toast.LENGTH_SHORT).show();
-                                // Actualizar la vista aquí. Por ejemplo, podrías querer actualizar una lista de usuarios.
-                                if(listener != null) {
-                                    listener.onUserExpelled();
-                                }*/
 
-                        //TODO:actualizar vista??                                mReserveListView.showReservesList();
-                        initFlow();//TODO: de momento
+                        reserve.setPlayerList(newListUsers);
+                        mReserveListView.updateReserveListView(reserve,position);
                     }
 
                     @Override
@@ -178,8 +182,6 @@ public class ReservesListControllerImpl implements ReservesListController {
 
             @Override
             public void onFailure(String error) {
-                // Muestra un Toast cuando haya un error
-                //TODO: Toast.makeText(context.getApplicationContext(), "Error al expulsar al usuario: " + errorMessage, Toast.LENGTH_SHORT).show();
 
             }
         });

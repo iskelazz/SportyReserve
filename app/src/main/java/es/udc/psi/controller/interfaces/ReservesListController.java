@@ -10,6 +10,8 @@ public interface ReservesListController {
 
     void onClickPlayer(Reserve reserve, int position);
 
-    void onClickAddNewPlayer();
+    void addMeAsPlayer(Reserve reserve, int position);
+
+    void deleteMeAsPlayer(Reserve reserve, int position);
 
 }

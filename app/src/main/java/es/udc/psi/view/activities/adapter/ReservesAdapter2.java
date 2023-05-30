@@ -11,7 +11,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -37,10 +43,10 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
 
     public static class reserveViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView tvNameReservation, tvNameCourt, tvStrDate, tvNameSport, tv_newplayer;
+        public TextView tvNameReservation, tvNameCourt, tvStrTime, tvStrDate, tvNameSport, tv_newplayer, tvNumPlayers;
         public LinearLayout layoutPlayersTeam1, layoutPlayersTeam2, layoutOnePlayer, layoutTeams;
         public CardView cardView_img_player;
-        public ImageView imageView_newplayer;
+        public ImageView imageView_newplayer, imageView_privateReserve;
 
 
         public reserveViewHolder(@NonNull View itemView) {
@@ -48,8 +54,11 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             super(itemView);
             tvNameReservation = itemView.findViewById(R.id.tv_nameReservation);
             tvNameCourt = itemView.findViewById(R.id.tv_nameCourt);
+            tvStrTime = itemView.findViewById(R.id.tv_nameTime);
             tvStrDate = itemView.findViewById(R.id.tv_nameDate);
+            tvNumPlayers = itemView.findViewById(R.id.tv_numberPlayers);
             tvNameSport = itemView.findViewById(R.id.tv_nameSport);
+            imageView_privateReserve = itemView.findViewById(R.id.iv_privateReserve);
 
             layoutPlayersTeam1=itemView.findViewById(R.id.ll_team1players);
             layoutPlayersTeam2=itemView.findViewById(R.id.ll_team2players);
@@ -59,10 +68,22 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
 
         public void bind(Reserve reserve) {
 
+
             tvNameReservation.setText(reserve.getName());
+            if (!reserve.isPublic()){imageView_privateReserve.setVisibility(View.VISIBLE);} else {imageView_privateReserve.setVisibility(View.GONE);}
             tvNameCourt.setText(reserve.getPista());
-            //tvStrDate.setText(reserve.getFecha());
             tvNameSport.setText(reserve.getDeporte());
+            //tvNumPlayers.setText("Jugadores: "+(reserve.getCapacidadMax()-reserve.getNumPlayers()));
+            tvNumPlayers.setText("Plazas: "+reserve.getCapacidadMax());
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(reserve.getFecha());
+            calendar.add(Calendar.MINUTE, reserve.getDuracion());
+            Date endTime = calendar.getTime();
+            DateFormat df = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            tvStrTime.setText(df.format(reserve.getFecha())+" - "+df.format(endTime));
+            DateFormat dfi = new SimpleDateFormat("dd/MM", Locale.getDefault());
+            tvStrDate.setText(dfi.format(reserve.getFecha()));
 
             layoutPlayersTeam1.removeAllViews();
             layoutPlayersTeam2.removeAllViews();
@@ -71,12 +92,9 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
                 //if ((layoutPlayers!= null) && (layoutPlayers.getChildCount()>0)){
 
                 int size_list_players = reserve.getPlayerList().size();
-                //int size_list_players = reserve.getNumPlayers(); //TODO:???????????
+                //int size_list_players = reserve.getNumPlayers();
                 int num_max_players = reserve.getCapacidadMax();
                 int num_players_team = num_max_players / 2;
-//TODO:: Límites mal, no recorrer si no necesario if sizelistplayers> numplayersteam => 2 teams y recorrer for para 1er
-Log.d("TAG_LOG", "Reserva "+reserve.getName()+":  ");
-Log.d("TAG_LOG", "sizelistplayers: "+size_list_players+",    num_max_players :"+num_max_players+",    num_players_team: "+num_players_team);
 
                 // Orientación de los layouts de los equipos
                 if (num_max_players > 4) {                            //ll_players en horizontal (2 ll_teams en horizontal)
@@ -160,8 +178,7 @@ Log.d("TAG_LOG", "sizelistplayers: "+size_list_players+",    num_max_players :"+
             imageView_newplayer.setScaleType(ImageView.ScaleType.CENTER_CROP);
             Glide.with(imageView_newplayer)
                     .load(reserve.getPlayerList().get(position).getUriAvatar())
-                    //.placeholder(android.R.drawable.ic_input_add)   //TODO: Cambiar icono??
-                    .placeholder(R.drawable.baseline_account_circle_24)   //TODO: Cambiar icono??
+                    .placeholder(R.drawable.baseline_account_circle_24)
                     .into(imageView_newplayer);
 
             layoutOnePlayer.setId(position);
@@ -190,7 +207,7 @@ Log.d("TAG_LOG", "sizelistplayers: "+size_list_players+",    num_max_players :"+
             tv_newplayer.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT,1));
-            tv_newplayer.setText("Añadir Jugador");
+            tv_newplayer.setText(R.string.str_NewPlayer);
             tv_newplayer.setTextSize(14);
             tv_newplayer.setGravity(Gravity.CENTER);
 
@@ -283,8 +300,7 @@ Log.d("TAG_LOG", "sizelistplayers: "+size_list_players+",    num_max_players :"+
     public void addReserve(Reserve reserve) {
 
         mDataset.add(reserve);
-        //notifyItemChanged(mDataset.size()-1);
-        notifyItemInserted(mDataset.size() - 1);
+        notifyItemInserted(mDataset.size());
     }
 
 
@@ -301,7 +317,7 @@ Log.d("TAG_LOG", "sizelistplayers: "+size_list_players+",    num_max_players :"+
     }
 
 
-    public void setReserve(int position, Reserve reserve) {
+    public void setReserve(Reserve reserve, int position) {
 
         mDataset.set(position,reserve);
         //notifyDataSetChanged();
@@ -312,8 +328,9 @@ Log.d("TAG_LOG", "sizelistplayers: "+size_list_players+",    num_max_players :"+
     public void updateReserve(Reserve reserve,
                            int position) {
 
-        mDataset.add(position, reserve);
-        notifyItemChanged(position);
+        notifyDataSetChanged();
+        //mDataset.add(position, reserve);
+        //notifyItemChanged(position);
     }
 
 }

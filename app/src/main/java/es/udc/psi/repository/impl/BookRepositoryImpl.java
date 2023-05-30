@@ -1,6 +1,5 @@
 package es.udc.psi.repository.impl;
 
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -15,8 +14,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +21,7 @@ import java.util.Map;
 import es.udc.psi.model.Reserve;
 import es.udc.psi.model.User;
 import es.udc.psi.repository.interfaces.BookRepository;
+import es.udc.psi.view.activities.ReservesListActivity;
 
 public class BookRepositoryImpl implements BookRepository {
     private DatabaseReference mDatabase;
@@ -195,78 +193,40 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
         public void getFilteredReserves(String nameCourt, String nameSport, Calendar startDate, Calendar endDate, final OnFilteredReservesFetchedListener listener) {
 
-        Log.d("TAG_LOG","En REpository hora startDate: "+startDate.get(Calendar.DAY_OF_MONTH)+"/"+startDate.get(Calendar.MONTH)+"/"+startDate.get(Calendar.YEAR)+"/       "+startDate.get(Calendar.HOUR_OF_DAY)+":"+startDate.get(Calendar.MINUTE)+":"+startDate.get(Calendar.SECOND)+"en milliseconds: "+startDate.getTimeInMillis());
-        Log.d("TAG_LOG","En REpository hora endDate: "+endDate.get(Calendar.DAY_OF_MONTH)+"/"+endDate.get(Calendar.MONTH)+"/"+endDate.get(Calendar.YEAR)+"/       "+endDate.get(Calendar.HOUR_OF_DAY)+":"+endDate.get(Calendar.MINUTE)+":"+endDate.get(Calendar.SECOND)+"en milliseconds: "+endDate.getTimeInMillis());
-        Log.d("TAG_LOG","En REpository pista: "+nameCourt);
-        Log.d("TAG_LOG","En REpository deprte: "+nameSport);
-
-/*
-        // String nombrepista="Pistas de Lubre", nombredeporte="Basketball";
-        //String nombrepista="Polideportivo Meirás norte", nombredeporte="Basketball";
-
-        Calendar fecha_comienzo = new GregorianCalendar(),fecha_final = new GregorianCalendar();
-        fecha_comienzo.set(Calendar.YEAR, 2023);
-        fecha_comienzo.set(Calendar.MONTH,5 );
-        fecha_comienzo.set(Calendar.DAY_OF_MONTH, 22);
-        fecha_comienzo.set(Calendar.HOUR_OF_DAY, 0);
-        fecha_comienzo.set(Calendar.MINUTE, 0);
-        fecha_comienzo.set(Calendar.SECOND, 0);
-
-        fecha_final.set(Calendar.YEAR, 2023);
-        fecha_final.set(Calendar.MONTH,5 );
-        fecha_final.set(Calendar.DAY_OF_MONTH, 24);
-
-Log.d("TAG_LOG","fecha_comienzo.set(Calendar.DAY_OF_MONTH, 22); "+fecha_comienzo.get(Calendar.DAY_OF_MONTH)+",  fecha_comienzo enmillis del 22/05??: "+fecha_comienzo.getTimeInMillis());
-        Log.d("TAG_LOG","fecha_comienzo : "+fecha_comienzo.toString());
-
-        //TODO:Reservas por pista
-*/
-
         mDatabase.orderByChild("fecha/time").startAt(startDate.getTimeInMillis()).endAt(endDate.getTimeInMillis())
-
-        //.equalTo(nombrepista)
-        //        .orderByChild("pista")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                //TODO: if (dataSnapshot.exists()) {
+                //TODO: if (dataSnapshot.exists()) { ??????Mirar/Comprobar????
                 ArrayList<Reserve> reservesList = new ArrayList<>();
-                //Log.d("TAG_LOG","Nombre pista: "+nombrepista+",  deporte: "+nombredeporte);
 
-                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                        try {
-                            Reserve reserve = childSnapshot.getValue(Reserve.class);
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    try {
+                        Reserve reserve = childSnapshot.getValue(Reserve.class);
 
-                            if (reserve != null){
-                                if (nameSport.equals("-- Todos --")){
-                                    if (nameCourt.equals("-- Todas --")){
-                                        reservesList.add(reserve);
-                                    } else if (reserve.getPista().equals(nameCourt)){
-                                            reservesList.add(reserve);
-                                    }
-                                } else if (reserve.getDeporte().equals(nameSport)){
-                                    if (nameCourt.equals("-- Todas --")){
-                                        reservesList.add(reserve);
-                                    } else if (reserve.getPista().equals(nameCourt)){
-                                        reservesList.add(reserve);
-                                    }
+                        if (reserve != null){
+                            if (nameSport.equals(ReservesListActivity.ALL_COURTS_AND_SPORTS)){
+                                if (nameCourt.equals(ReservesListActivity.ALL_COURTS_AND_SPORTS)){
+                                    reservesList.add(reserve);
+                                } else if (reserve.getPista().equals(nameCourt)){
+                                    reservesList.add(reserve);
+                                }
+                            } else if (reserve.getDeporte().equals(nameSport)){
+                                if (nameCourt.equals(ReservesListActivity.ALL_COURTS_AND_SPORTS)){
+                                    reservesList.add(reserve);
+                                } else if (reserve.getPista().equals(nameCourt)){
+                                    reservesList.add(reserve);
                                 }
                             }
-
-/*                        Log.d("TAG_LOG","Antes comparación: Reserva  "+ reserve.getName()+ "   pista: "+reserve.getPista()+"  deporte: "+reserve.getDeporte());
-
-                            if (reserve != null && reserve.getDeporte().equals(nameSport) && reserve.getPista().equals(nameCourt)) {
-
-                            Log.d("TAG_LOG","Después: Reserva  "+ reserve.getName()+ "   pista: "+reserve.getPista()+"  deporte: "+reserve.getDeporte());
-                                reservesList.add(reserve);
-                            }*/
-                        } catch (com.google.firebase.database.DatabaseException e) {
-                            // Falló la conversión, ignora esta reserva y continúa con la siguiente
-                            continue;
                         }
+
+                    } catch (com.google.firebase.database.DatabaseException e) {
+                            // Ignora esta reserva y continúa con la siguiente
+                            continue;
                     }
-                    listener.onFetched(reservesList);
+                }
+                listener.onFetched(reservesList);
 /*
                 for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
                     try {
@@ -287,7 +247,7 @@ Log.d("TAG_LOG","fecha_comienzo.set(Calendar.DAY_OF_MONTH, 22); "+fecha_comienzo
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("TAG_LOG","En fallito :"+databaseError.getMessage());
+
                 listener.onFailure(databaseError.getMessage());
             }
         });

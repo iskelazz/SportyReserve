@@ -45,7 +45,7 @@
     <string name="navigation_drawer_close">Close navigation menu</string>
     <string name="reserva_image_description">Image description</string>
     <string name="str_no_reservas">No reserves</string>
-    <string name="str_error_msg">Error ......</string>
+    <string name="str_error_msg">Error ...</string>
     <string name="str_name_team1">Team 1</string>
     <string name="str_name_team2">Team 2</string>
     <string name="autores">Alejandro, Javier and José</string>
@@ -66,4 +66,5 @@
     <string name="dateBeginPickerText">Start Date</string>
     <string name="dateEndPickerText">End Date</string>
     <string name="str_bt_lookForReserves">Look for</string>
+    <string name="str_NewPlayer">New Player</string>
 </resources>
