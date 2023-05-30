@@ -5,14 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import es.udc.psi.R;
 import es.udc.psi.model.Notification;
+import es.udc.psi.databinding.NotificationItemBinding;
 
 public class NotificationsAdapter extends ArrayAdapter<Notification> {
 
@@ -25,22 +24,23 @@ public class NotificationsAdapter extends ArrayAdapter<Notification> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.notification_item, parent, false);
-        }
+        NotificationItemBinding binding;
 
-        TextView titleTextView = convertView.findViewById(R.id.notificationTitleTextView);
-        TextView messageTextView = convertView.findViewById(R.id.notificationMessageTextView);
-        TextView dateTextView = convertView.findViewById(R.id.notificationDateTextView);
+        if (convertView == null) {
+            binding = NotificationItemBinding.inflate(LayoutInflater.from(getContext()), parent, false);
+            convertView = binding.getRoot();
+        } else {
+            binding = (NotificationItemBinding) convertView.getTag();
+        }
 
         Notification notification = getItem(position);
         if (notification != null) {
-            titleTextView.setText(notification.getTitle());
-            messageTextView.setText(notification.getMessage());
-            dateTextView.setText(mDateFormat.format(notification.getDate()));
+            binding.notificationTitleTextView.setText(notification.getTitle());
+            binding.notificationMessageTextView.setText(notification.getMessage());
+            binding.notificationDateTextView.setText(mDateFormat.format(notification.getDate()));
         }
 
+        convertView.setTag(binding);
         return convertView;
     }
 }
-
