@@ -72,5 +72,9 @@
     <string name="old_password">Old Password</string>
     <string name="new_password">New Password</string>
     <string name="accept">Accept</string>
+    <string name="pista">Court</string>
+    <string name="deporte">Sport</string>
+    <string name="numero_maximo_de_jugadores">Maximum Number of Players</string>
+    <string name="numero_actual_de_jugadores">Current Number of Players</string>
 
 </resources>

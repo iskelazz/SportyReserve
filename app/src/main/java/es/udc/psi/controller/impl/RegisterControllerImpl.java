@@ -26,6 +26,11 @@ public class RegisterControllerImpl implements RegisterController {
         mAuth = FirebaseAuth.getInstance();
         userRepository = new UserRepositoryImpl();
     }
+    public RegisterControllerImpl(RegisterView view, FirebaseAuth mAuth, UserRepository userRepository) {
+        this.view = view;
+        this.mAuth = mAuth;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void validateAndRegister(String email, String phone, String firstName, String lastName, String password, String username) {

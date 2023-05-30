@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,30 +17,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import es.udc.psi.R;
 import es.udc.psi.model.Notification;
-import es.udc.psi.view.adapters.NotificationsAdapter;
-import es.udc.psi.repository.impl.UserRepositoryImpl;
 import es.udc.psi.repository.interfaces.UserRepository;
+import es.udc.psi.view.adapters.NotificationsAdapter;
+import es.udc.psi.controller.impl.UserControllerImpl;
+import es.udc.psi.controller.interfaces.UserController;
+import es.udc.psi.databinding.FragmentNotificationsBinding;
 
 public class NotificationsFragment extends Fragment {
-    private ListView notificationsListView;
-    private TextView emptyNotificationsTextView;
-    private UserRepository userRepository;
+    private UserController userController;
     private NotificationsAdapter adapter;
+    private FragmentNotificationsBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_notifications, container, false);
+        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
-        notificationsListView = view.findViewById(R.id.notificationsListView);
-        emptyNotificationsTextView = view.findViewById(R.id.emptyNotificationsTextView);
-
-        userRepository = new UserRepositoryImpl();
-        String userId = userRepository.getCurrentUserId(); // Obtén el ID del usuario actual
-
-        userRepository.getNotifications(userId, new UserRepository.OnNotificationsFetchedListener() {
+        userController = new UserControllerImpl();
+        String userId = userController.getCurrentUserId(); // Obtén el ID del usuario actual
+        userController.getNotifications(userId, new UserRepository.OnNotificationsFetchedListener() {
             @Override
             public void onFetched(Map<String, Notification> notifications) {
                 // Cuando tengamos las notificaciones, las mostramos en el ListView.
@@ -52,7 +47,7 @@ public class NotificationsFragment extends Fragment {
                 Collections.reverse(notificationList);
 
                 adapter = new NotificationsAdapter(getContext(), notificationList);
-                notificationsListView.setAdapter(adapter);
+                binding.notificationsListView.setAdapter(adapter);
             }
 
             @Override
@@ -63,5 +58,11 @@ public class NotificationsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

@@ -12,8 +12,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -76,6 +78,7 @@ public class BookRepositoryImpl implements BookRepository {
                         for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
                             reserves.add(childSnapshot.getValue(Reserve.class));
                         }
+                        removeOldReserves(reserves);
                         listener.onFetched(reserves);
                     }
 
@@ -104,6 +107,7 @@ public class BookRepositoryImpl implements BookRepository {
                         continue;
                     }
                 }
+                removeOldReserves(reserves);
                 listener.onFetched(reserves);
             }
 
@@ -254,5 +258,26 @@ public class BookRepositoryImpl implements BookRepository {
                 listener.onFailure(databaseError.getMessage());
             }
         });
+    }
+
+    public static void removeOldReserves(List<Reserve> reserveList) {
+        // Obtener el momento actual
+        Date now = new Date();
+
+        Iterator<Reserve> iterator = reserveList.iterator();
+        while (iterator.hasNext()) {
+            Reserve reserve = iterator.next();
+
+            // Calcular la hora de finalización de la reserva sumando la duración a la fecha
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(reserve.getFecha());
+            cal.add(Calendar.MINUTE, reserve.getDuracion());
+            Date endTime = cal.getTime();
+
+            // Si la hora de finalización es anterior al momento actual, eliminar la reserva
+            if (endTime.before(now)) {
+                iterator.remove();
+            }
+        }
     }
 }

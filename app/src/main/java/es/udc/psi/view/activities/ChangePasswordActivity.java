@@ -2,42 +2,34 @@ package es.udc.psi.view.activities;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.material.textfield.TextInputEditText;
-
-import es.udc.psi.R;
 import es.udc.psi.model.User;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
 import es.udc.psi.repository.interfaces.UserRepository;
+import es.udc.psi.databinding.ChangePasswordActivityBinding;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
-    private TextInputEditText oldPasswordEditText, newPasswordEditText;
-    private Button acceptButton;
+    private ChangePasswordActivityBinding binding;
     private UserRepository userRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.change_password_activity);
 
-        toolbar = findViewById(R.id.change_password_toolbar);
-        oldPasswordEditText = findViewById(R.id.oldPasswordEditText);
-        newPasswordEditText = findViewById(R.id.newPasswordEditText);
-        acceptButton = findViewById(R.id.acceptButton);
+        binding = ChangePasswordActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         userRepository = new UserRepositoryImpl();
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.changePasswordToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        binding.changePasswordToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Asegúrate de que SettingsActivity está en la pila de back stack
@@ -45,11 +37,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
             }
         });
 
-        acceptButton.setOnClickListener(new View.OnClickListener() {
+        binding.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String oldPassword = oldPasswordEditText.getText().toString();
-                String newPassword = newPasswordEditText.getText().toString();
+                String oldPassword = binding.oldPasswordEditText.getText().toString();
+                String newPassword = binding.newPasswordEditText.getText().toString();
 
                 userRepository.getUser(userRepository.getCurrentUserId(), new UserRepository.OnUserFetchedListener() {
                     @Override
