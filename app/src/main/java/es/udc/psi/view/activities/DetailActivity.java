@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import es.udc.psi.R;
 import es.udc.psi.controller.impl.BookControllerImpl;
 import es.udc.psi.model.Reserve;
 import es.udc.psi.model.User;
@@ -95,7 +96,7 @@ public class DetailActivity extends AppCompatActivity implements UserAdapter.OnU
 
             @Override
             public void onFailure(String errorMessage) {
-                Toast.makeText(getApplicationContext(), "Error al recuperar los datos de la reserva: " + errorMessage, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.reserve_retrieving_failure) + errorMessage, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -139,13 +140,13 @@ public class DetailActivity extends AppCompatActivity implements UserAdapter.OnU
 
     private void cancelReservationAsHost(String reserveId) {
         new AlertDialog.Builder(DetailActivity.this)
-                .setTitle("Eliminación de Reserva")
-                .setMessage("Al ser anfitrión eliminaras toda la reserva. ¿Estás seguro de que quieres eliminarla?")
-                .setPositiveButton("Continuar", (dialog, which) -> {
+                .setTitle(getString(R.string.Title_ReserveDeletion))
+                .setMessage(getString(R.string.onReserveDeletion_ConfirmationMessage))
+                .setPositiveButton(getString(R.string.continueButtonText), (dialog, which) -> {
                     bookController.deleteReserve(reserveId, new BookRepositoryImpl.OnBookDeletedListener() {
                         @Override
                         public void onSuccess() {
-                            Toast.makeText(getApplicationContext(), "Reserva eliminada", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.toast_DeletedReserve), Toast.LENGTH_SHORT).show();
                             ReservationReminderManager.cancelReservationReminder(getApplicationContext(), reserveId.hashCode());
                             Intent intent = new Intent(DetailActivity.this, MainActivity.class);
                             startActivity(intent);
@@ -153,12 +154,12 @@ public class DetailActivity extends AppCompatActivity implements UserAdapter.OnU
 
                         @Override
                         public void onFailure(String errorMessage) {
-                            Toast.makeText(getApplicationContext(), "Error al eliminar la reserva: " + errorMessage, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.toast_FailureOnReserveDeletion) + errorMessage, Toast.LENGTH_LONG).show();
                         }
                     });
                 })
-                .setNegativeButton("Cancelar", null)
-                .setIcon(getColoredIcon("#FFD700"))
+                .setNegativeButton(getString(R.string.cancelationButtonText), null)
+                .setIcon(getColoredIcon(getString(R.color.cancelationButtonColor)))
                 .show();
     }
 
@@ -171,7 +172,7 @@ public class DetailActivity extends AppCompatActivity implements UserAdapter.OnU
                 bookRepository.replaceUserListWithNew(reserveId, userList, new BookRepositoryImpl.OnUserListUpdatedListener() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(getApplicationContext(), "Has sido eliminado de la reserva.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.toast_YouHaveBeenSuccesfullyRemovedFromReserve), Toast.LENGTH_SHORT).show();
                         ReservationReminderManager.cancelReservationReminder(getApplicationContext(), reserveId.hashCode());
                         Intent intent = new Intent(DetailActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -179,14 +180,14 @@ public class DetailActivity extends AppCompatActivity implements UserAdapter.OnU
 
                     @Override
                     public void onFailure(String errorMessage) {
-                        Toast.makeText(getApplicationContext(), "Error al eliminarte de la reserva: " + errorMessage, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.toast_FailureOnReserveParticipationRemoval) + errorMessage, Toast.LENGTH_LONG).show();
                     }
                 });
             }
 
             @Override
             public void onFailure(String errorMessage) {
-                Toast.makeText(getApplicationContext(), "Error al obtener la reserva: " + errorMessage, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.toast_FailureOnReserveGathering) + errorMessage, Toast.LENGTH_LONG).show();
             }
         });
     }
