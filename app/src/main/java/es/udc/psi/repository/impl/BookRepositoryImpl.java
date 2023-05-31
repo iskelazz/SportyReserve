@@ -19,9 +19,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import es.udc.psi.R;
 import es.udc.psi.model.Reserve;
 import es.udc.psi.model.User;
 import es.udc.psi.repository.interfaces.BookRepository;
+import es.udc.psi.utils.ResourceDemocratizator;
 
 public class BookRepositoryImpl implements BookRepository {
     private DatabaseReference mDatabase;
@@ -30,10 +32,10 @@ public class BookRepositoryImpl implements BookRepository {
     private DatabaseReference mUserDB;
 
     public BookRepositoryImpl() {
-        mDatabase = FirebaseDatabase.getInstance().getReference("Books");
-        mSportsDB = FirebaseDatabase.getInstance().getReference("Sports");
-        mLocationDB = FirebaseDatabase.getInstance().getReference("Location");
-        mUserDB = FirebaseDatabase.getInstance().getReference("Users");
+        mDatabase = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_BooksDB));
+        mSportsDB = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_SportsDB));
+        mLocationDB = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_TracksDB));
+        mUserDB = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_UsersDB));
     }
 
     @Override
@@ -182,7 +184,7 @@ public class BookRepositoryImpl implements BookRepository {
                 if (reserve != null) {
                     listener.onSuccess(reserve);
                 } else {
-                    listener.onFailure("Reserve not found");
+                    listener.onFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Failure_ReserveNotFound));
                 }
             }
 
@@ -249,7 +251,7 @@ public class BookRepositoryImpl implements BookRepository {
                     }
                     listener.onFetched(results);
                 } else {
-                    listener.onFailure("Error retrieving reserves from Reserve database");
+                    listener.onFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.reserve_retrieving_failure));//"Error retrieving reserves from Reserve database");
                 }
             }
 

@@ -11,16 +11,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import es.udc.psi.R;
 import es.udc.psi.model.Reserve;
 import es.udc.psi.model.Sport;
 import es.udc.psi.repository.interfaces.SportRepository;
+import es.udc.psi.utils.ResourceDemocratizator;
 
 public class SportRepositoryImpl implements SportRepository {
     private DatabaseReference mDatabase;
 
     public SportRepositoryImpl()
     {
-        mDatabase = FirebaseDatabase.getInstance().getReference("Sports");
+        mDatabase = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_SportsDB));
     }
     @Override
     public void retrieveSports(OnSportsRetrievedListener listener) {
@@ -38,7 +40,7 @@ public class SportRepositoryImpl implements SportRepository {
                     }
                     listener.onFetched(results);
                 } else {
-                    listener.onFailure("Error retrieving sports from Sports database");
+                    listener.onFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Failure_SportsRetrieval));
                 }
             }
 

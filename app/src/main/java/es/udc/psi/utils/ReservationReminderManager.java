@@ -18,7 +18,7 @@ public class ReservationReminderManager {
 
         Intent intent = new Intent(context, ReminderBroadcastReceiver.class);
         intent.putExtra("title", "Reminder");
-        String message = String.format("Your reservation, %s, is about to begin!", title);
+        String message = String.format("Your reservation, %s, is about to begin!", title); //TODO Igual necesita convertirse en resource
         intent.putExtra("message", message);
         intent.putExtra("userId", userId);  // Añade el userId al intent
 

@@ -1,5 +1,6 @@
 package es.udc.psi.repository.impl;
 
+import es.udc.psi.R;
 import es.udc.psi.model.Notification;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -16,13 +17,14 @@ import java.util.Map;
 
 import es.udc.psi.model.User;
 import es.udc.psi.repository.interfaces.UserRepository;
+import es.udc.psi.utils.ResourceDemocratizator;
 
 public class UserRepositoryImpl implements UserRepository {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
     public UserRepositoryImpl() {
-        mDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        mDatabase = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_UsersDB));
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -113,7 +115,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void updateUserPassword(User user, String oldPassword, String newPassword, OnPasswordChangedListener listener) {
         // Verificar si la contraseña nueva cumple con los requisitos mínimos
         if (newPassword.length() < 8) {
-            listener.onFailure("La contraseña debe tener al menos 8 caracteres");
+            listener.onFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Failure_InvalidPassword));
             return;
         }
 

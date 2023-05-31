@@ -11,15 +11,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import es.udc.psi.R;
 import es.udc.psi.model.Track;
 import es.udc.psi.repository.interfaces.TrackRepository;
+import es.udc.psi.utils.ResourceDemocratizator;
 
 public class TrackRepositoryImpl implements TrackRepository {
     private DatabaseReference mDatabase;
 
     public TrackRepositoryImpl()
     {
-        mDatabase = FirebaseDatabase.getInstance().getReference("Locations");
+        mDatabase = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_TracksDB));
     }
 
     @Override
@@ -38,7 +40,7 @@ public class TrackRepositoryImpl implements TrackRepository {
                     }
                     listener.onFetched(results);
                 } else {
-                    listener.onFailure("Error retrieving sports from Sports database");
+                    listener.onFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Failure_TracksRetrieval));
                 }
             }
 

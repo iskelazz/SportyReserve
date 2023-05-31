@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import es.udc.psi.R;
 import es.udc.psi.model.Notification;
 import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.view.adapters.NotificationsAdapter;
@@ -53,7 +54,7 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void onFailure(String errorMessage) {
                 // Gestionar el error aquí.
-                Toast.makeText(getContext(), "Error fetching notifications: " + errorMessage, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getContext().getString(R.string.Toast_ErrorRetrievingNotifications) + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
 
