@@ -76,16 +76,17 @@ public class ReservesListControllerImpl implements ReservesListController {
 
     @Override
     public void onClickPlayer(Reserve reserve, int position) {
+
         if (reserve != null && reserve.getPlayerList() != null) {
 
-            //if (position < reserve.getNumPlayers()) {    // Seleccionado un jugador   //TODO:???Comprobar si  BookRepository.replaceUserListWithNew actualiza bien el numPlayers
+            //if (position < reserve.getNumPlayers()) {    // Seleccionado un jugador
             if (position < reserve.getPlayerList().size()) {    // Seleccionado un jugador
 
                 if (reserve.getPlayerList().get(position).getId().equals(mUserRepository.getCurrentUserId())) {   //Si el jugador seleccionado es el propio usuario
 
                     if (!reserve.getAnfitrion().equals(mUserRepository.getCurrentUserId())) {
 
-                        mReserveListView.showDeleteUser(reserve,position);
+                        mReserveListView.showDeleteUser(reserve,position,false);
 
                     } else {
 
@@ -101,7 +102,7 @@ public class ReservesListControllerImpl implements ReservesListController {
 
                 if (reserve.getPlayerList().stream().noneMatch(player -> player.getId().equals(mUserRepository.getCurrentUserId()))) {
 
-                    mReserveListView.showAddUser(reserve,position);
+                    mReserveListView.showAddUser(reserve,position, false);
 
                 } else {
 

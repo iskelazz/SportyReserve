@@ -1,6 +1,6 @@
 package es.udc.psi.view.activities.adapter;
 
-import android.util.Log;
+import android.annotation.SuppressLint;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
@@ -66,22 +65,27 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
         }
 
 
-        public void bind(Reserve reserve) {
+        @SuppressLint("SetTextI18n")
+        public void bind(@NonNull Reserve reserve) {
 
 
             tvNameReservation.setText(reserve.getName());
             if (!reserve.isPublic()){imageView_privateReserve.setVisibility(View.VISIBLE);} else {imageView_privateReserve.setVisibility(View.GONE);}
             tvNameCourt.setText(reserve.getPista());
             tvNameSport.setText(reserve.getDeporte());
-            //tvNumPlayers.setText("Jugadores: "+(reserve.getCapacidadMax()-reserve.getNumPlayers()));
-            tvNumPlayers.setText("Plazas: "+reserve.getCapacidadMax());
+            if (reserve.getPlayerList()!=null){
+                tvNumPlayers.setText(Integer.toString((reserve.getCapacidadMax()-reserve.getPlayerList().size())));
+            }
+            //tvNumPlayers.setText("Plazas libres: "+(reserve.getCapacidadMax()-reserve.getNumPlayers()));
+            //tvNumPlayers.setText("Plazas: "+reserve.getCapacidadMax());
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(reserve.getFecha());
             calendar.add(Calendar.MINUTE, reserve.getDuracion());
             Date endTime = calendar.getTime();
             DateFormat df = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            tvStrTime.setText(df.format(reserve.getFecha())+" - "+df.format(endTime));
+            String stringDate = df.format(reserve.getFecha())+" - "+df.format(endTime);
+            tvStrTime.setText(stringDate);
             DateFormat dfi = new SimpleDateFormat("dd/MM", Locale.getDefault());
             tvStrDate.setText(dfi.format(reserve.getFecha()));
 
@@ -142,7 +146,7 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             }
         }
 
-        private void settingsForNewPlayer(LinearLayout layoutPlayersTeam) {
+        private void settingsForNewPlayer(@NonNull LinearLayout layoutPlayersTeam) {
 
             layoutOnePlayer = new LinearLayout(layoutPlayersTeam.getContext());
             tv_newplayer = new TextView(layoutPlayersTeam.getContext());
@@ -150,7 +154,7 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             imageView_newplayer = new ImageView(layoutPlayersTeam.getContext());
         }
 
-        private void addNewPlayerTeam(Reserve reserve, int position, LinearLayout layoutTeamPlayers){
+        private void addNewPlayerTeam(@NonNull Reserve reserve, int position, @NonNull LinearLayout layoutTeamPlayers){
 
             int sizeAvatar = (reserve.getCapacidadMax()>10)?100:150;
 
@@ -198,7 +202,7 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
 
         }
 
-        private void addNewAvatarPlayer(int position, LinearLayout layoutTeamPlayers) {
+        private void addNewAvatarPlayer(int position, @NonNull LinearLayout layoutTeamPlayers) {
 
             int sizeAvatar = (position>10)?100:150;
 

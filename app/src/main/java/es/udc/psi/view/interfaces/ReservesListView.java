@@ -15,9 +15,9 @@ public interface ReservesListView {
     void updateReserveListView(Reserve reserve,
                        int position);
 
-    void showAddUser(Reserve reserve, int position);
+    void showAddUser(Reserve reserve, int position,boolean comeFromWrongPasswd);
 
-    void showDeleteUser(Reserve reserve, int position);
+    void showDeleteUser(Reserve reserve, int position, boolean comeFromWrongPasswd);
 
     void showImHost();
 

@@ -190,70 +190,6 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
 
-    @Override
-        public void getFilteredReserves(String nameCourt, String nameSport, Calendar startDate, Calendar endDate, final OnFilteredReservesFetchedListener listener) {
-
-        mDatabase.orderByChild("fecha/time").startAt(startDate.getTimeInMillis()).endAt(endDate.getTimeInMillis())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                //TODO: if (dataSnapshot.exists()) { ??????Mirar/Comprobar????
-                ArrayList<Reserve> reservesList = new ArrayList<>();
-
-                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    try {
-                        Reserve reserve = childSnapshot.getValue(Reserve.class);
-
-                        if (reserve != null){
-                            if (nameSport.equals(ReservesListActivity.ALL_COURTS_AND_SPORTS)){
-                                if (nameCourt.equals(ReservesListActivity.ALL_COURTS_AND_SPORTS)){
-                                    reservesList.add(reserve);
-                                } else if (reserve.getPista().equals(nameCourt)){
-                                    reservesList.add(reserve);
-                                }
-                            } else if (reserve.getDeporte().equals(nameSport)){
-                                if (nameCourt.equals(ReservesListActivity.ALL_COURTS_AND_SPORTS)){
-                                    reservesList.add(reserve);
-                                } else if (reserve.getPista().equals(nameCourt)){
-                                    reservesList.add(reserve);
-                                }
-                            }
-                        }
-
-                    } catch (com.google.firebase.database.DatabaseException e) {
-                            // Ignora esta reserva y continúa con la siguiente
-                            continue;
-                    }
-                }
-                listener.onFetched(reservesList);
-/*
-                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-                    try {
-                        Reserve reserve = childSnapshot.getValue(Reserve.class);
-                        if (reserve != null && reserve.getPlayerList() != null) {
-                            if (reserve.getPlayerList().stream().anyMatch(player -> player.getId().equals(playerId))) {
-                                reserves.add(reserve);
-                            }
-                        }
-                    } catch (com.google.firebase.database.DatabaseException e) {
-                        // Falló la conversión, ignora esta reserva y continúa con la siguiente
-                        continue;
-                    }
-                }
-*/
-//TODO:            } else {listener.onFailure("Error retrieving reserves from Reserve database");}
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                listener.onFailure(databaseError.getMessage());
-            }
-        });
-
-    }
-
     /**
      *
      */
@@ -282,4 +218,56 @@ public class BookRepositoryImpl implements BookRepository {
             }
         });
     }
+
+
+
+    @Override
+    public void getFilteredReserves(String nameCourt, String nameSport, @NonNull Calendar startDate, @NonNull Calendar endDate, final OnFilteredReservesFetchedListener listener) {
+
+        mDatabase.orderByChild("fecha/time").startAt(startDate.getTimeInMillis()).endAt(endDate.getTimeInMillis())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        ArrayList<Reserve> reservesList = new ArrayList<>();
+
+                        for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                            try {
+                                Reserve reserve = childSnapshot.getValue(Reserve.class);
+
+                                if (reserve != null){
+                                    if (nameSport.equals(ReservesListActivity.ALL_COURTS_AND_SPORTS)){
+                                        if (nameCourt.equals(ReservesListActivity.ALL_COURTS_AND_SPORTS)){
+                                            reservesList.add(reserve);
+                                        } else if (reserve.getPista().equals(nameCourt)){
+                                            reservesList.add(reserve);
+                                        }
+                                    } else if (reserve.getDeporte().equals(nameSport)){
+                                        if (nameCourt.equals(ReservesListActivity.ALL_COURTS_AND_SPORTS)){
+                                            reservesList.add(reserve);
+                                        } else if (reserve.getPista().equals(nameCourt)){
+                                            reservesList.add(reserve);
+                                        }
+                                    }
+                                }
+
+                            } catch (com.google.firebase.database.DatabaseException e) {
+                                // Ignora esta reserva y continúa con la siguiente
+                                continue;
+                            }
+                        }
+
+                        listener.onFetched(reservesList);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        listener.onFailure(databaseError.getMessage());
+                    }
+                });
+
+    }
+
 }

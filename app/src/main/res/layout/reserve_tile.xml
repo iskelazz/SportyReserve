@@ -32,6 +32,7 @@
                 <LinearLayout
                     android:id="@+id/ll_firstline_header_reservation_"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:layout_width="match_parent"
                     android:orientation="horizontal">
 
@@ -41,8 +42,8 @@
                         android:layout_height="48dp"
                         android:layout_weight="1"
                         android:layout_width="48dp"
-                        android:visibility="gone"
-                        android:src="@drawable/outline_lock_black_48" />
+                        android:src="@drawable/outline_lock_black_48"
+                        android:visibility="gone" />
 
                     <TextView
                         android:gravity="start"
@@ -73,7 +74,9 @@
                         android:layout_width="match_parent"
                         android:padding="2dp"
                         android:text="Name Court"
-                        android:textAppearance="?attr/textAppearanceHeadline6" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                    <!-- android:textAppearance="?attr/textAppearanceHeadline6" /> -->
 
                     <TextView
                         android:gravity="center"
@@ -84,7 +87,9 @@
                         android:layout_width="match_parent"
                         android:padding="2dp"
                         android:text="Name Sport"
-                        android:textAppearance="?attr/textAppearanceHeadline6" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                    <!-- android:textAppearance="?attr/textAppearanceHeadline6" /> -->
 
                 </LinearLayout>
 
@@ -95,37 +100,57 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:gravity="center"
+                        android:gravity="end|center"
                         android:id="@+id/tv_nameTime"
                         android:layout_gravity="center"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:padding="2dp"
-                        android:text="10:00 - 12:00"
-                        android:textAppearance="?attr/textAppearanceHeadline6"  />
+                        android:text="00:00 - 00:00"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <!-- android:textAppearance="?attr/textAppearanceHeadline6" /> -->
+
 
                     <TextView
                         android:gravity="center"
                         android:id="@+id/tv_nameDate"
                         android:layout_gravity="center"
                         android:layout_height="wrap_content"
-                        android:layout_weight="4"
+                        android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:padding="2dp"
-                        android:text="10/07"
-                        android:textAppearance="?attr/textAppearanceHeadline6"  />
+                        android:text="31/12"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <!-- android:textAppearance="?attr/textAppearanceHeadline6" /> -->
 
                     <TextView
-                        android:gravity="center"
+                        android:gravity="end|center"
                         android:id="@+id/tv_numberPlayers"
                         android:layout_gravity="center"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:padding="2dp"
-                        android:text="Num Players"
-                        android:textAppearance="?attr/textAppearanceHeadline6"  />
+                        android:text="99"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:gravity="start|center"
+                        android:id="@+id/tv_freeplaces"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:padding="2dp"
+                        android:text="@string/str_reservetile_freeplaces"
+                        android:textSize="16sp" />
+                    <!-- android:textAppearance="?attr/textAppearanceHeadline6" /> -->
+
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -156,9 +181,12 @@
                             android:layout_gravity="center"
                             android:layout_height="wrap_content"
                             android:layout_width="match_parent"
-                            android:text="@string/str_name_team1"
                             android:padding="2dp"
-                            android:textAppearance="?attr/textAppearanceHeadline6" />
+                            android:text="@string/str_name_team1"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                        <!-- android:textAppearance="?attr/textAppearanceHeadline6" /> -->
+
 
                     </LinearLayout>
 
@@ -191,9 +219,11 @@
                             android:layout_gravity="center"
                             android:layout_height="wrap_content"
                             android:layout_width="match_parent"
-                            android:text="@string/str_name_team2"
                             android:padding="2dp"
-                            android:textAppearance="?attr/textAppearanceHeadline6" />
+                            android:text="@string/str_name_team2"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                        <!-- android:textAppearance="?attr/textAppearanceHeadline6" /> -->
 
                     </LinearLayout>
 

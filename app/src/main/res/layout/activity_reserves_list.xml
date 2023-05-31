@@ -10,44 +10,48 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:padding="8dp"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:padding="8dp">
+            android:orientation="horizontal">
 
-            <EditText
-                android:focusable="false"
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/startDatePickerInput"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
-                android:text="@string/dateBeginPickerText" />
-
-            <EditText
+                android:layout_height="wrap_content"
                 android:focusable="false"
-                android:id="@+id/endDatePickerInput"
-                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="@string/dateBeginPickerText"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"/>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/endDatePickerInput"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
-                android:text="@string/dateEndPickerText" />
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:layout_weight="1"
+                android:text="@string/dateEndPickerText"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:padding="8dp">
+            android:orientation="horizontal">
 
             <Spinner
                 android:background="@android:drawable/btn_dropdown"
                 android:hint="@string/Book_SportsDropdownListHint"
                 android:id="@+id/Book_CourtsDropdownList"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:spinnerMode="dropdown"></Spinner>
@@ -57,7 +61,6 @@
                 android:hint="@string/Book_SportsDropdownListHint"
                 android:id="@+id/Book_SportsDropdownList"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:spinnerMode="dropdown"></Spinner>
@@ -67,13 +70,25 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:padding="8dp">
+>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFiltrarReservas"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/str_bt_lookForReserves"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"/>
+
+ <!--           <Button
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/btnFiltrarReservas"
                 android:text="@string/str_bt_lookForReserves"/>
+            -->
         </LinearLayout>
 
         <LinearLayout

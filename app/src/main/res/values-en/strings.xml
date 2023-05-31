@@ -67,4 +67,16 @@
     <string name="dateEndPickerText">End Date</string>
     <string name="str_bt_lookForReserves">Look for</string>
     <string name="str_NewPlayer">New Player</string>
+    <string name="str_reservetile_freeplaces">free places</string>
+    <string name="str_alert_adduser_title">Add as player</string>
+    <string name="str_alert_adduser_message">"You are going to add yourself as a player to the reserve:    "</string>
+    <string name="str_alert_deleteuser_title">Leave reserve</string>
+    <string name="str_alert_deleteuser_message">"You are going to remove yourself as a reserve player : "</string>
+    <string name="str_alert_imhost_title">"   You are the Host"</string>
+    <string name="str_alert_imhost_message">You cannot delete yourself from the reservation from here</string>
+    <string name="str_alert_iminreserve_title">You are already on the reservation</string>
+    <string name="str_alert_continue">Continue</string>
+    <string name="str_alert_cancel">Cancel</string>
+    <string name="str_alert_wrongpasswd">Wrong Password</string>
+    <string name="str_error_searchdates">"   Wrong search dates"</string>
 </resources>
