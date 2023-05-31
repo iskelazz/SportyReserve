@@ -25,6 +25,7 @@ import es.udc.psi.repository.impl.UserRepositoryImpl;
 import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.utils.ReservationReminderManager;
+import es.udc.psi.utils.ResourceDemocratizator;
 import es.udc.psi.view.interfaces.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
@@ -40,6 +41,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        // Inicializa la clase singleton que permite a las clases que no son activities, acceder a
+        // los recursos
+        /** TIENE QUE IR EN PRIMER LUGAR EN LA APP **/
+        ResourceDemocratizator.initialize(getApplicationContext());
 
         // Inicializa el controlador de inicio de sesión
         userRepository = new UserRepositoryImpl();
@@ -69,12 +75,12 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         String password = binding.passwordEditText.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
-            binding.emailEditText.setError("Email is required.");
+            binding.emailEditText.setError(getString(R.string.Error_EmailIsRequired));
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            binding.passwordEditText.setError("Password is required.");
+            binding.passwordEditText.setError(getString(R.string.Error_PasswordIsRequired));
             return;
         }
 
@@ -88,13 +94,13 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void onLoginSuccess() {
-        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+        Toast.makeText(LoginActivity.this, getString(R.string.Toast_LoginSuccesfull), Toast.LENGTH_SHORT).show();
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
         finish();
     }
 
     @Override
     public void onLoginFailed(String errorMessage) {
-        Toast.makeText(LoginActivity.this, "Login Failed: " + errorMessage, Toast.LENGTH_SHORT).show();
+        Toast.makeText(LoginActivity.this, getString(R.string.Error_LoginFailed) + errorMessage, Toast.LENGTH_SHORT).show();
     }
 }

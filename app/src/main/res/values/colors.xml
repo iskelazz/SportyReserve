@@ -18,5 +18,5 @@
     <color name="colorSecondary_dark">#FF4081</color>
      <!-- Un gris claro -->
 
-
+    <color name="cancelationButtonColor" translatable="false">#FFD700</color>
 </resources>
