@@ -11,6 +11,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import es.udc.psi.R;
 import es.udc.psi.view.activities.BookActivity;
 import es.udc.psi.view.adapters.SectionsPagerAdapter;
 import es.udc.psi.databinding.FragmentTabsBinding;
@@ -36,10 +37,10 @@ public class TabFragment extends Fragment {
                 binding.tabs, binding.viewPager, (tab, position) -> {
             switch (position) {
                 case 0:
-                    tab.setText("Anfitrión");
+                    tab.setText(getContext().getString(R.string.host_text));
                     break;
                 case 1:
-                    tab.setText("Mis Reservas");
+                    tab.setText(getContext().getString(R.string.my_reserves_text));
                     break;
             }
         });

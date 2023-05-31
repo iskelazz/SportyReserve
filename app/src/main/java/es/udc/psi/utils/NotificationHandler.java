@@ -19,10 +19,10 @@ public class NotificationHandler {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
-                    "Reserva Channel",
+                    context.getString(R.string.Name_ReserveNotificationChannel),
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            channel.setDescription("Canal para las notificaciones de la reserva");
+            channel.setDescription(context.getString(R.string.Description_ReserveNotificationChannel));
 
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             if (notificationManager != null) {

@@ -40,7 +40,7 @@ import es.udc.psi.controller.impl.UserControllerImpl;
 import es.udc.psi.databinding.ActivityBookBinding;
 import es.udc.psi.model.Reserve;
 import es.udc.psi.model.Sport;
-import es.udc.psi.model.TimeShot;
+
 import es.udc.psi.model.Track;
 import es.udc.psi.model.User;
 import es.udc.psi.repository.impl.SportRepositoryImpl;
@@ -318,7 +318,7 @@ public class BookActivity extends AppCompatActivity implements BookView {
 
     @Override
     public void onBookSuccess(Reserve reserve) {
-        Toast.makeText(this, "Registration successful.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.succesfull_registration), Toast.LENGTH_SHORT).show();
         scheduleNotification(reserve);
         startActivity(new Intent(BookActivity.this, MainActivity.class));
         finish();
@@ -326,7 +326,7 @@ public class BookActivity extends AppCompatActivity implements BookView {
 
     @Override
     public void onBookFailure(String errorMessage) {
-        Toast.makeText(this, "Registration Failed: " + errorMessage, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.failure_on_registration) + errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override

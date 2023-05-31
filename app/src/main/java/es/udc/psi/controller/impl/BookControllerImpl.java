@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import es.udc.psi.R;
 import es.udc.psi.controller.interfaces.BookController;
 import es.udc.psi.model.Reserve;
-import es.udc.psi.model.TimeShot;
+
 import es.udc.psi.repository.impl.BookRepositoryImpl;
 import es.udc.psi.repository.interfaces.BookRepository;
+import es.udc.psi.utils.ResourceDemocratizator;
 import es.udc.psi.view.interfaces.BookView;
 
 public class BookControllerImpl implements BookController {
@@ -91,7 +93,7 @@ public class BookControllerImpl implements BookController {
         if(name != null)
         {
             isValid = (name != "");
-            view.showValidationError("name", "La reserva debe tener un nombre");
+            view.showValidationError("name", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_NameIsEmpty));
         }
         else
         {
@@ -100,7 +102,7 @@ public class BookControllerImpl implements BookController {
         if (fecha.compareTo(Calendar.getInstance().getTime()) < 0)
         {
             System.out.println(String.format("fecha before: %s vs %s", fecha.toString(), Calendar.getInstance().getTime().toString()));
-            view.showValidationError("date", "La fecha de la reserva debe ser posterior a la actual");
+            view.showValidationError("date", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_ReserveDateIsPast));
             isValid = false;
         }
         else
@@ -111,7 +113,7 @@ public class BookControllerImpl implements BookController {
         if (aux < 8 || aux > 20)
         {
             System.out.println("wrong time");
-            view.showValidationError("time", "La hora no está dentro del horario apto para reservar");
+            view.showValidationError("time", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_InvalidTimetable));
             isValid = false;
         }
         else
@@ -119,7 +121,7 @@ public class BookControllerImpl implements BookController {
             view.clearValidationError("time");
         }
         if (!isPublic && password != null && password.length() < 8) {
-            view.showValidationError("password", "La contraseña debe tener al menos 8 caracteres");
+            view.showValidationError("password", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_InvalidPasswordLength));
             isValid = false;
         } else {
             view.clearValidationError("password");
@@ -135,7 +137,7 @@ public class BookControllerImpl implements BookController {
         bookRepository.checkBookCoincidences(book, new BookRepository.OnBookCoincidencesCheckedListener() {
             @Override
             public void onExists() {
-                view.showValidationError("reserve", "La reserva coincide en horario con alguna ya existente.");
+                view.showValidationError("reserve", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_CollisionOnTimeWithPreviousReserve));
             }
 
             @Override
@@ -149,14 +151,14 @@ public class BookControllerImpl implements BookController {
 
                     @Override
                     public void onFailure(String errorMessage) {
-                        view.onBookFailure("Error al añadir la reserva: " + errorMessage);
+                        view.onBookFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Failure_AddingReserve) + errorMessage);
                     }
                 });
             }
 
             @Override
             public void onFailure(String errorMessage) {
-                view.onBookFailure("Error al comprobar las reservas existentes: " + errorMessage);
+                view.onBookFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Failure_ErrorCheckingPreviousReserves) + errorMessage);
             }
         });
     }

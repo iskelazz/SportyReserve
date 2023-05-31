@@ -100,10 +100,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             binding.btnExpulsar.setOnClickListener(v -> {
                 BookRepository bookRepository = new BookRepositoryImpl();
                 userList.remove(user);
-                bookRepository.replaceUserListWithNew(reserve.getId(),userList, new BookRepositoryImpl.OnUserListUpdatedListener() {
+                bookRepository.replaceUserListWithNew(reserve.getId(), userList, new BookRepositoryImpl.OnUserListUpdatedListener() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(context.getApplicationContext(), "Usuario expulsado con éxito.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context.getApplicationContext(), context.getString(R.string.Toast_SuccesfullyRemovedUserFromList), Toast.LENGTH_SHORT).show();
                         if(listener != null) {
                             listener.onUserExpelled();
                         }
@@ -112,33 +112,33 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
                     @Override
                     public void onFailure(String errorMessage) {
-                        Toast.makeText(context.getApplicationContext(), "Error al expulsar al usuario: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context.getApplicationContext(), context.getString(R.string.Toast_ErrorRemovingUserFromList) + errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
             });
 
             binding.btnHacerAnfitron.setOnClickListener(v -> {
                 new AlertDialog.Builder(context)
-                        .setTitle("Hacer Anfitrion")
-                        .setMessage("Si haces a otro jugador anfitrion, perderas ese rol. ¿Estás seguro de querer continuar?")
-                        .setPositiveButton("Aceptar", (dialog, which) -> {
+                        .setTitle(context.getString(R.string.makeHostText))
+                        .setMessage(context.getString(R.string.makeHost_ConfirmationMessage))
+                        .setPositiveButton(context.getString(R.string.AcceptButtonText), (dialog, which) -> {
                             BookRepository bookRepository = new BookRepositoryImpl();
                             reserve.setAnfitrion(user.getId());
                             bookRepository.updateReserve(reserve, new BookRepositoryImpl.OnReserveUpdatedListener() {
                                 @Override
                                 public void onSuccess() {
-                                    Toast.makeText(context.getApplicationContext(), "Usuario promovido a anfitrion con éxito.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context.getApplicationContext(), context.getString(R.string.Toast_SuccesfullHostChange), Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(context, MainActivity.class);
                                     context.startActivity(intent);
                                 }
 
                                 @Override
                                 public void onFailure(String errorMessage) {
-                                    Toast.makeText(context.getApplicationContext(), "Error al promover al usuario a anfitrion: " + errorMessage, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context.getApplicationContext(), context.getString(R.string.Toast_ErrorOnHostChange) + errorMessage, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         })
-                        .setNegativeButton("Cancelar", null)
+                        .setNegativeButton(context.getString(R.string.cancelationButtonText), null)
                         .show();
             });
         }
