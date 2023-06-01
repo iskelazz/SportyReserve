@@ -1,6 +1,8 @@
 package es.udc.psi.view.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -24,15 +26,19 @@ import es.udc.psi.repository.impl.BookRepositoryImpl;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
 import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.repository.interfaces.UserRepository;
+import es.udc.psi.utils.CommonThings;
 import es.udc.psi.utils.ReservationReminderManager;
 import es.udc.psi.utils.ResourceDemocratizator;
 import es.udc.psi.view.interfaces.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
+
     private ActivityLoginBinding binding;
     private LoginController loginController;
     private UserRepository userRepository;
+
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +56,20 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         // Inicializa el controlador de inicio de sesión
         userRepository = new UserRepositoryImpl();
         loginController = new LoginControllerImpl(this,userRepository);
-        // Configura los listeners para los botones
-        setupListeners();
+
+        //sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+        String email = sharedPreferences.getString(CommonThings.USER_EMAIL, null);
+        String password = sharedPreferences.getString(CommonThings.USER_PASSWORD,null);
+        if ((email == null) && (password==null)){
+            setupListeners();
+            //createRandomReserve();
+
+        } else {
+
+            loginController.login(email,password);
+        }
+
     }
 
     private void setupListeners() {
@@ -93,8 +111,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     @Override
-    public void onLoginSuccess() {
+    public void onLoginSuccess(String email, String password) {
         Toast.makeText(LoginActivity.this, getString(R.string.Toast_LoginSuccesfull), Toast.LENGTH_SHORT).show();
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(CommonThings.USER_EMAIL, email);
+        editor.putString(CommonThings.USER_PASSWORD, password);
+        editor.apply();
+
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
         finish();
     }

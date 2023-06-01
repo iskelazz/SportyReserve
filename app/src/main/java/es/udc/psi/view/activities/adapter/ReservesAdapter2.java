@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -183,6 +185,8 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             Glide.with(imageView_newplayer)
                     .load(reserve.getPlayerList().get(position).getUriAvatar())
                     .placeholder(R.drawable.baseline_account_circle_24)
+                    .skipMemoryCache(true)
+                    .signature(new ObjectKey(UUID.randomUUID().toString()))
                     .into(imageView_newplayer);
 
             layoutOnePlayer.setId(position);
