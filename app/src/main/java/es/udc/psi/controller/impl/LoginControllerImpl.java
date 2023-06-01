@@ -7,8 +7,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import es.udc.psi.R;
 import es.udc.psi.controller.interfaces.LoginController;
 import es.udc.psi.repository.interfaces.UserRepository;
+import es.udc.psi.utils.ResourceDemocratizator;
 import es.udc.psi.view.interfaces.LoginView;
 
 public class LoginControllerImpl implements LoginController {
@@ -30,7 +32,7 @@ public class LoginControllerImpl implements LoginController {
                     loginView.onLoginSuccess();
                 } else {
                     Exception exception = task.getException();
-                    String errorMessage = exception != null ? exception.getMessage() : "Unknown error";
+                    String errorMessage = exception != null ? exception.getMessage() : ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Error_Unkown);
                     loginView.onLoginFailed(errorMessage);
                 }
             }

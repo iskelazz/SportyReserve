@@ -2,6 +2,9 @@ package es.udc.psi.repository.impl;
 
 import android.net.Uri;
 
+import es.udc.psi.R;
+import es.udc.psi.model.Notification;
+
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,8 +24,12 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 
 import androidx.annotation.NonNull;
+import java.util.HashMap;
+import java.util.Map;
+
 import es.udc.psi.model.User;
 import es.udc.psi.repository.interfaces.UserRepository;
+import es.udc.psi.utils.ResourceDemocratizator;
 
 public class UserRepositoryImpl implements UserRepository {
     private DatabaseReference mDatabase;
@@ -30,7 +37,7 @@ public class UserRepositoryImpl implements UserRepository {
     private FirebaseStorage mStorage;
 
     public UserRepositoryImpl() {
-        mDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        mDatabase = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_UsersDB));
         mAuth = FirebaseAuth.getInstance();
         mStorage = FirebaseStorage.getInstance();
     }
@@ -52,6 +59,32 @@ public class UserRepositoryImpl implements UserRepository {
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
 
+    @Override
+    public void addNotification(String userId, Notification notification, final OnNotificationAddedListener listener) {
+        mDatabase.child(userId).child("notifications").child(notification.getId()).setValue(notification)
+                .addOnSuccessListener(aVoid -> listener.onSuccess())
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
+
+    @Override
+    public void getNotifications(String userId, final OnNotificationsFetchedListener listener) {
+        mDatabase.child(userId).child("notifications").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Notification> notifications = new HashMap<>();
+                for (DataSnapshot notificationSnapshot: dataSnapshot.getChildren()) {
+                    Notification notification = notificationSnapshot.getValue(Notification.class);
+                    notifications.put(notification.getId(), notification);
+                }
+                listener.onFetched(notifications);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onFailure(databaseError.getMessage());
+            }
+        });
+    }
     @Override
     public void checkUsernameExists(String username, final OnUsernameCheckedListener listener) {
         mDatabase.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -92,7 +125,38 @@ public class UserRepositoryImpl implements UserRepository {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(listener);
     }
 
+    @Override
+    public void updateUserPassword(User user, String oldPassword, String newPassword, OnPasswordChangedListener listener) {
+        // Verificar si la contraseña nueva cumple con los requisitos mínimos
+        if (newPassword.length() < 8) {
+            listener.onFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Failure_InvalidPassword));
+            return;
+        }
 
+        // Verificar la contraseña antigua iniciando sesión con el correo electrónico del usuario y la contraseña antigua
+        mAuth.signInWithEmailAndPassword(user.getCorreoElectronico(), oldPassword).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Si el inicio de sesión es exitoso, actualizar la contraseña en FirebaseAuth
+                mAuth.getCurrentUser().updatePassword(newPassword).addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+                        // Si la actualización de la contraseña es exitosa en FirebaseAuth, actualizarla en Firebase Realtime Database
+                        user.setContraseña(newPassword);
+                        mDatabase.child(user.getId()).setValue(user)
+                                .addOnSuccessListener(aVoid -> listener.onSuccess())
+                                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+                    } else {
+                        // Si falla la actualización de la contraseña en FirebaseAuth, enviar el error al listener
+                        listener.onFailure(task1.getException().getMessage());
+                    }
+                });
+            } else {
+                // Si falla el inicio de sesión, enviar el error al listener
+                listener.onFailure(task.getException().getMessage());
+            }
+        });
+    }
+  
+  
     public void uploadAvatarAndSetUrlAvatar(Uri fileAvatarImage){
 
         StorageReference storageReferenceUID = mStorage.getReference().child(getCurrentUserId()+"/avatar.jpg");
@@ -131,6 +195,5 @@ public class UserRepositoryImpl implements UserRepository {
     private void setUrlAvatar(String url){
 
         mDatabase.child(getCurrentUserId()).child("uriAvatar").setValue(url);
-
     }
 }

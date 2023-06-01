@@ -9,12 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import es.udc.psi.R;
 import es.udc.psi.controller.impl.BookControllerImpl;
 import es.udc.psi.controller.impl.UserControllerImpl;
 import es.udc.psi.controller.interfaces.BookController;
@@ -22,27 +20,28 @@ import es.udc.psi.controller.interfaces.UserController;
 import es.udc.psi.model.Reserve;
 import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.view.adapters.ReservesAdapter;
+import es.udc.psi.databinding.FragmentMyReservesBinding;
 
 public class MyReservesFragment extends Fragment {
-    private RecyclerView recyclerView;
     private ReservesAdapter adapter;
     private BookController bookController;
+    private FragmentMyReservesBinding binding;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_my_reserves, container, false);
-        recyclerView = rootView.findViewById(R.id.mis_reservas_recyclerview);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentMyReservesBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
         // Añade aquí la lógica para cargar la lista de reservas en las que el usuario está anotado
         List<Reserve> reservas = new ArrayList<>();
 
         // Configura el RecyclerView con el adaptador personalizado
         adapter = new ReservesAdapter(reservas);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.misReservasRecyclerview.setAdapter(adapter);
+        binding.misReservasRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        return rootView;
+        return view;
     }
 
     @Override
@@ -70,5 +69,11 @@ public class MyReservesFragment extends Fragment {
                 // Maneja el error aquí
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

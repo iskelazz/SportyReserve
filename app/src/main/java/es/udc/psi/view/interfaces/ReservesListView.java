@@ -8,11 +8,18 @@ public interface ReservesListView {
 
     void showReservesList(ArrayList<Reserve> reservesList);
 
-    void showError();
+    void showError(String error);
 
     void showEmptyView();
 
-    void updateReserve(Reserve reserve,
+    void updateReserveListView(Reserve reserve,
                        int position);
 
+    void showAddUser(Reserve reserve, int position,boolean comeFromWrongPasswd);
+
+    void showDeleteUser(Reserve reserve, int position, boolean comeFromWrongPasswd);
+
+    void showImHost();
+
+    void showImInReserve();
 }

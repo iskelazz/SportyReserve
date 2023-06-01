@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
+        android:name=".application.NotificationsApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -27,6 +28,19 @@
         <activity android:name=".view.activities.RegisterActivity" />
         <activity android:name=".view.activities.BookActivity" />
         <activity android:name=".view.activities.DetailActivity" />
+        <activity android:name=".view.activities.EditReserveActivity" />
+        <activity android:name=".view.activities.SettingsActivity" />
+        <activity android:name=".view.activities.ThemeActivity" />
+        <activity android:name=".view.activities.ChangePasswordActivity" />
+
+        <receiver android:name=".utils.ReminderBroadcastReceiver"/>
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

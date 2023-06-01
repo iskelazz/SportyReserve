@@ -117,6 +117,7 @@ public class Reserve implements Parcelable {
 
     protected Reserve(Parcel in) {
         id = in.readString();
+        name = in.readString();
         anfitrion = in.readString();
         password = in.readString();
         pista = in.readString();
@@ -126,6 +127,7 @@ public class Reserve implements Parcelable {
         long tmpFecha = in.readLong();
         fecha = tmpFecha != -1 ? new Date(tmpFecha) : null;
         duracion = in.readInt();
+        isPublic = in.readBoolean();
         if (in.readByte() == 0x01) {
             playerList = new ArrayList<User>();
             in.readList(playerList, User.class.getClassLoader());
@@ -258,25 +260,27 @@ public class Reserve implements Parcelable {
         return String.format(
                 "Reserve %s:\n" +
                 "\tID: %s\n" +
-                "\tMaxParticipants: %d\n" +
-                "\tLength: %d\n" +
                 "\tHost: %s\n" +
-                "\tisPublic?: %s\n" +
                 "\tPassword: %s\n" +
-                "\tCalendar: %s\n" +
-                "\tSport: %s\n" +
                 "\tTrack: %s\n" +
+                "\tMaxParticipants: %d\n" +
+                "\tSport: %s\n" +
+                "\tNumPLayers: %d\n" +
+                "\tCalendar: %s\n" +
+                "\tLength: %d\n" +
+                "\tisPublic?: %s\n" +
                 "\tPlayerList: %s\n",
                 this.name,
                 this.id,
-                this.capacidadMax,
-                this.duracion,
                 this.anfitrion,
-                (this.isPublic ? "True" : "False"),
                 this.password,
-                this.fecha.toString(),
-                this.deporte,
                 this.pista,
+                this.capacidadMax,
+                this.deporte,
+                this.numPlayers,
+                this.fecha.toString(),
+                this.duracion,
+                (this.isPublic ? "True" : "False"),
                 this.playerList
         );
     }
@@ -290,6 +294,7 @@ public class Reserve implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(id);
+        dest.writeString(name);
         dest.writeString(anfitrion);
         dest.writeString(password);
         dest.writeString(pista);
@@ -298,6 +303,7 @@ public class Reserve implements Parcelable {
         dest.writeInt(numPlayers);
         dest.writeLong(fecha != null ? fecha.getTime() : -1L);
         dest.writeInt(duracion);
+        dest.writeBoolean(isPublic);
         if (playerList == null) {
             dest.writeByte((byte) (0x00));
         } else {

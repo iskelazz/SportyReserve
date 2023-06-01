@@ -9,10 +9,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import es.udc.psi.R;
 import es.udc.psi.controller.interfaces.RegisterController;
 import es.udc.psi.model.User;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
 import es.udc.psi.repository.interfaces.UserRepository;
+import es.udc.psi.utils.ResourceDemocratizator;
 import es.udc.psi.view.interfaces.RegisterView;
 
 public class RegisterControllerImpl implements RegisterController {
@@ -25,6 +27,11 @@ public class RegisterControllerImpl implements RegisterController {
         this.view = view;
         mAuth = FirebaseAuth.getInstance();
         userRepository = new UserRepositoryImpl();
+    }
+    public RegisterControllerImpl(RegisterView view, FirebaseAuth mAuth, UserRepository userRepository) {
+        this.view = view;
+        this.mAuth = mAuth;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -40,42 +47,42 @@ public class RegisterControllerImpl implements RegisterController {
         boolean isValid = true;
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            view.showValidationError("email", "Por favor, introduce un correo electrónico válido");
+            view.showValidationError("email", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_InvalidEmail));
             isValid = false;
         } else {
             view.clearValidationError("email");
         }
 
         if (!Patterns.PHONE.matcher(phone).matches()) {
-            view.showValidationError("phone", "Por favor, introduce un número de teléfono válido");
+            view.showValidationError("phone", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_InvalidPhoneNumber));
             isValid = false;
         } else {
             view.clearValidationError("phone");
         }
 
         if (firstName.isEmpty()) {
-            view.showValidationError("firstName", "El campo no puede estar vacío");
+            view.showValidationError("firstName", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_EmptyField));
             isValid = false;
         } else {
             view.clearValidationError("firstName");
         }
 
         if (lastName.isEmpty()) {
-            view.showValidationError("lastName", "El campo no puede estar vacío");
+            view.showValidationError("lastName", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_EmptyField));
             isValid = false;
         } else {
             view.clearValidationError("lastName");
         }
 
         if (password.length() < 8) {
-            view.showValidationError("password", "La contraseña debe tener al menos 8 caracteres");
+            view.showValidationError("password", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_InvalidPasswordLength));
             isValid = false;
         } else {
             view.clearValidationError("password");
         }
 
         if (username.length() < 3) {
-            view.showValidationError("username", "El nombre de usuario debe tener al menos 3 caracteres");
+            view.showValidationError("username", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_InvalidUsernameLength));
             isValid = false;
         } else {
             view.clearValidationError("username");
@@ -88,7 +95,7 @@ public class RegisterControllerImpl implements RegisterController {
         userRepository.checkUsernameExists(username, new UserRepository.OnUsernameCheckedListener() {
             @Override
             public void onExists() {
-                view.showValidationError("username", "Username is already taken.");
+                view.showValidationError("username", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_UsernameAlreadyTaken));
             }
 
             @Override
@@ -108,11 +115,11 @@ public class RegisterControllerImpl implements RegisterController {
 
                                 @Override
                                 public void onFailure(String errorMessage) {
-                                    view.onRegisterFailure("Error al registrar el usuario: " + errorMessage);
+                                    view.onRegisterFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Failure_UserRegistration) + errorMessage);
                                 }
                             });
                         } else {
-                            view.onRegisterFailure("Error al crear el usuario: " + task.getException().getMessage());
+                            view.onRegisterFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Failure_UserCreation) + task.getException().getMessage());
                         }
                     }
                 });
@@ -120,7 +127,7 @@ public class RegisterControllerImpl implements RegisterController {
 
             @Override
             public void onFailure(String errorMessage) {
-                view.onRegisterFailure("Error al verificar el nombre de usuario: " + errorMessage);
+                view.onRegisterFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Failure_UsernameVerification) + errorMessage);
             }
         });
     }
