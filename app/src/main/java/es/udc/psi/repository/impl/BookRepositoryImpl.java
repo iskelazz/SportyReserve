@@ -14,30 +14,37 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import es.udc.psi.R;
 import es.udc.psi.model.Reserve;
 import es.udc.psi.model.User;
 import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.view.activities.ReservesListActivity;
+import es.udc.psi.utils.ResourceDemocratizator;
+
 
 public class BookRepositoryImpl implements BookRepository {
     private DatabaseReference mDatabase;
     private DatabaseReference mSportsDB;
     private DatabaseReference mLocationDB;
+    private DatabaseReference mUserDB;
 
     public BookRepositoryImpl() {
-        mDatabase = FirebaseDatabase.getInstance().getReference("Books");
-        mSportsDB = FirebaseDatabase.getInstance().getReference("Sports");
-        mLocationDB = FirebaseDatabase.getInstance().getReference("Location");
+        mDatabase = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_BooksDB));
+        mSportsDB = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_SportsDB));
+        mLocationDB = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_TracksDB));
+        mUserDB = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_UsersDB));
     }
 
     @Override
     public void createReserve(Reserve book, final OnBookCreatedListener listener) {
         mDatabase.child(book.getId()).setValue(book)
-                .addOnSuccessListener(aVoid -> listener.onSuccess())
+                .addOnSuccessListener(aVoid -> listener.onSuccess(book))
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
 
@@ -76,6 +83,7 @@ public class BookRepositoryImpl implements BookRepository {
                         for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
                             reserves.add(childSnapshot.getValue(Reserve.class));
                         }
+                        removeOldReserves(reserves);
                         listener.onFetched(reserves);
                     }
 
@@ -104,6 +112,7 @@ public class BookRepositoryImpl implements BookRepository {
                         continue;
                     }
                 }
+                removeOldReserves(reserves);
                 listener.onFetched(reserves);
             }
 
@@ -178,7 +187,7 @@ public class BookRepositoryImpl implements BookRepository {
                 if (reserve != null) {
                     listener.onSuccess(reserve);
                 } else {
-                    listener.onFailure("Reserve not found");
+                    listener.onFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Failure_ReserveNotFound));
                 }
             }
 
@@ -208,7 +217,7 @@ public class BookRepositoryImpl implements BookRepository {
                     }
                     listener.onFetched(results);
                 } else {
-                    listener.onFailure("Error retrieving reserves from Reserve database");
+                    listener.onFailure(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.reserve_retrieving_failure));//"Error retrieving reserves from Reserve database");
                 }
             }
 
@@ -220,6 +229,29 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
 
+    public static void removeOldReserves(List<Reserve> reserveList) {
+        // Obtener el momento actual
+        Date now = new Date();
+
+        Iterator<Reserve> iterator = reserveList.iterator();
+        while (iterator.hasNext()) {
+            Reserve reserve = iterator.next();
+
+            // Calcular la hora de finalización de la reserva sumando la duración a la fecha
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(reserve.getFecha());
+            cal.add(Calendar.MINUTE, reserve.getDuracion());
+            Date endTime = cal.getTime();
+
+            // Si la hora de finalización es anterior al momento actual, eliminar la reserva
+            if (endTime.before(now)) {
+                iterator.remove();
+            }
+        }
+    }
+
+  
+  
 
     @Override
     public void getFilteredReserves(String nameCourt, String nameSport, @NonNull Calendar startDate, @NonNull Calendar endDate, final OnFilteredReservesFetchedListener listener) {
@@ -269,5 +301,5 @@ public class BookRepositoryImpl implements BookRepository {
                 });
 
     }
-
+  
 }

@@ -12,59 +12,45 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
+
 
 import es.udc.psi.R;
-import es.udc.psi.controller.impl.BookControllerImpl;
 import es.udc.psi.controller.impl.UserControllerImpl;
-import es.udc.psi.controller.interfaces.BookController;
 import es.udc.psi.controller.interfaces.UserController;
-import es.udc.psi.model.Reserve;
 import es.udc.psi.model.User;
-import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.repository.interfaces.UserRepository;
-import es.udc.psi.view.adapters.SectionsPagerAdapter;
-import es.udc.psi.view.fragments.HostFragment;
 
-import androidx.viewpager2.widget.ViewPager2;
+import es.udc.psi.view.fragments.NotificationsFragment;
+import es.udc.psi.view.fragments.TabFragment;
+import es.udc.psi.databinding.ActivityMainBinding;
 
-import java.util.ArrayList;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private DrawerLayout drawerLayout;
-    private TabLayout tabLayout;
-    private ViewPager2 viewPager;
-    private BottomNavigationView bottomNavigationView;
     private UserController userController;
     private TextView usernameText;
     private TextView emailText;
-    private SectionsPagerAdapter pagerAdapter;
-    private Toolbar toolbar;
-    private NavigationView navigationView;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
         setupToolbar();
         setupDrawerLayout();
         setupNavigationView();
-        setupFloatingActionButton();
         setupUserController();
-        setupViewPager();
-        setupTabLayoutAndViewPager();
         setupBottomNavigationView();
+        setupFragmentTabs();
     }
 
 
@@ -76,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -91,73 +77,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (id) {
             case R.id.nav_mis_reservas:
-                // Lanza la actividad de mis reservas
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_lista_reservas:
-                // Lanza la actividad de lista de reservas
                 intent = new Intent(this, ReservesListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_opciones:
-                // Lanza la actividad de opciones
-                intent = new Intent(this, RegisterActivity.class);
+                intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_about:
-                // Lanza la actividad de "acerca de"
-                // Reemplaza AcercaDeActivity.class con la clase de actividad adecuada
                 about();
                 break;
             case R.id.nav_logout:
-                //intent = new Intent(this, RegisterActivity.class);
-                //startActivity(intent);
                 intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 break;
         }
 
-        drawerLayout.closeDrawer(GravityCompat.START);
+        binding.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    /**
-     * Configura el TabLayout y lo asocia con el ViewPager.
-     */
-    private void setupTabLayoutAndViewPager() {
-        tabLayout = findViewById(R.id.tabs);
-        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(
-                tabLayout, viewPager, (tab, position) -> {
-            switch (position) {
-                case 0:
-                    tab.setText("Anfitrión");
-                    break;
-                case 1:
-                    tab.setText("Mis Reservas");
-                    break;
-            }
-        });
-        tabLayoutMediator.attach();
-    }
 
     /**
      * Configura la barra de herramientas (Toolbar) de la actividad.
      */
     private void setupToolbar() {
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
     }
 
     /**
      * Configura el Navigation Drawer (Menú lateral) y el Toggle asociado con la barra de herramientas.
      */
     private void setupDrawerLayout() {
-        drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar,
+                this, binding.drawerLayout, binding.toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
+        binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
@@ -165,28 +124,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Configura la vista de navegación lateral (Navigation View) y selecciona el primer elemento.
      */
     private void setupNavigationView() {
-        navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        binding.navView.setNavigationItemSelectedListener(this);
         selectNavigationMenuItem(R.id.nav_mis_reservas);
 
-        View headerView = navigationView.getHeaderView(0);
+        View headerView = binding.navView.getHeaderView(0);
         usernameText = headerView.findViewById(R.id.username_text);
         emailText = headerView.findViewById(R.id.email_text);
     }
 
-    /**
-     * Configura el botón flotante de acción (Floating Action Button) asociado a crearReserva.
-     */
-    private void setupFloatingActionButton() {
-        FloatingActionButton fab = findViewById(R.id.fab_add_reservation);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, BookActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
 
     /**
      * Configura el controlador de usuario (UserController).
@@ -199,29 +144,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /**
      * Configura el ViewPager para la navegación entre pestañas.
      */
-    private void setupViewPager() {
-        viewPager = findViewById(R.id.view_pager);
-        pagerAdapter = new SectionsPagerAdapter(this);
-        viewPager.setAdapter(pagerAdapter);
+    private void setupFragmentTabs() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        TabFragment tabFragment = new TabFragment();
+        fragmentTransaction.add(R.id.fragment_tabs, tabFragment); // Aquí utilizamos la misma ID
+        fragmentTransaction.commit();
     }
 
     /**
      * Configura la vista de navegación inferior (Bottom Navigation View).
      */
     private void setupBottomNavigationView() {
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        binding.bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment selectedFragment = null;
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-                        // Inicio seleccionado, no se necesita hacer nada aquí
-                        return true;
+                        selectedFragment = new TabFragment();
+                        break;
                     case R.id.navigation_notifications:
-                        // Lanza la actividad de notificaciones
-                        Intent intent = new Intent(MainActivity.this, NotificationsActivity.class);
-                        startActivity(intent);
-                        return true;
+                        selectedFragment = new NotificationsFragment();
+                        break;
+                }
+                if (selectedFragment != null) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_tabs, selectedFragment).commit();
+                    return true;
                 }
                 return false;
             }
@@ -229,8 +179,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void selectNavigationMenuItem(int menuItemId) {
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        MenuItem menuItem = navigationView.getMenu().findItem(menuItemId);
+        MenuItem menuItem = binding.navView.getMenu().findItem(menuItemId);
         if (menuItem != null) {
             menuItem.setChecked(true);
         }
@@ -238,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void about() {
-        //TODO hay que añadirle margenes al layout de "about"
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -263,17 +211,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onFailure(String error) {
-                // Maneja el error
+                // Handle the error
             }
         });
     }
 
     private void updateNavigationDrawerSelection() {
-        NavigationView navigationView = findViewById(R.id.nav_view);
         MenuItem menuItem;
-        // Actualiza la selección en base a la actividad actual
+        // Update selection based on the current activity
         if (this instanceof MainActivity) {
-            menuItem = navigationView.getMenu().findItem(R.id.nav_mis_reservas);
+            menuItem = binding.navView.getMenu().findItem(R.id.nav_mis_reservas);
         }else {
             return;
         }
@@ -282,4 +229,3 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 }
-

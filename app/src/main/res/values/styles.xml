@@ -8,4 +8,14 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Other attributes -->
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+    </style>
+
+    <!-- Dark theme -->
+    <style name="AppTheme.Dark" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Other attributes -->
+        <item name="colorOnSurface">@color/colorOnSurfaceInverse</item>
+    </style>
 </resources>

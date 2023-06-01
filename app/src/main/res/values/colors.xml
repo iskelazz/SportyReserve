@@ -12,5 +12,11 @@
     <color name="colorBlack">#000000</color>
     <color name="colorDarkYellow">#FFAA00</color>
     <color name="colorRed">#FF0000</color>
+    <color name="colorOnSurface">#000000</color>
+    <color name="colorOnSurfaceInverse">#FFFFFF</color>
+    <color name="colorPrimary_dark">#121212</color>
+    <color name="colorSecondary_dark">#FF4081</color>
+     <!-- Un gris claro -->
 
+    <color name="cancelationButtonColor" translatable="false">#FFD700</color>
 </resources>

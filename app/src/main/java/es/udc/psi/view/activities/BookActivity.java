@@ -40,7 +40,7 @@ import es.udc.psi.controller.impl.UserControllerImpl;
 import es.udc.psi.databinding.ActivityBookBinding;
 import es.udc.psi.model.Reserve;
 import es.udc.psi.model.Sport;
-import es.udc.psi.model.TimeShot;
+
 import es.udc.psi.model.Track;
 import es.udc.psi.model.User;
 import es.udc.psi.repository.impl.SportRepositoryImpl;
@@ -48,6 +48,7 @@ import es.udc.psi.repository.impl.TrackRepositoryImpl;
 import es.udc.psi.repository.interfaces.SportRepository;
 import es.udc.psi.repository.interfaces.TrackRepository;
 import es.udc.psi.repository.interfaces.UserRepository;
+import es.udc.psi.utils.ReservationReminderManager;
 import es.udc.psi.view.interfaces.BookView;
 
 public class BookActivity extends AppCompatActivity implements BookView {
@@ -304,7 +305,7 @@ public class BookActivity extends AppCompatActivity implements BookView {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         date.set(Calendar.YEAR, datePicker.getYear());
-                        date.set(Calendar.MONTH, datePicker.getMonth()+1);
+                        date.set(Calendar.MONTH, datePicker.getMonth());
                         date.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
                         binding.datePickerInput.setText(localeDate(datePicker.getDayOfMonth(), datePicker.getMonth()+1, datePicker.getYear()));
                     }
@@ -316,15 +317,16 @@ public class BookActivity extends AppCompatActivity implements BookView {
     // Métodos de la interfaz RegisterView
 
     @Override
-    public void onBookSuccess() {
-        Toast.makeText(this, "Registration successful.", Toast.LENGTH_SHORT).show();
+    public void onBookSuccess(Reserve reserve) {
+        Toast.makeText(this, getString(R.string.succesfull_registration), Toast.LENGTH_SHORT).show();
+        scheduleNotification(reserve);
         startActivity(new Intent(BookActivity.this, MainActivity.class));
         finish();
     }
 
     @Override
     public void onBookFailure(String errorMessage) {
-        Toast.makeText(this, "Registration Failed: " + errorMessage, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.failure_on_registration) + errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -399,5 +401,15 @@ public class BookActivity extends AppCompatActivity implements BookView {
 
     public void datePicker(DatePicker date) {
 
+    }
+
+    public void scheduleNotification(Reserve reserve) {
+        // Obtén la hora de la reserva y réstale una hora
+        Calendar oneHourBefore = Calendar.getInstance();
+        oneHourBefore.setTime(reserve.getFecha());
+        oneHourBefore.add(Calendar.HOUR, -1);
+        String idUser = userController.getCurrentUserId();
+        // Usa directamente oneHourBefore, que ya es un Calendar
+        ReservationReminderManager.scheduleReservationReminder(getApplicationContext(), oneHourBefore, reserve.getId().hashCode(), reserve.getName(),idUser);
     }
 }

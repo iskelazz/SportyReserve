@@ -20,7 +20,7 @@ public interface BookRepository {
 
     interface OnBookCreatedListener {
 
-        void onSuccess();
+        void onSuccess(Reserve reserve);
 
         void onFailure(String errorMessage);
     }
