@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    style="@style/Theme.SportyReserve"
     tools:context=".view.activities.ReservesListActivity">
 
     <LinearLayout
@@ -25,7 +26,7 @@
                 android:focusable="false"
                 android:layout_weight="1"
                 android:text="@string/dateBeginPickerText"
-                android:textColor="@color/colorBlack"
+                android:textColor="#777777"
                 android:textStyle="bold"
                 app:cornerRadius="8dp"/>
 
@@ -37,7 +38,7 @@
                 android:focusable="false"
                 android:layout_weight="1"
                 android:text="@string/dateEndPickerText"
-                android:textColor="@color/colorBlack"
+                android:textColor="#777777"
                 android:textStyle="bold"
                 app:cornerRadius="8dp"/>
         </LinearLayout>
@@ -79,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/str_bt_lookForReserves"
-                android:textColor="@color/colorBlack"
+                android:textColor="#777777"
                 android:textStyle="bold"
                 app:cornerRadius="8dp"/>
 
