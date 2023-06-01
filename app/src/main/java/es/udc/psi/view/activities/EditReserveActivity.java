@@ -113,15 +113,15 @@ public class EditReserveActivity extends AppCompatActivity implements EditReserv
         System.out.println(toModifyReserve.toString());
 
         // Botón visibilidad
-        privatenessTButton = findViewById(R.id.book_privateness_button);
+        privatenessTButton = binding.bookPrivatenessButton;
         privatenessTButton.setEnabled(true);
 
         // Inicializa las variables de los elementos de la interfaz de usuario
-        passwordEditText = findViewById(R.id.Book_passwordEditText);
+        passwordEditText = binding.BookPasswordEditText;
 
         modifyReserveButton = binding.modifyReserveButton;
 
-        passwordTextInputLayout = findViewById(R.id.Book_passwordTextInputLayout);
+        passwordTextInputLayout = binding.BookPasswordTextInputLayout;
 
         binding.reserveTitleField.addTextChangedListener(fieldsTextWatcher);
 
@@ -168,8 +168,8 @@ public class EditReserveActivity extends AppCompatActivity implements EditReserv
         setVisibilityWithCongruence(aPublic);
         passwordEditText.setText(password);
         binding.ReserveMaxParticipantsPicker.setMinValue(numPlayers);
-        binding.ReserveMaxParticipantsPicker.setValue(maxCapacity);
         binding.ReserveMaxParticipantsPicker.setMaxValue(25);
+        binding.ReserveMaxParticipantsPicker.setValue(maxCapacity);
     }
 
     // Métodos de la interfaz EditReserveView
@@ -190,9 +190,9 @@ public class EditReserveActivity extends AppCompatActivity implements EditReserv
     public void showValidationError(String fieldName, String errorMessage) {
         TextInputLayout inputLayout;
         switch (fieldName) {
-            case "duracion":
-                //inputLayout = emailTextInputLayout;
-                break;
+            case "name":
+                binding.reserveTitleField.setError(errorMessage);
+                return;
             case "password":
                 inputLayout = passwordTextInputLayout;
                 break;
@@ -209,8 +209,8 @@ public class EditReserveActivity extends AppCompatActivity implements EditReserv
     public void clearValidationError(String fieldName) {
         TextInputLayout inputLayout;
         switch (fieldName) {
-            case "date":
-                //inputLayout = emailTextInputLayout;
+            case "name":
+                binding.reserveTitleField.setError("");
                 break;
             case "password":
                 inputLayout = passwordTextInputLayout;

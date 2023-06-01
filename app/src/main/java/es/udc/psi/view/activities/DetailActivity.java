@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.common.internal.service.Common;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -28,6 +30,7 @@ import es.udc.psi.model.Reserve;
 import es.udc.psi.model.User;
 import es.udc.psi.repository.impl.BookRepositoryImpl;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
+import es.udc.psi.utils.CommonThings;
 import es.udc.psi.utils.ReservationReminderManager;
 import es.udc.psi.view.adapters.UserAdapter;
 import es.udc.psi.databinding.ActivityDetailBinding;
@@ -118,6 +121,9 @@ public class DetailActivity extends AppCompatActivity implements UserAdapter.OnU
             binding.btnEdit.setOnClickListener(view -> {
                 // Handle click event here
                 // For example, edit the reservation
+                Intent intent = new Intent(getApplicationContext(), EditReserveActivity.class);
+                intent.putExtra(CommonThings.KEY_TO_MODIFY_RESERVE, reserve);
+                startActivity(intent);
             });
         } else {
             binding.btnEdit.setVisibility(View.GONE);
@@ -159,7 +165,7 @@ public class DetailActivity extends AppCompatActivity implements UserAdapter.OnU
                     });
                 })
                 .setNegativeButton(getString(R.string.cancelationButtonText), null)
-                .setIcon(getColoredIcon(getString(R.color.cancelationButtonColor)))
+                .setIcon(getColoredIcon(getString(R.color.cancelationButtonColor))) //FIXME
                 .show();
     }
 

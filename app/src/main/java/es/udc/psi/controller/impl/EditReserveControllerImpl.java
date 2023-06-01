@@ -41,9 +41,9 @@ public class EditReserveControllerImpl implements EditReserveController {
     {
         boolean isValid = true;
 
-        if(name != null)
+        if(name != null && name.equals(""))
         {
-            isValid = (name != "");
+            isValid = false;
             view.showValidationError("name", ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.ValError_NameIsEmpty));
         }
         else
