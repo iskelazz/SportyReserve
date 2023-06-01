@@ -1,5 +1,7 @@
 package es.udc.psi.controller.impl;
 
+import android.net.Uri;
+
 import java.util.Map;
 
 import es.udc.psi.controller.interfaces.UserController;
@@ -39,4 +41,10 @@ public class UserControllerImpl implements UserController {
         });
     }
 
+  
+    @Override
+    public void uploadAvatarAndSetUrlAvatar(Uri uriAvatarImage) {
+        userRepository.uploadAvatarAndSetUrlAvatar(uriAvatarImage);
+    }
+  
 }

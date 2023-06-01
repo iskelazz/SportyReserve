@@ -1,5 +1,8 @@
 package es.udc.psi.controller.interfaces;
 
+
+import android.net.Uri;
+
 import java.util.List;
 import java.util.Map;
 
@@ -16,4 +19,6 @@ public interface UserController {
         void onFetched(Map<String, Notification> notifications);
         void onFailure(String errorMessage);
     }
+
+      void uploadAvatarAndSetUrlAvatar(Uri uriAvatarImage);
 }

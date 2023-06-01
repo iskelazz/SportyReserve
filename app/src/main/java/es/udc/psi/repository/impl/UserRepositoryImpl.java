@@ -1,9 +1,14 @@
 package es.udc.psi.repository.impl;
 
+import android.net.Uri;
+
 import es.udc.psi.R;
 import es.udc.psi.model.Notification;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -11,7 +16,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+
+import androidx.annotation.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,10 +34,12 @@ import es.udc.psi.utils.ResourceDemocratizator;
 public class UserRepositoryImpl implements UserRepository {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    private FirebaseStorage mStorage;
 
     public UserRepositoryImpl() {
         mDatabase = FirebaseDatabase.getInstance().getReference(ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.name_UsersDB));
         mAuth = FirebaseAuth.getInstance();
+        mStorage = FirebaseStorage.getInstance();
     }
 
     @Override
@@ -140,5 +154,46 @@ public class UserRepositoryImpl implements UserRepository {
                 listener.onFailure(task.getException().getMessage());
             }
         });
+    }
+  
+  
+    public void uploadAvatarAndSetUrlAvatar(Uri fileAvatarImage){
+
+        StorageReference storageReferenceUID = mStorage.getReference().child(getCurrentUserId()+"/avatar.jpg");
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setContentType("image/jpeg")
+                .build();
+        UploadTask uploadTask = storageReferenceUID.putFile(fileAvatarImage, metadata);
+
+        //Obtener url de descarga
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                return storageReferenceUID.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    setUrlAvatar(downloadUri.toString());
+
+                } else {
+                    // Handle failures
+                    // ...
+                }
+            }
+        });
+
+    }
+
+
+    private void setUrlAvatar(String url){
+
+        mDatabase.child(getCurrentUserId()).child("uriAvatar").setValue(url);
     }
 }

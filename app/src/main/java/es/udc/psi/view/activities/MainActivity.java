@@ -2,17 +2,24 @@ package es.udc.psi.view.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
+
+import com.bumptech.glide.Glide;
 
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
@@ -32,13 +39,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private UserController userController;
     private TextView usernameText;
     private TextView emailText;
+    private ImageView avatarImage;
     private ActivityMainBinding binding;
 
+    private static final int RC_GET_AVATAR_IMAGE = 1234567;
+  
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +141,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View headerView = binding.navView.getHeaderView(0);
         usernameText = headerView.findViewById(R.id.username_text);
         emailText = headerView.findViewById(R.id.email_text);
+        avatarImage = headerView.findViewById(R.id.avatar_image);
+        avatarImage.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                getAvatarImageFromDevice();
+            }
+        });
     }
 
 
@@ -207,6 +226,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onFetched(User user) {
                 usernameText.setText(user.getNombre());
                 emailText.setText(user.getCorreoElectronico());
+                Glide.with(MainActivity.this)
+                        .load(user.getUriAvatar())
+                        .placeholder(R.drawable.baseline_account_circle_24)
+                        .into(avatarImage);
             }
 
             @Override
@@ -228,4 +251,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             menuItem.setChecked(true);
         }
     }
+
+    private void getAvatarImageFromDevice(){
+        Intent intentAvatarImage = new Intent(Intent.ACTION_GET_CONTENT);
+        //Intent intentAvatarImage = new Intent(Intent.ACTION_PICK);
+        intentAvatarImage.setType("image/*");
+
+        if (intentAvatarImage.resolveActivity(getPackageManager()) != null) {
+
+            selectAvatarResultLauncher.launch(Intent.createChooser(intentAvatarImage, getString(R.string.str_title_chooser_avatarImage)));
+        }
+
+        //selectAvatarResultLauncher.launch(intentAvatarImage);
+        // startActivityForResult(intentAvatarImage, RC_GET_AVATAR_IMAGE);
+        /*if (intentAvatarImage.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(Intent.createChooser(intentAvatarImage, getString(R.string.str_title_chooser_avatarImage)), RC_GET_AVATAR_IMAGE);
+        }*/
+    }
+
+    ActivityResultLauncher<Intent> selectAvatarResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
+
+                    Intent data = result.getData();
+                    if (data != null) {
+                            final Uri imageUri = data.getData();
+                            Glide.with(MainActivity.this)
+                                .load(imageUri)
+                                .placeholder(R.drawable.baseline_account_circle_24)
+                                .into(avatarImage);
+                            //avatarImage.setImageURI(imageUri);
+                            userController.uploadAvatarAndSetUrlAvatar(imageUri);
+                    }
+                }
+            });
+
+/*    @Override
+    protected void onActivityResult(int requestCode,
+                                    int resultCode,
+                                    @Nullable Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_GET_AVATAR_IMAGE && resultCode == RESULT_OK && null != data) {
+            final Uri imageUri = data.getData();
+            avatarImage.setImageURI(imageUri);
+            userController.uploadAvatarAndSetUrlAvatar(imageUri);
+        }
+    }
+*/
+
 }
