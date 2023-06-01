@@ -162,4 +162,22 @@ public class BookControllerImpl implements BookController {
             }
         });
     }
+
+
+    @Override
+    public void fetchFilteredReserves(String nameCourt, String nameSport, Calendar startDate, Calendar endDate , BookRepository.OnFilteredReservesFetchedListener listener) {
+
+            bookRepository.getFilteredReserves(nameCourt, nameSport, startDate, endDate, new BookRepository.OnFilteredReservesFetchedListener() {
+            @Override
+            public void onFetched(ArrayList<Reserve> reserves) {
+                listener.onFetched(reserves);
+            }
+
+            @Override
+            public void onFailure(String errorMsg) {
+                listener.onFailure(errorMsg);
+            }
+        });
+    }
+
 }

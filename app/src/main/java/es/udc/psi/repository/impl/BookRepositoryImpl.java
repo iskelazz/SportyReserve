@@ -1,5 +1,6 @@
 package es.udc.psi.repository.impl;
 
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,7 +24,9 @@ import es.udc.psi.R;
 import es.udc.psi.model.Reserve;
 import es.udc.psi.model.User;
 import es.udc.psi.repository.interfaces.BookRepository;
+import es.udc.psi.view.activities.ReservesListActivity;
 import es.udc.psi.utils.ResourceDemocratizator;
+
 
 public class BookRepositoryImpl implements BookRepository {
     private DatabaseReference mDatabase;
@@ -196,43 +199,6 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
 
-    @Override
-    public ArrayList<Reserve> getReservesList() {
-
-        //TODO: Datos mockeados
-        User usuario = new User("1234", "Nombre player 1","mail@mail.com","passwd01","678123456","Perez Perez");
-        User usuario2 = new User("1344", "Nombre player 2","mail2@mail.com","passwd01","675345345456","Perez Perez");
-        usuario2.setUriAvatar("https://goo.gl/gEgYUd");
-        //usuario.setUriAvatar("https://brickmarkt.com/19711-large_default/minifiguras-iron-man-minifigura-lego-marvel-super-heroes-sh065.jpg");
-        usuario.setUriAvatar("https://firebasestorage.googleapis.com/v0/b/sportyreserve.appspot.com/o/lego-marvel-super-heroes.jpg?alt=media&token=8ea6a384-da6d-4d81-89f0-f5f7e003169c");
-
-        User usuarioVacio = new User();usuarioVacio.setNombre("+New Player");
-
-
-        ArrayList<User> listaPlayers2=new ArrayList<>();listaPlayers2.add(usuario);listaPlayers2.add(usuario2);listaPlayers2.add(usuarioVacio);listaPlayers2.add(usuario);
-        ArrayList<User> listaPlayers=new ArrayList<>();listaPlayers.add(usuario);listaPlayers.add(usuario2);listaPlayers.add(usuarioVacio);listaPlayers.add(usuario);listaPlayers.add(usuarioVacio);listaPlayers.add(usuario2);listaPlayers.add(usuarioVacio);listaPlayers.add(usuarioVacio);listaPlayers.add(usuarioVacio);listaPlayers.add(usuario);
-        ArrayList<User> listaPlayers3 = (ArrayList<User>) listaPlayers.clone();listaPlayers3.add(usuario);listaPlayers3.add(usuario2);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuario);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuario2);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuario);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuarioVacio);listaPlayers3.add(usuario);
-
-        Reserve reserve1=new Reserve("2234","Nombre Anfitrion","Nombre de la pista",4,"Padel  ",4,new Date(),120,listaPlayers2);
-        Reserve reserve2=new Reserve("67534","Nombre Anfitrion","Nombre de la pista2",10,"Basket  ",10,new Date(),120,listaPlayers);
-        Reserve reserve3=new Reserve("67534","Nombre Anfitrion","Nombre de la pista2",23,"Basket  ",23,new Date(),120,listaPlayers3);
-
-        ArrayList<Reserve> reservationmockList= new ArrayList<Reserve>();
-
-
-        reservationmockList.add(reserve1);
-        reservationmockList.add(reserve2);
-        reservationmockList.add(reserve1);
-        reservationmockList.add(reserve2);
-        reservationmockList.add(reserve3);
-        reservationmockList.add(reserve2);
-
-
-        return reservationmockList;
-
-        //    return null;
-    }
-
     /**
      *
      */
@@ -262,6 +228,7 @@ public class BookRepositoryImpl implements BookRepository {
         });
     }
 
+
     public static void removeOldReserves(List<Reserve> reserveList) {
         // Obtener el momento actual
         Date now = new Date();
@@ -282,4 +249,57 @@ public class BookRepositoryImpl implements BookRepository {
             }
         }
     }
+
+  
+  
+
+    @Override
+    public void getFilteredReserves(String nameCourt, String nameSport, @NonNull Calendar startDate, @NonNull Calendar endDate, final OnFilteredReservesFetchedListener listener) {
+
+        mDatabase.orderByChild("fecha/time").startAt(startDate.getTimeInMillis()).endAt(endDate.getTimeInMillis())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        ArrayList<Reserve> reservesList = new ArrayList<>();
+
+                        for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                            try {
+                                Reserve reserve = childSnapshot.getValue(Reserve.class);
+
+                                if (reserve != null){
+                                    if (nameSport.equals(ReservesListActivity.ALL_COURTS_AND_SPORTS)){
+                                        if (nameCourt.equals(ReservesListActivity.ALL_COURTS_AND_SPORTS)){
+                                            reservesList.add(reserve);
+                                        } else if (reserve.getPista().equals(nameCourt)){
+                                            reservesList.add(reserve);
+                                        }
+                                    } else if (reserve.getDeporte().equals(nameSport)){
+                                        if (nameCourt.equals(ReservesListActivity.ALL_COURTS_AND_SPORTS)){
+                                            reservesList.add(reserve);
+                                        } else if (reserve.getPista().equals(nameCourt)){
+                                            reservesList.add(reserve);
+                                        }
+                                    }
+                                }
+
+                            } catch (com.google.firebase.database.DatabaseException e) {
+                                // Ignora esta reserva y continúa con la siguiente
+                                continue;
+                            }
+                        }
+
+                        listener.onFetched(reservesList);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        listener.onFailure(databaseError.getMessage());
+                    }
+                });
+
+    }
+  
 }
