@@ -1,7 +1,6 @@
 package es.udc.psi.repository.impl;
 
 import android.net.Uri;
-import android.util.Log;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -98,7 +97,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         StorageReference storageReferenceUID = mStorage.getReference().child(getCurrentUserId()+"/avatar.jpg");
         StorageMetadata metadata = new StorageMetadata.Builder()
-                .setContentType("image/jpeg")   //TODO: ¿qué pasa si no upload un jpg????
+                .setContentType("image/jpeg")
                 .build();
         UploadTask uploadTask = storageReferenceUID.putFile(fileAvatarImage, metadata);
 

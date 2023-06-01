@@ -1,19 +1,14 @@
 package es.udc.psi.view.activities;
 
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -27,7 +22,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -285,14 +279,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onFetched(User user) {
                 usernameText.setText(user.getNombre());
                 emailText.setText(user.getCorreoElectronico());
-                Glide.with(getApplicationContext())
+                Glide.with(MainActivity.this)
                         .load(user.getUriAvatar())
-                        .apply(new RequestOptions()
-                                .placeholder(R.drawable.baseline_account_circle_24))
-                        .placeholder(R.drawable.baseline_account_circle_24) //TODO:¿porqué NO fncionano carga el drawable????
-                        .error(R.drawable.baseline_account_circle_24) //TODO:¿porqué NO fncionano carga el drawable????
-                        .skipMemoryCache(true)
-                        //.fallback(R.drawable.baseline_account_circle_24)    //TODO:probar???
+                        .placeholder(R.drawable.baseline_account_circle_24)
                         .into(avatarImage);
             }
 
@@ -323,6 +312,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         intentAvatarImage.setType("image/*");
 
         if (intentAvatarImage.resolveActivity(getPackageManager()) != null) {
+
             selectAvatarResultLauncher.launch(Intent.createChooser(intentAvatarImage, getString(R.string.str_title_chooser_avatarImage)));
         }
 
@@ -339,14 +329,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     Intent data = result.getData();
                     if (data != null) {
-Log.d("TAG_LOG","hola???");
                             final Uri imageUri = data.getData();
-                            avatarImage.setImageURI(imageUri);
+                            Glide.with(MainActivity.this)
+                                .load(imageUri)
+                                .placeholder(R.drawable.baseline_account_circle_24)
+                                .into(avatarImage);
+                            //avatarImage.setImageURI(imageUri);
                             userController.uploadAvatarAndSetUrlAvatar(imageUri);
                     }
                 }
             });
-    @Override
+
+/*    @Override
     protected void onActivityResult(int requestCode,
                                     int resultCode,
                                     @Nullable Intent data) {
@@ -359,6 +353,7 @@ Log.d("TAG_LOG","hola???");
             userController.uploadAvatarAndSetUrlAvatar(imageUri);
         }
     }
+*/
 
 }
 

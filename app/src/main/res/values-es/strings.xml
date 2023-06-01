@@ -63,4 +63,9 @@
     <string name="timePickingText">Elige una hora</string>
     <string name="reserveLengthLabel">Duración</string>
     <string name="reserveLengthText">Dar valor</string>
+
+
+
+
+    <string name="str_title_chooser_avatarImage">Elige tu imagen de avatar:</string>
 </resources>
