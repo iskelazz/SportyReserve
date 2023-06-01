@@ -35,6 +35,7 @@ import es.udc.psi.controller.interfaces.UserController;
 import es.udc.psi.model.User;
 import es.udc.psi.repository.interfaces.UserRepository;
 
+import es.udc.psi.utils.CommonThings;
 import es.udc.psi.view.fragments.NotificationsFragment;
 import es.udc.psi.view.fragments.TabFragment;
 import es.udc.psi.databinding.ActivityMainBinding;
@@ -314,8 +315,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void stopPersistingEmailPassword(){
         //SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         SharedPreferences.Editor editor = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE).edit();
-        editor.putString(LoginActivity.USER_EMAIL, null);
-        editor.putString(LoginActivity.USER_PASSWORD, null);
+        editor.putString(CommonThings.USER_EMAIL, null);
+        editor.putString(CommonThings.USER_PASSWORD, null);
         editor.apply();
     }
 }

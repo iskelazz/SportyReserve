@@ -26,14 +26,13 @@ import es.udc.psi.repository.impl.BookRepositoryImpl;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
 import es.udc.psi.repository.interfaces.BookRepository;
 import es.udc.psi.repository.interfaces.UserRepository;
+import es.udc.psi.utils.CommonThings;
 import es.udc.psi.utils.ReservationReminderManager;
 import es.udc.psi.utils.ResourceDemocratizator;
 import es.udc.psi.view.interfaces.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
-    public static final String USER_EMAIL = "es.udc.psi.SportyReserve.USER_EMAIL";
-    public static final String USER_PASSWORD = "es.udc.psi.SportyReserve.USER_PASSWORD";
 
     private ActivityLoginBinding binding;
     private LoginController loginController;
@@ -60,8 +59,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         //sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
-        String email = sharedPreferences.getString(USER_EMAIL, null);
-        String password = sharedPreferences.getString(USER_PASSWORD,null);
+        String email = sharedPreferences.getString(CommonThings.USER_EMAIL, null);
+        String password = sharedPreferences.getString(CommonThings.USER_PASSWORD,null);
         if ((email == null) && (password==null)){
             setupListeners();
             //createRandomReserve();
@@ -116,8 +115,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         Toast.makeText(LoginActivity.this, getString(R.string.Toast_LoginSuccesfull), Toast.LENGTH_SHORT).show();
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(USER_EMAIL, email);
-        editor.putString(USER_PASSWORD, password);
+        editor.putString(CommonThings.USER_EMAIL, email);
+        editor.putString(CommonThings.USER_PASSWORD, password);
         editor.apply();
 
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
