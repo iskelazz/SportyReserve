@@ -1,7 +1,9 @@
 package es.udc.psi.view.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -21,9 +23,11 @@ import androidx.core.view.GravityCompat;
 
 import com.bumptech.glide.Glide;
 
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.UUID;
 
 import es.udc.psi.R;
 import es.udc.psi.controller.impl.UserControllerImpl;
@@ -103,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 about();
                 break;
             case R.id.nav_logout:
+                stopPersistingEmailPassword();
                 intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 break;
@@ -229,6 +234,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Glide.with(MainActivity.this)
                         .load(user.getUriAvatar())
                         .placeholder(R.drawable.baseline_account_circle_24)
+                        .skipMemoryCache(true)
+                        .signature(new ObjectKey(UUID.randomUUID().toString()))
                         .into(avatarImage);
             }
 
@@ -277,9 +284,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (data != null) {
                             final Uri imageUri = data.getData();
                             Glide.with(MainActivity.this)
-                                .load(imageUri)
-                                .placeholder(R.drawable.baseline_account_circle_24)
-                                .into(avatarImage);
+                                    .load(imageUri)
+                                    .placeholder(R.drawable.baseline_account_circle_24)
+                                    .skipMemoryCache(true)
+                                    .signature(new ObjectKey(UUID.randomUUID().toString()))
+                                    .into(avatarImage);
                             //avatarImage.setImageURI(imageUri);
                             userController.uploadAvatarAndSetUrlAvatar(imageUri);
                     }
@@ -301,4 +310,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 */
 
+
+    private void stopPersistingEmailPassword(){
+        //SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE).edit();
+        editor.putString(LoginActivity.USER_EMAIL, null);
+        editor.putString(LoginActivity.USER_PASSWORD, null);
+        editor.apply();
+    }
 }

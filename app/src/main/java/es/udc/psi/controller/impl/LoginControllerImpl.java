@@ -29,7 +29,7 @@ public class LoginControllerImpl implements LoginController {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful() && task.getResult() != null) {
-                    loginView.onLoginSuccess();
+                    loginView.onLoginSuccess(email, password);
                 } else {
                     Exception exception = task.getException();
                     String errorMessage = exception != null ? exception.getMessage() : ResourceDemocratizator.getInstance().getStringFromResourceID(R.string.Error_Unkown);

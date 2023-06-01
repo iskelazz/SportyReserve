@@ -1,6 +1,8 @@
 package es.udc.psi.view.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -30,9 +32,14 @@ import es.udc.psi.view.interfaces.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
+    public static final String USER_EMAIL = "es.udc.psi.SportyReserve.USER_EMAIL";
+    public static final String USER_PASSWORD = "es.udc.psi.SportyReserve.USER_PASSWORD";
+
     private ActivityLoginBinding binding;
     private LoginController loginController;
     private UserRepository userRepository;
+
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +57,20 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         // Inicializa el controlador de inicio de sesión
         userRepository = new UserRepositoryImpl();
         loginController = new LoginControllerImpl(this,userRepository);
-        // Configura los listeners para los botones
-        setupListeners();
+
+        //sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+        String email = sharedPreferences.getString(USER_EMAIL, null);
+        String password = sharedPreferences.getString(USER_PASSWORD,null);
+        if ((email == null) && (password==null)){
+            setupListeners();
+            //createRandomReserve();
+
+        } else {
+
+            loginController.login(email,password);
+        }
+
     }
 
     private void setupListeners() {
@@ -93,8 +112,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     @Override
-    public void onLoginSuccess() {
+    public void onLoginSuccess(String email, String password) {
         Toast.makeText(LoginActivity.this, getString(R.string.Toast_LoginSuccesfull), Toast.LENGTH_SHORT).show();
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(USER_EMAIL, email);
+        editor.putString(USER_PASSWORD, password);
+        editor.apply();
+
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
         finish();
     }
