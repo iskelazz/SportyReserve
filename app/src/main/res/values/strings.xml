@@ -174,4 +174,9 @@
     <string name="str_error_searchdates">"   Error en las fechas de búsqueda"</string>
 
 
+
+
+    <string name="str_title_chooser_avatarImage">Elige tu imagen de avatar:</string>
+
+
 </resources>
