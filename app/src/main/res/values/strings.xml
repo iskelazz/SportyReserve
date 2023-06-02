@@ -177,6 +177,8 @@
 
 
     <string name="str_title_chooser_avatarImage">Elige tu imagen de avatar:</string>
+    <string name="wikiTitleText">Wiki</string>
+    <string name="wikiText">https://github.com/iskelazz/SportyReserve/wiki</string>
 
 
 </resources>
