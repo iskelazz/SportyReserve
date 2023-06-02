@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:text="@string/aboutInfoText"
             android:textSize="20sp"/>
+
         <TextView
             android:id="@+id/authorsTitle"
             android:layout_width="match_parent"
@@ -30,12 +31,27 @@
             android:textColor="#000000"
             android:textSize="30sp"
             android:textStyle="bold" />
-    <TextView
-        android:id="@+id/authorsText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/authorsText"
-        android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/authorsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/authorsText"
+            android:textSize="20sp"/>
 
+        <TextView
+            android:id="@+id/wikiTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wikiTitleText"
+            android:textColor="#000000"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/wikiText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wikiText"
+            android:autoLink="web"
+            android:textSize="20sp"/>
     </LinearLayout>
 </ScrollView>

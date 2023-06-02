@@ -150,4 +150,6 @@
     <string name="str_alert_wrongpasswd">Wrong Password</string>
     <string name="str_error_searchdates">"   Wrong search dates"</string>
     <string name="str_title_chooser_avatarImage">Choose your avatar image:</string>
+    <string name="wikiTitleText">Wiki</string>
+    <string name="wikiText">https://github.com/iskelazz/SportyReserve/wiki</string>
 </resources>
