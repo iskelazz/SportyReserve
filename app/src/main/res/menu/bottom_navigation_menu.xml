@@ -5,12 +5,12 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/outline_home_black_24"
-        android:title="Inicio"
+        android:title="@string/home_menu"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/outline_notifications_black_24"
-        android:title="Notificaciones"
+        android:title="@string/notifications_option"
         app:showAsAction="ifRoom" />
 </menu>
