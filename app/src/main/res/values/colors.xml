@@ -16,6 +16,7 @@
     <color name="colorOnSurfaceInverse">#FFFFFF</color>
     <color name="colorPrimary_dark">#121212</color>
     <color name="colorSecondary_dark">#FF4081</color>
+    <color name="color_grey">#777777</color>
      <!-- Un gris claro -->
 
     <color name="cancelationButtonColor" translatable="false">#FFD700</color>

@@ -11,5 +11,7 @@ public class CommonThings {
     public static String KEY_TO_MODIFY_RESERVE = "to_be_modified_reserve";
     public static final String USER_EMAIL = "es.udc.psi.SportyReserve.USER_EMAIL";
     public static final String USER_PASSWORD = "es.udc.psi.SportyReserve.USER_PASSWORD";
+    public static final int SIZE_AVATAR_BIG = 140;
+    public static final int SIZE_AVATAR_SMALL = 100;
 
 }

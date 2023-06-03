@@ -1,6 +1,7 @@
 package es.udc.psi.view.activities.adapter;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import es.udc.psi.R;
 import es.udc.psi.model.Reserve;
+import es.udc.psi.utils.CommonThings;
 
 public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.reserveViewHolder> {
 
@@ -44,7 +46,7 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
 
     public static class reserveViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView tvNameReservation, tvNameCourt, tvStrTime, tvStrDate, tvNameSport, tv_newplayer, tvNumPlayers;
+        public TextView tvNameReservation, tvNameCourt, tvStrTime, tvStrDate, tvNameSport, tv_newplayer, tvNumPlayers, tvNameTeam2;
         public LinearLayout layoutPlayersTeam1, layoutPlayersTeam2, layoutOnePlayer, layoutTeams;
         public CardView cardView_img_player;
         public ImageView imageView_newplayer, imageView_privateReserve;
@@ -59,6 +61,7 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             tvStrDate = itemView.findViewById(R.id.tv_nameDate);
             tvNumPlayers = itemView.findViewById(R.id.tv_numberPlayers);
             tvNameSport = itemView.findViewById(R.id.tv_nameSport);
+            tvNameTeam2 = itemView.findViewById(R.id.tv_nameTeam2);
             imageView_privateReserve = itemView.findViewById(R.id.iv_privateReserve);
 
             layoutPlayersTeam1=itemView.findViewById(R.id.ll_team1players);
@@ -78,8 +81,6 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             if (reserve.getPlayerList()!=null){
                 tvNumPlayers.setText(Integer.toString((reserve.getCapacidadMax()-reserve.getPlayerList().size())));
             }
-            //tvNumPlayers.setText("Plazas libres: "+(reserve.getCapacidadMax()-reserve.getNumPlayers()));
-            //tvNumPlayers.setText("Plazas: "+reserve.getCapacidadMax());
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(reserve.getFecha());
@@ -95,7 +96,6 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             layoutPlayersTeam2.removeAllViews();
 
             if ((layoutPlayersTeam1 != null) && (layoutPlayersTeam2 != null) && (reserve.getPlayerList()!=null) && (!reserve.getPlayerList().isEmpty())) {
-                //if ((layoutPlayers!= null) && (layoutPlayers.getChildCount()>0)){
 
                 int size_list_players = reserve.getPlayerList().size();
                 //int size_list_players = reserve.getNumPlayers();
@@ -131,17 +131,18 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
                         addNewPlayerTeam(reserve, i, layoutPlayersTeam1);
 
                     }
-
                 }
+
                 //Añadir avatar para añadir jugador
+                tvNameTeam2.setVisibility(View.VISIBLE);
                 if (size_list_players < num_max_players) {
                     if (size_list_players < num_players_team) {
                         settingsForNewPlayer(layoutPlayersTeam1);
                         addNewAvatarPlayer(size_list_players, layoutPlayersTeam1);
-                    } else{
+                        tvNameTeam2.setVisibility(View.GONE);
+                    } else {
                         settingsForNewPlayer(layoutPlayersTeam2);
                         addNewAvatarPlayer(size_list_players, layoutPlayersTeam2);
-
                     }
                 }
 
@@ -156,9 +157,10 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             imageView_newplayer = new ImageView(layoutPlayersTeam.getContext());
         }
 
+
         private void addNewPlayerTeam(@NonNull Reserve reserve, int position, @NonNull LinearLayout layoutTeamPlayers){
 
-            int sizeAvatar = (reserve.getCapacidadMax()>10)?100:150;
+            int sizeAvatar = (position>10)? CommonThings.SIZE_AVATAR_SMALL : CommonThings.SIZE_AVATAR_BIG;
 
             tv_newplayer.setId(100+position);;
             tv_newplayer.setTag("tv_player_"+position);
@@ -168,6 +170,7 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             tv_newplayer.setText(reserve.getPlayerList().get(position).getNombre());
             tv_newplayer.setTextSize(14);
             tv_newplayer.setGravity(Gravity.CENTER);
+            tv_newplayer.setTextColor(Color.parseColor("#777777"));
 
             cardView_img_player.setId(200+position);
             cardView_img_player.setCardElevation(10);
@@ -178,9 +181,6 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             imageView_newplayer.setId(300+position);
             imageView_newplayer.setTag("image_player_"+position);
             imageView_newplayer.setLayoutParams(new LinearLayout.LayoutParams(sizeAvatar,sizeAvatar,1));
-            /*imageView_newplayer.setLayoutParams(new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT,1));*/
             imageView_newplayer.setScaleType(ImageView.ScaleType.CENTER_CROP);
             Glide.with(imageView_newplayer)
                     .load(reserve.getPlayerList().get(position).getUriAvatar())
@@ -208,7 +208,7 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
 
         private void addNewAvatarPlayer(int position, @NonNull LinearLayout layoutTeamPlayers) {
 
-            int sizeAvatar = (position>10)?100:150;
+            int sizeAvatar = (position>10)? CommonThings.SIZE_AVATAR_SMALL : CommonThings.SIZE_AVATAR_BIG;
 
             tv_newplayer.setId(100+position);
             tv_newplayer.setTag("tv_player_"+position);
@@ -218,25 +218,14 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             tv_newplayer.setText(R.string.str_NewPlayer);
             tv_newplayer.setTextSize(14);
             tv_newplayer.setGravity(Gravity.CENTER);
-
-            cardView_img_player.setId(200+position);
-            cardView_img_player.setCardElevation(10);
-            cardView_img_player.setRadius(250);
-            cardView_img_player.setLayoutParams(new LinearLayout.LayoutParams(sizeAvatar,sizeAvatar,1));
-            cardView_img_player.setForegroundGravity(View.TEXT_ALIGNMENT_CENTER);
+            tv_newplayer.setTextColor(Color.parseColor("#777777"));
 
             imageView_newplayer.setId(300+position);
             imageView_newplayer.setTag("image_player_"+position);
-            imageView_newplayer.setLayoutParams(new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT,1));
+            imageView_newplayer.setLayoutParams(new LinearLayout.LayoutParams(sizeAvatar,sizeAvatar,1));
             imageView_newplayer.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView_newplayer.setImageResource(android.R.drawable.ic_input_add);
-/*            Glide.with(imageView_newplayer)
-                    .load("https://firebasestorage.googleapis.com/v0/b/sportyreserve.appspot.com/o/defaultAvatar%2Favatar.jpg?alt=media&token=5ceb03f7-ccbd-49e3-ad92-d7b15b55af5e")
-                    .placeholder(android.R.drawable.ic_input_add)   //TODO: Cambiar icono??
-                    .into(imageView_newplayer);
-*/
+            imageView_newplayer.setImageResource(R.drawable.round_add_player_24);
+
             layoutOnePlayer.setId(position);
             layoutOnePlayer.setTag("layoutplayer_"+position);
             layoutOnePlayer.setLayoutParams(new LinearLayout.LayoutParams(
@@ -246,8 +235,7 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             layoutOnePlayer.setGravity(Gravity.CENTER);
             layoutOnePlayer.setOnClickListener(this);
 
-            cardView_img_player.addView(imageView_newplayer);
-            layoutOnePlayer.addView(cardView_img_player);
+            layoutOnePlayer.addView(imageView_newplayer);
             layoutOnePlayer.addView(tv_newplayer);
 
             layoutTeamPlayers.addView(layoutOnePlayer);
