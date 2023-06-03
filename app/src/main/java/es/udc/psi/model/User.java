@@ -15,6 +15,7 @@ public class User implements Parcelable {
     private String contraseña;
     private String telefono;
     private String apellidos;
+    private String username;
     private Map<String, Notification> notifications = new HashMap<>();
 
     private String uriAvatar;
@@ -30,7 +31,8 @@ public class User implements Parcelable {
                 String correoElectronico,
                 String contraseña,
                 String telefono,
-                String apellidos) {
+                String apellidos,
+                String username) {
 
         this.id = id;
         this.nombre = nombre;
@@ -38,6 +40,7 @@ public class User implements Parcelable {
         this.contraseña = contraseña;
         this.telefono = telefono;
         this.apellidos = apellidos;
+        this.username = username;
     }
 
     protected User(Parcel in) {
@@ -47,6 +50,7 @@ public class User implements Parcelable {
         contraseña = in.readString();
         telefono = in.readString();
         apellidos = in.readString();
+        username = in.readString();
         uriAvatar = in.readString();
         int size = in.readInt();
         for(int i = 0; i < size; i++){
@@ -114,7 +118,15 @@ public class User implements Parcelable {
 
         this.apellidos = apellidos;
     }
+    public String getUsername() {
 
+        return username;
+    }
+
+    public void setUsername(String username) {
+
+        this.username = username;
+    }
     public String getUriAvatar() {
 
         return uriAvatar;
@@ -145,6 +157,7 @@ public class User implements Parcelable {
         dest.writeString(contraseña);
         dest.writeString(telefono);
         dest.writeString(apellidos);
+        dest.writeString(username);
         dest.writeString(uriAvatar);
         dest.writeInt(notifications.size());
         for(Map.Entry<String, Notification> entry : notifications.entrySet()){

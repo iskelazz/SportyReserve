@@ -167,7 +167,7 @@ public class ReservesAdapter2 extends RecyclerView.Adapter<ReservesAdapter2.rese
             tv_newplayer.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT,1));
-            tv_newplayer.setText(reserve.getPlayerList().get(position).getNombre());
+            tv_newplayer.setText(reserve.getPlayerList().get(position).getUsername());
             tv_newplayer.setTextSize(14);
             tv_newplayer.setGravity(Gravity.CENTER);
             tv_newplayer.setTextColor(Color.parseColor("#777777"));

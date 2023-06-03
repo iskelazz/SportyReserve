@@ -105,7 +105,7 @@ public class RegisterControllerImpl implements RegisterController {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             String userId = userRepository.getAuthId();
-                            User usuario = new User(userId, firstName, email, password, phone, lastName);
+                            User usuario = new User(userId, firstName, email, password, phone, lastName, username);
 
                             userRepository.createUser(usuario, new UserRepository.OnUserCreatedListener() {
                                 @Override
