@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import es.udc.psi.R;
 import es.udc.psi.controller.impl.LoginControllerImpl;
 import es.udc.psi.controller.interfaces.LoginController;
@@ -47,6 +48,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+        setupListeners();
 
         // Inicializa la clase singleton que permite a las clases que no son activities, acceder a
         // los recursos
@@ -59,13 +61,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         //sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+        int themeModeNight = sharedPreferences.getInt(CommonThings.USER_THEME, AppCompatDelegate.MODE_NIGHT_NO);
+        AppCompatDelegate.setDefaultNightMode(themeModeNight);
         String email = sharedPreferences.getString(CommonThings.USER_EMAIL, null);
         String password = sharedPreferences.getString(CommonThings.USER_PASSWORD,null);
-        if ((email == null) && (password==null)){
-            setupListeners();
-            //createRandomReserve();
-
-        } else {
+        if (!((email == null) && (password==null))){
 
             loginController.login(email,password);
         }
