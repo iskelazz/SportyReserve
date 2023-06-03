@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         userController.getUser(uid, new UserRepository.OnUserFetchedListener() {
             @Override
             public void onFetched(User user) {
-                usernameText.setText(user.getNombre());
+                usernameText.setText(user.getUsername());
                 emailText.setText(user.getCorreoElectronico());
                 Glide.with(MainActivity.this)
                         .load(user.getUriAvatar())
