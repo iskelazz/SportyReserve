@@ -55,13 +55,42 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public void checkBookCoincidences(Reserve book, final OnBookCoincidencesCheckedListener listener) {
-        final Query aux = mDatabase.orderByChild("id");
-        aux.equalTo(book.getPista()).addListenerForSingleValueEvent(new ValueEventListener() {
+        final Query aux = mDatabase.orderByChild("pista").startAt(book.getPista());
+        aux.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    //aux
-                    listener.onExists();
+                    Calendar nuevaFInicio = Calendar.getInstance();
+                    Calendar nuevaFFin = Calendar.getInstance();
+                    Calendar viejaFInicio = Calendar.getInstance();
+                    Calendar viejaFFin = Calendar.getInstance();
+                    Boolean exists = false;
+                    nuevaFInicio.setTime(book.getFecha());
+                    nuevaFFin.setTime(book.getFecha());
+                    nuevaFFin.add(Calendar.MINUTE, book.getDuracion());
+
+                    for(DataSnapshot element: dataSnapshot.getChildren())
+                    {
+                        Reserve tmp = element.getValue(Reserve.class);
+                        viejaFInicio.setTime(tmp.getFecha());
+                        viejaFFin.setTime(tmp.getFecha());
+                        viejaFFin.add(Calendar.MINUTE, tmp.getDuracion());
+
+                        if(nuevaFFin.before(viejaFFin) && nuevaFFin.after(viejaFInicio))
+                        {
+                            exists = true;
+                            break;
+                        }
+                        if(nuevaFInicio.before(viejaFFin) && nuevaFInicio.after(viejaFInicio))
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if(exists)
+                        listener.onExists();
+                    else
+                        listener.onNotExists();
                 } else {
                     listener.onNotExists();
                 }

@@ -152,4 +152,5 @@
     <string name="str_title_chooser_avatarImage">Choose your avatar image:</string>
     <string name="wikiTitleText">Wiki</string>
     <string name="wikiText">https://github.com/iskelazz/SportyReserve/wiki</string>
+    <string name="conflicting_reserve">Sorry, there is already a reserve in that same court that would overlap your reserve.</string>
 </resources>
