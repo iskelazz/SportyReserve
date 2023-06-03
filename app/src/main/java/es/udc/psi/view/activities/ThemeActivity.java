@@ -1,5 +1,7 @@
 package es.udc.psi.view.activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,6 +12,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import es.udc.psi.R;
 import es.udc.psi.databinding.ActivityThemeBinding;
+import es.udc.psi.utils.CommonThings;
 
 public class ThemeActivity extends AppCompatActivity {
 
@@ -42,9 +45,11 @@ public class ThemeActivity extends AppCompatActivity {
             switch (checkedId) {
                 case R.id.rb_light_theme:
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    saveUserModeNight(AppCompatDelegate.MODE_NIGHT_NO);
                     break;
                 case R.id.rb_dark_theme:
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    saveUserModeNight(AppCompatDelegate.MODE_NIGHT_YES);
                     break;
             }
             recreate(); // You need to recreate the activity for changes to take effect
@@ -59,4 +64,11 @@ public class ThemeActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void saveUserModeNight(int modeNight){
+        SharedPreferences.Editor editor = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE).edit();
+        editor.putInt(CommonThings.USER_THEME, modeNight);
+        editor.apply();
+    }
+
 }

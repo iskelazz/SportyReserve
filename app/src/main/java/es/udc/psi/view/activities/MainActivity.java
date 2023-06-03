@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 
 import com.bumptech.glide.Glide;
@@ -294,10 +295,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void stopPersistingEmailPassword(){
-        //SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+
         SharedPreferences.Editor editor = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE).edit();
         editor.putString(CommonThings.USER_EMAIL, null);
         editor.putString(CommonThings.USER_PASSWORD, null);
+        editor.putInt(CommonThings.USER_THEME, AppCompatDelegate.MODE_NIGHT_NO);
         editor.apply();
     }
 }
