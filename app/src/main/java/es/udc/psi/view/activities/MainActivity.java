@@ -174,9 +174,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         TabFragment tabFragment = new TabFragment();
-        fragmentTransaction.add(R.id.fragment_tabs, tabFragment); // Aquí utilizamos la misma ID
+        fragmentTransaction.replace(R.id.fragment_tabs, tabFragment); // Reemplazar en lugar de agregar
         fragmentTransaction.commit();
     }
+
 
     /**
      * Configura la vista de navegación inferior (Bottom Navigation View).
@@ -202,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
 
     private void selectNavigationMenuItem(int menuItemId) {
         MenuItem menuItem = binding.navView.getMenu().findItem(menuItemId);
