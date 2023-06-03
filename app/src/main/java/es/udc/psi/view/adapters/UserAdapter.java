@@ -7,11 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.UUID;
 
 import es.udc.psi.R;
 import es.udc.psi.controller.impl.UserControllerImpl;
@@ -81,6 +85,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         void bind(User user) {
             binding.textViewSurname.setText(String.format("%s,", user.getApellidos()));
             binding.textViewName.setText(user.getNombre());
+            Glide.with(binding.imageViewAvatar)
+                    .load(user.getUriAvatar())
+                    .placeholder(R.drawable.baseline_account_circle_24)
+                    .skipMemoryCache(true)
+                    .signature(new ObjectKey(UUID.randomUUID().toString()))
+                    .into(binding.imageViewAvatar);
 
             if (user.getId().equals(reserve.getAnfitrion())) {
                 binding.btnExpulsar.setVisibility(View.GONE);

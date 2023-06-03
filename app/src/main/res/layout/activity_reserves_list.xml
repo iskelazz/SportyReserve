@@ -26,8 +26,9 @@
                 android:focusable="false"
                 android:layout_weight="1"
                 android:text="@string/dateBeginPickerText"
-                android:textColor="#777777"
+                android:textColor="@color/color_grey"
                 android:textStyle="bold"
+                android:textSize="16sp"
                 app:cornerRadius="8dp"/>
 
             <com.google.android.material.textfield.TextInputEditText
@@ -38,8 +39,9 @@
                 android:focusable="false"
                 android:layout_weight="1"
                 android:text="@string/dateEndPickerText"
-                android:textColor="#777777"
+                android:textColor="@color/color_grey"
                 android:textStyle="bold"
+                android:textSize="16sp"
                 app:cornerRadius="8dp"/>
         </LinearLayout>
 
@@ -71,17 +73,18 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:orientation="vertical"
->
+            android:paddingLeft="8dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnFiltrarReservas"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/str_bt_lookForReserves"
-                android:textColor="#777777"
+                android:textColor="@color/color_grey"
                 android:textStyle="bold"
+                android:textSize="16sp"
                 app:cornerRadius="8dp"/>
 
  <!--           <Button
@@ -96,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="2dp">
 
             <TextView
                 android:gravity="center"
