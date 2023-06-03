@@ -4,7 +4,7 @@
     <string name="authorsTitleText">Authors</string>
     <string name="authorsText">Alejandro, Javier and José</string>
     <string name="aboutInfoTitleText">Info</string>
-    <string name="aboutInfoText">This proyect is about...</string>
+    <string name="aboutInfoText">SportyReserve is a sports-oriented booking application that makes it easy to plan sporting events and share them among its users.</string>
     <string name="app_name">SportyReserve</string>
     <string name="login">Login</string>
     <string name="sign_up">Sign Up</string>

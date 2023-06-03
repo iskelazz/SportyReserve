@@ -270,11 +270,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             selectAvatarResultLauncher.launch(Intent.createChooser(intentAvatarImage, getString(R.string.str_title_chooser_avatarImage)));
         }
 
-        //selectAvatarResultLauncher.launch(intentAvatarImage);
-        // startActivityForResult(intentAvatarImage, RC_GET_AVATAR_IMAGE);
-        /*if (intentAvatarImage.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(Intent.createChooser(intentAvatarImage, getString(R.string.str_title_chooser_avatarImage)), RC_GET_AVATAR_IMAGE);
-        }*/
     }
 
     ActivityResultLauncher<Intent> selectAvatarResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -296,20 +291,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
 
-/*    @Override
-    protected void onActivityResult(int requestCode,
-                                    int resultCode,
-                                    @Nullable Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_GET_AVATAR_IMAGE && resultCode == RESULT_OK && null != data) {
-            final Uri imageUri = data.getData();
-            avatarImage.setImageURI(imageUri);
-            userController.uploadAvatarAndSetUrlAvatar(imageUri);
-        }
-    }
-*/
 
 
     private void stopPersistingEmailPassword(){
