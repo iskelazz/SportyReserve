@@ -1,5 +1,6 @@
 package es.udc.psi.view.activities;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -26,13 +27,15 @@ public class ThemeActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // Aquí se debe recuperar el tema actual y seleccionar el RadioButton correspondiente.
-        // Supongamos que el tema se almacena en SharedPreferences.
-
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            binding.rbDarkTheme.setChecked(true);
-        } else {
-            binding.rbLightTheme.setChecked(true);
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                binding.rbDarkTheme.setChecked(true);
+                break;
+            case Configuration.UI_MODE_NIGHT_NO:
+            default:
+                binding.rbLightTheme.setChecked(true);
+                break;
         }
 
         binding.radioGroup.setOnCheckedChangeListener((group, checkedId) -> {

@@ -4,7 +4,7 @@
     <string name="authorsTitleText">Autores</string>
     <string name="authorsText">Alejandro, Javier y José</string>
     <string name="aboutInfoTitleText">Info</string>
-    <string name="aboutInfoText">Este proyecto trata de...</string>
+    <string name="aboutInfoText">SportyReserve es una aplicación de reservas orientada a deportes, que facilita la planificación de eventos deportivos y compartirlos entre sus usuarios.</string>
     <string name="app_name">SportyReserve</string>
     <string name="login">Iniciar Sesión</string>
     <string name="sign_up">Registrarse</string>

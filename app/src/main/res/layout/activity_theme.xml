@@ -32,6 +32,7 @@
             android:text="@string/dark_theme"
             android:textSize="16sp" />
 
+
     </RadioGroup>
 
 </RelativeLayout>

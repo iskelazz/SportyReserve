@@ -44,9 +44,6 @@ public class NotificationsFragment extends Fragment {
                 // Cuando tengamos las notificaciones, las mostramos en el ListView.
                 List<Notification> notificationList = new ArrayList<>(notifications.values());
 
-                // Ordena la lista en orden inverso.
-                Collections.reverse(notificationList);
-
                 adapter = new NotificationsAdapter(getContext(), notificationList);
                 binding.notificationsListView.setAdapter(adapter);
             }

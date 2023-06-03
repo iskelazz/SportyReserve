@@ -24,7 +24,11 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 
 import androidx.annotation.NonNull;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import es.udc.psi.model.User;
@@ -76,7 +80,20 @@ public class UserRepositoryImpl implements UserRepository {
                     Notification notification = notificationSnapshot.getValue(Notification.class);
                     notifications.put(notification.getId(), notification);
                 }
-                listener.onFetched(notifications);
+
+                // Convert map to list of entries
+                List<Map.Entry<String, Notification>> list = new ArrayList<>(notifications.entrySet());
+
+                // Sort list by date in descending order
+                list.sort((o1, o2) -> o2.getValue().getDate().compareTo(o1.getValue().getDate()));
+
+                // Convert sorted list back to map
+                Map<String, Notification> sortedNotifications = new LinkedHashMap<>();
+                for (Map.Entry<String, Notification> entry : list) {
+                    sortedNotifications.put(entry.getKey(), entry.getValue());
+                }
+
+                listener.onFetched(sortedNotifications);
             }
 
             @Override
