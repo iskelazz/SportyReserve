@@ -339,6 +339,8 @@ public class BookActivity extends AppCompatActivity implements BookView {
             case "password":
                 inputLayout = passwordTextInputLayout;
                 break;
+            case "reserve":
+                Toast.makeText(this, getString(R.string.conflicting_reserve), Toast.LENGTH_SHORT).show();
             default:
                 return;
         }
