@@ -1,15 +1,20 @@
 package es.udc.psi.view.activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatDelegate;
+import es.udc.psi.R;
 import es.udc.psi.model.User;
 import es.udc.psi.repository.impl.UserRepositoryImpl;
 import es.udc.psi.repository.interfaces.UserRepository;
 import es.udc.psi.databinding.ChangePasswordActivityBinding;
+import es.udc.psi.utils.CommonThings;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
@@ -50,6 +55,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess() {
                                 Toast.makeText(ChangePasswordActivity.this, "Contraseña cambiada correctamente", Toast.LENGTH_SHORT).show();
+
+                                SharedPreferences.Editor editor = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE).edit();
+                                editor.putString(CommonThings.USER_PASSWORD, newPassword);
+                                editor.apply();
+
                                 finish();
                             }
 
