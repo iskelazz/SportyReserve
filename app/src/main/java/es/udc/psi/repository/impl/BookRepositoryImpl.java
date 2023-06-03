@@ -76,12 +76,9 @@ public class BookRepositoryImpl implements BookRepository {
                         viejaFFin.setTime(tmp.getFecha());
                         viejaFFin.add(Calendar.MINUTE, tmp.getDuracion());
 
-                        if(nuevaFFin.before(viejaFFin) && nuevaFFin.after(viejaFInicio))
-                        {
-                            exists = true;
-                            break;
-                        }
-                        if(nuevaFInicio.before(viejaFFin) && nuevaFInicio.after(viejaFInicio))
+                        if( (nuevaFFin.before(viejaFFin) && nuevaFFin.after(viejaFInicio))
+                            || (nuevaFInicio.before(viejaFFin) && nuevaFInicio.after(viejaFInicio))
+                            || (nuevaFInicio.before(viejaFInicio) && nuevaFFin.after(viejaFFin)) )
                         {
                             exists = true;
                             break;
